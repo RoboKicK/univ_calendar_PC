@@ -193,7 +193,7 @@
     }
 
     //시주 찾기
-    int editedTime = ((targetHour + ((targetMin + 30)/60) ) / 2).floor();
+    int editedTime = (((targetHour + ((targetMin + 30)/60) ) / 2).floor()) % 12;
 
     int siGan = ((ilGan % 5) * 2 + editedTime) % listCheonGanString.length;
     //if(ilGan % 2 == 1)

@@ -35,6 +35,13 @@ class _MyAppState extends State<MyApp> {
 
   var appBarTitle = ['만세력', '일진일기'];
   int _nowMainTap = 0;
+  bool _isShowSettingPage = false;
+
+  ShowSettingPage(){ //  설정 페이지 온오프
+    setState(() {
+      _isShowSettingPage = !_isShowSettingPage;
+    });
+  }
 
   @override initState(){
     findGangi.FindGanjiData();
@@ -44,6 +51,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
@@ -52,9 +60,24 @@ class _MyAppState extends State<MyApp> {
           transform: Matrix4.translationValues(0.0, 4.0, 0.0),
           child: Text(appBarTitle[_nowMainTap]),
         ),
+        actions: [
+          Container(
+            width: 40,
+            height: 40,
+            margin: EdgeInsets.only(right: 20),
+            child: ElevatedButton(
+              onPressed: (){
+                ShowSettingPage();
+              },
+              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
+              child: Icon(Icons.settings, size: 20),
+            ),
+          ),
+
+        ],
         elevation: 0.0, //Drop Shadow, 붕 떠 있는 느낌의 수치
       ),
-      body:bodyWidgetManager.BodyWidgetManager(nowMainTap: _nowMainTap),
+      body:bodyWidgetManager.BodyWidgetManager(nowMainTap: _nowMainTap, isShowSettingPage: _isShowSettingPage, setSettingPage: ShowSettingPage),
     );
   }
 }

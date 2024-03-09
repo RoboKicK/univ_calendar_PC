@@ -169,6 +169,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
   @override
   Set<PointerDeviceKind> get dragDevices => {
     PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
   };
 }
 
@@ -562,7 +563,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             widget.closeWidget(widgetNum);
           },
-          child: Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
+          child: Icon(Icons.close, color: Colors.white),//Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
           style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
         ),
       );
@@ -583,7 +584,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             BackButtonAction();
           },
-          child: Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
+          child: Icon(Icons.arrow_back, color:Colors.white),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
           style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
         ),
       );
