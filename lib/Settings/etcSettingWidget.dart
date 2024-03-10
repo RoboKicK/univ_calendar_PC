@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../style.dart' as style;
@@ -198,15 +200,16 @@ class EtcSettingState extends State<EtcSettingWidget> {
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [Container(
-            width: style.UIButtonWidth,
-            height: style.fullSizeButtonHeight,
-            alignment: Alignment.center,
-            child:Text('기타', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
-          ),
+          children: [
+            Container(
+              width: style.UIButtonWidth,
+              height: style.fullSizeButtonHeight,
+              alignment: Alignment.center,
+              child:Text('기타', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
+            ),
             Expanded(
               child: ScrollConfiguration(
-                behavior: ScrollBehavior().copyWith(overscroll: false),
+                behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
                   child: Column(
@@ -541,6 +544,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                 Container(  //천간 합충극 설명
                                   width: (widgetWidth - (style.UIMarginLeft * 2)),
                                   height: style.saveDataMemoLineHeight,
+                                  margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo),
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -637,4 +641,14 @@ class EtcSettingState extends State<EtcSettingWidget> {
         ),
       );
   }
+}
+
+//마우스로 횡스크롤
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }

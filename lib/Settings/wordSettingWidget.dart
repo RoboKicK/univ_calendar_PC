@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../style.dart' as style;
@@ -118,416 +120,438 @@ class _WordSettingState extends State<WordSettingWidget> {
         borderRadius: BorderRadius.circular(style.textFiledRadius),
       ),
       child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: style.UIButtonWidth,
-              height: style.fullSizeButtonHeight,
-              alignment: Alignment.center,
-              child:Text('단어 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
-            ),
-            Container( //일간 이름
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              //color:Colors.green,
-              margin: EdgeInsets.only(top: style.UIMarginTop),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom),
-                    child: Text("일간 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<IlganText>(
-                    //남자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: IlganText.Ilgan,
-                      groupValue: ilganText,
-                      fillColor: ilganText == IlganText.Ilgan
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (IlganText? value) {
-                        setState(() {
-                          ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 0);widget.reloadSetting();
-                        });
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                    child: Text("본원 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<IlganText>(
-                    //여자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: IlganText.Bonwon,
-                      groupValue: ilganText,
-                      fillColor: ilganText == IlganText.Bonwon
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (IlganText? value) {
-                        setState(() {
-                          ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 1);widget.reloadSetting();
-                        });
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                    child: Text("아신 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<IlganText>(
-                    //여자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: IlganText.Asin,
-                      groupValue: ilganText,
-                      fillColor: ilganText == IlganText.Asin
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (IlganText? value) {
-                        setState(() {
-                          ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 2);widget.reloadSetting();
-                        });
-                      }),
-                ],
-              ),
-            ),
-            Container(  //일간 이름 설명
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              //color:Colors.yellow,
-              margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-              child: Text("일간을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
-            ),
-            Container( //육친 이름
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(top: style.UIMarginTop),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom),
-                    child: Text("육친 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<YugchinText>(
-                    //남자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: YugchinText.Yugchin,
-                      groupValue: yugchinText,
-                      fillColor: yugchinText == YugchinText.Yugchin
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (YugchinText? value) {
-                        setState(() {
-                          yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 0);widget.reloadSetting();
-                        });
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                    child: Text("육신 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<YugchinText>(
-                    //여자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: YugchinText.Yugsin,
-                      groupValue: yugchinText,
-                      fillColor: yugchinText == YugchinText.Yugsin
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (YugchinText? value) {
-                        setState(() {
-                          yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 1);widget.reloadSetting();
-                        });
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                    child: Text("십성 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<YugchinText>(
-                    //여자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: YugchinText.Sibseong,
-                      groupValue: yugchinText,
-                      fillColor: yugchinText == YugchinText.Sibseong
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (YugchinText? value) {
-                        setState(() {
-                          yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 2);widget.reloadSetting();
-                        });
-                      }),
-                ],
-              ),
-            ),
-            Container(  //육친 이름 설명
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-              child: Text("육친, 육신 또는 십성을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
-            ),
-            Container( //육친 이름
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(top: style.UIMarginTop),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom),
-                    child: Text("원진 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<WonjinText>(
-                    //남자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: WonjinText.Wonjin,
-                      groupValue: wonjinText,
-                      fillColor: wonjinText == WonjinText.Wonjin
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (WonjinText? value) {
-                        setState(() {
-                          wonjinText = value;
-                          personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
-                        });
-                      }),
-                  Container(
-                    padding: EdgeInsets.only(
-                        bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                    child: Text("해 ",
-                        style: style.settingText0),
-                  ),
-                  Radio<WonjinText>(
-                    //여자 버튼
-                      visualDensity: const VisualDensity(
-                        horizontal:
-                        VisualDensity.minimumDensity,
-                        vertical:
-                        VisualDensity.minimumDensity,
-                      ),
-                      value: WonjinText.Hea,
-                      groupValue: wonjinText,
-                      fillColor: wonjinText == WonjinText.Hea
-                          ? MaterialStateColor.resolveWith(
-                              (states) => style.colorMainBlue)
-                          : MaterialStateColor.resolveWith(
-                              (states) => style.colorGrey),
-                      splashRadius: 0,
-                      onChanged: (WonjinText? value) {
-                        setState(() {
-                          wonjinText = value;
-                          personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
-                        });
-                      }),
-                ],
-              ),
-            ),
-            Container(  //육친 이름 설명
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-              child: Text("원진 또는 해를 표시하는 방법을 선택합니다", style: style.settingInfoText0),
-            ),
-            Container(  //천간극
-              height: style.saveDataMemoLineHeight,
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              margin: EdgeInsets.only(top: style.UIMarginTop),
-              child: Stack(
-                children: [
-                  Container(
-                    height: style.saveDataMemoLineHeight,
-                    width: (widgetWidth - (style.UIMarginLeft * 2)),
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: style.saveDataMemoLineHeight,
-                      width: 32,
-                      child: Stack( //스위치
-                        alignment: Alignment.center,
-                        children: [
-                          AnimatedCrossFade(  //천간 합충극 스위치 배경
-                            duration: Duration(milliseconds: 130),
-                            firstChild: Container(
-                              width: 32,
-                              height: 20,
-                              child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: style.UIButtonWidth,
+            height: style.fullSizeButtonHeight,
+            alignment: Alignment.center,
+            child:Text('단어 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
+          ),
+          Expanded(
+            child: ScrollConfiguration(
+              behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                    children: [
+                      Container( //일간 이름
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        //color:Colors.green,
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom),
+                              child: Text("일간 ",
+                                  style: style.settingText0),
                             ),
-                            secondChild: Container(
-                              width: 32,
-                              height: 20,
-                              child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
+                            Radio<IlganText>(
+                              //남자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: IlganText.Ilgan,
+                                groupValue: ilganText,
+                                fillColor: ilganText == IlganText.Ilgan
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (IlganText? value) {
+                                  setState(() {
+                                    ilganText = value;
+                                    personalDataManager.SaveWordData('ilGan', 0);widget.reloadSetting();
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("본원 ",
+                                  style: style.settingText0),
                             ),
-                            crossFadeState: isSameGeuc == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                            alignment: Alignment.center,
-                            firstCurve: Curves.easeIn,
-                            secondCurve: Curves.easeIn,
-                          ),
-                          Container(  //천간 합충극 스위치 버튼
-                            width: 26,
-                            child: AnimatedAlign(
-                              alignment: geucAlign,
-                              duration: Duration(milliseconds: 130),
-                              curve: Curves.easeIn,
+                            Radio<IlganText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: IlganText.Bonwon,
+                                groupValue: ilganText,
+                                fillColor: ilganText == IlganText.Bonwon
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (IlganText? value) {
+                                  setState(() {
+                                    ilganText = value;
+                                    personalDataManager.SaveWordData('ilGan', 1);widget.reloadSetting();
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("아신 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<IlganText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: IlganText.Asin,
+                                groupValue: ilganText,
+                                fillColor: ilganText == IlganText.Asin
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (IlganText? value) {
+                                  setState(() {
+                                    ilganText = value;
+                                    personalDataManager.SaveWordData('ilGan', 2);widget.reloadSetting();
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                      Container(  //일간 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        //color:Colors.yellow,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("일간을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
+                      ),
+                      Container( //육친 이름
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom),
+                              child: Text("육친 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<YugchinText>(
+                              //남자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: YugchinText.Yugchin,
+                                groupValue: yugchinText,
+                                fillColor: yugchinText == YugchinText.Yugchin
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (YugchinText? value) {
+                                  setState(() {
+                                    yugchinText = value;
+                                    personalDataManager.SaveWordData('yugChin', 0);widget.reloadSetting();
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("육신 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<YugchinText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: YugchinText.Yugsin,
+                                groupValue: yugchinText,
+                                fillColor: yugchinText == YugchinText.Yugsin
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (YugchinText? value) {
+                                  setState(() {
+                                    yugchinText = value;
+                                    personalDataManager.SaveWordData('yugChin', 1);widget.reloadSetting();
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("십성 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<YugchinText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: YugchinText.Sibseong,
+                                groupValue: yugchinText,
+                                fillColor: yugchinText == YugchinText.Sibseong
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (YugchinText? value) {
+                                  setState(() {
+                                    yugchinText = value;
+                                    personalDataManager.SaveWordData('yugChin', 2);widget.reloadSetting();
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                      Container(  //육친 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("육친, 육신 또는 십성을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
+                      ),
+                      Container( //육친 이름
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom),
+                              child: Text("원진 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<WonjinText>(
+                              //남자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: WonjinText.Wonjin,
+                                groupValue: wonjinText,
+                                fillColor: wonjinText == WonjinText.Wonjin
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (WonjinText? value) {
+                                  setState(() {
+                                    wonjinText = value;
+                                    personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("해 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<WonjinText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal:
+                                  VisualDensity.minimumDensity,
+                                  vertical:
+                                  VisualDensity.minimumDensity,
+                                ),
+                                value: WonjinText.Hea,
+                                groupValue: wonjinText,
+                                fillColor: wonjinText == WonjinText.Hea
+                                    ? MaterialStateColor.resolveWith(
+                                        (states) => style.colorMainBlue)
+                                    : MaterialStateColor.resolveWith(
+                                        (states) => style.colorGrey),
+                                splashRadius: 0,
+                                onChanged: (WonjinText? value) {
+                                  setState(() {
+                                    wonjinText = value;
+                                    personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                      Container(  //육친 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("원진 또는 해를 표시하는 방법을 선택합니다", style: style.settingInfoText0),
+                      ),
+                      Container(  //천간극
+                        height: style.saveDataMemoLineHeight,
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: style.saveDataMemoLineHeight,
+                              width: (widgetWidth - (style.UIMarginLeft * 2)),
+                              alignment: Alignment.centerRight,
                               child: Container(
-                                width: 16,
-                                height: 16,
-                                child: geucButtonImage,
+                                height: style.saveDataMemoLineHeight,
+                                width: 32,
+                                child: Stack( //스위치
+                                  alignment: Alignment.center,
+                                  children: [
+                                    AnimatedCrossFade(  //천간 합충극 스위치 배경
+                                      duration: Duration(milliseconds: 130),
+                                      firstChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
+                                      ),
+                                      secondChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
+                                      ),
+                                      crossFadeState: isSameGeuc == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      alignment: Alignment.center,
+                                      firstCurve: Curves.easeIn,
+                                      secondCurve: Curves.easeIn,
+                                    ),
+                                    Container(  //천간 합충극 스위치 버튼
+                                      width: 26,
+                                      child: AnimatedAlign(
+                                        alignment: geucAlign,
+                                        duration: Duration(milliseconds: 130),
+                                        curve: Curves.easeIn,
+                                        child: Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: geucButtonImage,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Text("천간의 극을 충으로 표시합니다", style: style.settingText0),
+                            ElevatedButton( //천간 합충극 스위치 버튼
+                              onPressed: (){SetGeuc();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                  Text("천간의 극을 충으로 표시합니다", style: style.settingText0),
-                  ElevatedButton( //천간 합충극 스위치 버튼
-                    onPressed: (){SetGeuc();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
-                    style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
-                ],
-              ),
-            ),
-            Container(  //천간극 이름 설명
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-              child: Text("천간의 충과 극을 모두 충으로 표시합니다", style: style.settingInfoText0),
-            ),
-            Container(  //합
-              height: style.saveDataMemoLineHeight,
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              margin: EdgeInsets.only(top: style.UIMarginTop),
-              child: Stack(
-                children: [
-                  Container(
-                    height: style.saveDataMemoLineHeight,
-                    width: (widgetWidth - (style.UIMarginLeft * 2)),
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: style.saveDataMemoLineHeight,
-                      width: 32,
-                      child: Stack( //스위치
-                        alignment: Alignment.center,
-                        children: [
-                          AnimatedCrossFade(  //천간 합충극 스위치 배경
-                            duration: Duration(milliseconds: 130),
-                            firstChild: Container(
-                              width: 32,
-                              height: 20,
-                              child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
-                            ),
-                            secondChild: Container(
-                              width: 32,
-                              height: 20,
-                              child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
-                            ),
-                            crossFadeState: isSameHab == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                            alignment: Alignment.center,
-                            firstCurve: Curves.easeIn,
-                            secondCurve: Curves.easeIn,
-                          ),
-                          Container(  //천간 합충극 스위치 버튼
-                            width: 26,
-                            child: AnimatedAlign(
-                              alignment: habAlign,
-                              duration: Duration(milliseconds: 130),
-                              curve: Curves.easeIn,
+                      Container(  //천간극 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("천간의 충과 극을 모두 충으로 표시합니다", style: style.settingInfoText0),
+                      ),
+                      Container(  //합
+                        height: style.saveDataMemoLineHeight,
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: style.saveDataMemoLineHeight,
+                              width: (widgetWidth - (style.UIMarginLeft * 2)),
+                              alignment: Alignment.centerRight,
                               child: Container(
-                                width: 16,
-                                height: 16,
-                                child: habButtonImage,
+                                height: style.saveDataMemoLineHeight,
+                                width: 32,
+                                child: Stack( //스위치
+                                  alignment: Alignment.center,
+                                  children: [
+                                    AnimatedCrossFade(  //천간 합충극 스위치 배경
+                                      duration: Duration(milliseconds: 130),
+                                      firstChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
+                                      ),
+                                      secondChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
+                                      ),
+                                      crossFadeState: isSameHab == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      alignment: Alignment.center,
+                                      firstCurve: Curves.easeIn,
+                                      secondCurve: Curves.easeIn,
+                                    ),
+                                    Container(  //천간 합충극 스위치 버튼
+                                      width: 26,
+                                      child: AnimatedAlign(
+                                        alignment: habAlign,
+                                        duration: Duration(milliseconds: 130),
+                                        curve: Curves.easeIn,
+                                        child: Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: habButtonImage,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Text("지지합 단순화", style: style.settingText0),
+                            ElevatedButton( //천간 합충극 스위치 버튼
+                              onPressed: (){SetHab();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                          ],
+                        ),
                       ),
-                    ),
+                      Container(  //천간극 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("지지의 방합, 삼합, 육합을 모두 합으로 표시합니다", style: style.settingInfoText0),
+                      ),
+                    ],
                   ),
-                  Text("지지합 단순화", style: style.settingText0),
-                  ElevatedButton( //천간 합충극 스위치 버튼
-                    onPressed: (){SetHab();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
-                    style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
-                ],
               ),
             ),
-            Container(  //천간극 이름 설명
-              width: (widgetWidth - (style.UIMarginLeft * 2)),
-              height: style.saveDataMemoLineHeight,
-              margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-              child: Text("지지의 방합, 삼합, 육합을 모두 합으로 표시합니다", style: style.settingInfoText0),
-            ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
+}
+
+//마우스로 횡스크롤
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+  };
 }

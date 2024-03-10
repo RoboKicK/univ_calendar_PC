@@ -697,6 +697,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                     Container(
                                       width: (widgetWidth - (style.UIMarginLeft * 2)),
                                       height: style.saveDataMemoLineHeight,
+                                      margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo),
                                       child: Row(
                                         children: [
                                           SizedBox(

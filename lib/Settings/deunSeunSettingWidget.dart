@@ -815,7 +815,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                               Container(  //월운
                                 height: style.saveDataMemoLineHeight,
                                 width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                margin: EdgeInsets.only(top: style.UIMarginTop),
+                                margin: EdgeInsets.only(top: style.UIMarginTop, bottom: style.SettingMarginTopWithInfo),
                                 child: Stack(
                                   children: [
                                     Container(
