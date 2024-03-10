@@ -12,7 +12,7 @@ class Jijanggan{  //지장간 계산해주는 클래스
       yugchin = list6chin[(_cheonganNum - _ilganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length];
     }
     else{ //음일간
-      yugchin = list6chin[(_cheonganNum % 2 == 1? _cheonganNum:(_cheonganNum + 2) - _ilganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length];
+      yugchin = list6chin[((_cheonganNum % 2 == 1? _cheonganNum:(_cheonganNum + 2)) - _ilganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length];
     }
 
     return yugchin;
