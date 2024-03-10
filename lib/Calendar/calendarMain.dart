@@ -13,7 +13,9 @@ import '../../Settings/personalDataManager.dart' as personalDataManager;
 import '../CalendarResult/calendarResultBirthTextWidget.dart' as calendarResultBirthTextWidget;  //이름과 생년월일
 
 class CalendarMain extends StatefulWidget {
-  const CalendarMain({super.key});
+  const CalendarMain({super.key, required this.isEditSetting});
+
+  final isEditSetting;
 
   @override
   State<CalendarMain> createState() => _CalendarMainState();
@@ -27,6 +29,8 @@ class _CalendarMainState extends State<CalendarMain> {
   List<Widget> listCalendarWidget = [];
 
   ScrollController controller = ScrollController();
+
+  bool isEditSetting = false;
 
   ShowDialogMessage(String message) {
     showDialog<void>(
@@ -53,10 +57,10 @@ class _CalendarMainState extends State<CalendarMain> {
       Map mapNumAndKey = {'widgetNum':unlimitedCalendarNum, 'globalKey':GlobalKey<_CalendarWidget>()};
       if(isLeft == true){
         listKey.add(mapNumAndKey);
-        listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1));
+        listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting,));
       } else {
         listKey.add(mapNumAndKey);
-        listCalendarWidget.add(CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1));
+        listCalendarWidget.add(CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting,));
       }
       unlimitedCalendarNum++;
       for(int i = 0; i < listKey.length; i++){
@@ -95,10 +99,23 @@ class _CalendarMainState extends State<CalendarMain> {
   void initState() {
     super.initState();
     AddCalendarWidget(false);
+    isEditSetting = widget.isEditSetting;
   }
 
   @override
   Widget build(BuildContext context) {
+
+    setState(() {
+      if(isEditSetting != widget.isEditSetting){
+        for(int i = 0; i < listKey.length; i++){
+          if(listKey[i]['globalKey'].currentState?.nowState == 1){
+            listKey[i]['globalKey'].currentState?.SetCalendarResultWidget();
+          }
+        }
+        isEditSetting = widget.isEditSetting;
+      }
+    });
+
     return Container(
         height: MediaQuery.of(context).size.height - 60,
         color: style.colorDarkGrey,
@@ -174,14 +191,13 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 }
 
 
-
-
 //여기부터는 달력 위젯
 class CalendarWidget extends StatefulWidget {
-  const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount});
+  const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount, required this.isEditSetting});
 
   final int widgetNum, nowWidgetCount;
   final closeWidget;
+  final bool isEditSetting;
 
   @override
   State<CalendarWidget> createState() => _CalendarWidget();
@@ -524,6 +540,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   Widget calendarBirthTextWidget = SizedBox.shrink();
 
   int nowState = 0; //0:만세력 입력화면, 1:만세력 조회화면
+  bool isEditSetting = false;
 
   //위젯 가로 크기 정하기
   SetWidgetWidth(int widgetCount){
@@ -640,11 +657,12 @@ class _CalendarWidget extends State<CalendarWidget> {
   //만세력 조회 화면 생성
   SetCalendarResultWidget(){
     nowState = 1;
+    isEditSetting = !isEditSetting;
     setState(() {
       double _widgetWidth = widgetWidth;
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: '', saveDataNum: '', widgetWidth: _widgetWidth);
+        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: '', saveDataNum: '', widgetWidth: _widgetWidth, isEditSetting: isEditSetting);
       SetWidgetBackButton();
       SetWidgetCalendarResultBirthText();
     });
@@ -658,6 +676,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     genderColorFemale = MaterialStateColor.resolveWith((states) => style.colorGrey);
 
     widgetNum = widget.widgetNum;
+    isEditSetting = widget.isEditSetting;
   }
 
   @override void didChangeDependencies() {  //initState 끝나고 실행됨

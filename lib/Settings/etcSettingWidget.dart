@@ -4,10 +4,11 @@ import '../style.dart' as style;
 import 'personalDataManager.dart' as personalDataManager;
 
 class EtcSettingWidget extends StatefulWidget {
-  const EtcSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight});
+  const EtcSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<EtcSettingWidget> createState() => EtcSettingState();
@@ -265,7 +266,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             ),
                             Text("만 나이로 표시", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetManOld();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetManOld();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -328,7 +329,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             ),
                             Text("간지 음양", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetUemyang();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetUemyang();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -391,7 +392,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             ),
                             Text("간지 한글화", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetKoreanGanji();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetKoreanGanji();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -454,7 +455,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             ),
                             Text("인적사항 숨김", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetPersonalData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetPersonalData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -493,7 +494,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                         value: isShowPersonalName,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowPersonalName = value!;
+                                            isShowPersonalName = value!;widget.reloadSetting();
                                           });
                                           SavePersonalData();
                                         },
@@ -504,7 +505,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                         value: isShowPersonalOld,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowPersonalOld = value!;
+                                            isShowPersonalOld = value!;widget.reloadSetting();
                                           });
                                           if(value == true){
                                             if(((personalDataManager.deunSeunData % 1000000) / 100000).floor() == 2) {
@@ -529,7 +530,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                         value: isShowPersonalBirth,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowPersonalBirth = value!;
+                                            isShowPersonalBirth = value!;widget.reloadSetting();
                                           });
                                           SavePersonalData();
                                         },
@@ -561,7 +562,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                 height: personalDataContainerHeight,
                                 curve: Curves.fastOutSlowIn,
                               ),
-                              Container(  //화면꺼짐 방지
+                              /*Container(  //화면꺼짐 방지
                                 height: style.saveDataMemoLineHeight,
                                 width: (widgetWidth - (style.UIMarginLeft * 2)),
                                 margin: EdgeInsets.only(top: style.UIMarginTop),
@@ -622,7 +623,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                                 height: style.saveDataMemoLineHeight,
                                 //margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo1),
                                 child: Text("만세력 조회 중 화면이 꺼지지 않습니다", style: style.settingInfoText0),
-                              ),
+                              ),*/
                             ],
                           ),
                         ],

@@ -670,7 +670,7 @@ class CalendarWidget{
                                         birthMin: targetBirthMin,
                                         memo: '',
                                         saveDataNum: '',
-                                    widgetWidth: widgetWidth),
+                                    widgetWidth: widgetWidth, isEditSetting:  true),
                                     transitionDuration: Duration(milliseconds: 200),
                                     reverseTransitionDuration: Duration(milliseconds: 200),
                                     fullscreenDialog: false,

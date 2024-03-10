@@ -11,9 +11,10 @@ import 'deunSeunSettingWidget.dart' as deunSeunSettingWidget;
 import 'etcSettingWidget.dart' as etcSettingWidget;
 
 class SettingManagerWidget extends StatefulWidget {
-  const SettingManagerWidget({super.key, required this.setSettingPage});
+  const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting});
 
   final setSettingPage;
+  final reloadSetting;
 
   @override
   State<SettingManagerWidget> createState() => _SettingManagerState();
@@ -148,22 +149,22 @@ class _SettingManagerState extends State<SettingManagerWidget> {
           nextPage = SizedBox.shrink();
         }
         case 1: {
-          nextPage = userDataWidget.UserDataWidget(diaryFirstSet: null, widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = userDataWidget.UserDataWidget(diaryFirstSet: null, widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 2: {
-          nextPage = wordSettingWidget.WordSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = wordSettingWidget.WordSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 3: {
-          nextPage = calendarSettingWidget.CalendarSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = calendarSettingWidget.CalendarSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 4: {
-          nextPage = deunSeunSettingWidget.DeunSeunSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = deunSeunSettingWidget.DeunSeunSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 5: {
-          nextPage = sinsalSettingWidget.SinsalSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = sinsalSettingWidget.SinsalSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 6: {
-          nextPage = etcSettingWidget.EtcSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight);
+          nextPage = etcSettingWidget.EtcSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
       }
       if(num == 0){

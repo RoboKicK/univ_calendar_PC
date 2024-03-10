@@ -4,10 +4,11 @@ import '../style.dart' as style;
 import 'personalDataManager.dart' as personalDataManager;
 
 class WordSettingWidget extends StatefulWidget {
-  const WordSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight});
+  const WordSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<WordSettingWidget> createState() => _WordSettingState();
@@ -158,7 +159,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (IlganText? value) {
                         setState(() {
                           ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 0);
+                          personalDataManager.SaveWordData('ilGan', 0);widget.reloadSetting();
                         });
                       }),
                   Container(
@@ -186,7 +187,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (IlganText? value) {
                         setState(() {
                           ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 1);
+                          personalDataManager.SaveWordData('ilGan', 1);widget.reloadSetting();
                         });
                       }),
                   Container(
@@ -214,7 +215,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (IlganText? value) {
                         setState(() {
                           ilganText = value;
-                          personalDataManager.SaveWordData('ilGan', 2);
+                          personalDataManager.SaveWordData('ilGan', 2);widget.reloadSetting();
                         });
                       }),
                 ],
@@ -259,7 +260,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (YugchinText? value) {
                         setState(() {
                           yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 0);
+                          personalDataManager.SaveWordData('yugChin', 0);widget.reloadSetting();
                         });
                       }),
                   Container(
@@ -287,7 +288,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (YugchinText? value) {
                         setState(() {
                           yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 1);
+                          personalDataManager.SaveWordData('yugChin', 1);widget.reloadSetting();
                         });
                       }),
                   Container(
@@ -315,7 +316,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (YugchinText? value) {
                         setState(() {
                           yugchinText = value;
-                          personalDataManager.SaveWordData('yugChin', 2);
+                          personalDataManager.SaveWordData('yugChin', 2);widget.reloadSetting();
                         });
                       }),
                 ],
@@ -359,7 +360,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (WonjinText? value) {
                         setState(() {
                           wonjinText = value;
-                          personalDataManager.SaveWordData('wonJin', 0);
+                          personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
                         });
                       }),
                   Container(
@@ -387,7 +388,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                       onChanged: (WonjinText? value) {
                         setState(() {
                           wonjinText = value;
-                          personalDataManager.SaveWordData('wonJin', 1);
+                          personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
                         });
                       }),
                 ],
@@ -451,7 +452,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                   ),
                   Text("천간의 극을 충으로 표시합니다", style: style.settingText0),
                   ElevatedButton( //천간 합충극 스위치 버튼
-                    onPressed: (){SetGeuc();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
+                    onPressed: (){SetGeuc();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
                     style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                 ],
               ),
@@ -514,7 +515,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                   ),
                   Text("지지합 단순화", style: style.settingText0),
                   ElevatedButton( //천간 합충극 스위치 버튼
-                    onPressed: (){SetHab();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
+                    onPressed: (){SetHab();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
                     style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                 ],
               ),

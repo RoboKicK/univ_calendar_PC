@@ -694,7 +694,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                               },
                               pageBuilder: (c, a1, a2) => mainCalendarInquireResult.MainCalendarInquireResult(
                                  name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-                                 birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: '', saveDataNum: '', widgetWidth: widgetWidth),
+                                 birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: '', saveDataNum: '', widgetWidth: widgetWidth, isEditSetting: true),
                               transitionDuration: Duration(milliseconds: 200),
                               reverseTransitionDuration: Duration(milliseconds: 200),
                               fullscreenDialog: false,

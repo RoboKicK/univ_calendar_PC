@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
         toolbarHeight: 60,
         centerTitle: true,
         title: Transform(
-          transform: Matrix4.translationValues(0.0, 4.0, 0.0),
+          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
           child: Text(appBarTitle[_nowMainTap]),
         ),
         actions: [
@@ -69,8 +69,8 @@ class _MyAppState extends State<MyApp> {
               onPressed: (){
                 ShowSettingPage();
               },
-              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0)),
-              child: Icon(Icons.settings, size: 20),
+              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+              child: Icon(Icons.settings, size: 20, color:Colors.white),
             ),
           ),
 

@@ -6,10 +6,11 @@ import '../style.dart' as style;
 import 'personalDataManager.dart' as personalDataManager;
 
 class DeunSeunSettingWidget extends StatefulWidget {
-  const DeunSeunSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight});
+  const DeunSeunSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<DeunSeunSettingWidget> createState() => _DeunSeunSettingState();
@@ -352,7 +353,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(true);
+                                    SetAllShow(true);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -375,7 +376,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(false);
+                                    SetAllShow(false);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -433,7 +434,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                             ),
                             Text("간지 추가", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetGanji();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetGanji();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -497,7 +498,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                             ),
                             Text(personalDataManager.GetYugchinText(), style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetYugchin();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetYugchin();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -554,7 +555,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                             ),
                             Text("십이운성", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetSibiunseong();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetSibiunseong();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -611,7 +612,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                             ),
                             Text("십이신살", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetSinsal();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetSinsal();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -668,7 +669,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                             ),
                             Text("공망", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetGongmang(); SaveGongmangData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetGongmang(); SaveGongmangData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -700,7 +701,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                         value: isShowYearGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowYearGongmang = value!;
+                                            isShowYearGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -711,7 +712,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                         value: isShowDayGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowDayGongmang = value!;
+                                            isShowDayGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -722,7 +723,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                         value: isShowRocGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowRocGongmang = value!;
+                                            isShowRocGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -806,7 +807,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                     ),
                                     Text("세운에 나이 표시", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetOld();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetOld();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -863,7 +864,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                     ),
                                     Text("월운", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetWolun();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetWolun();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),

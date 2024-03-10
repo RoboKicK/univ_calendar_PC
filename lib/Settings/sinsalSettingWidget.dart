@@ -6,10 +6,11 @@ import '../style.dart' as style;
 import 'personalDataManager.dart' as personalDataManager;
 
 class SinsalSettingWidget extends StatefulWidget {
-  const SinsalSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight});
+  const SinsalSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<SinsalSettingWidget> createState() => _SinsalSettingState();
@@ -273,7 +274,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(true);
+                                    SetAllShow(true);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -296,7 +297,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(false);
+                                    SetAllShow(false);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -354,7 +355,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                             ),
                             Text("공망", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetGongmang(); SaveGongmangData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetGongmang(); SaveGongmangData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -386,7 +387,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                         value: isShowYearGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowYearGongmang = value!;
+                                            isShowYearGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -397,7 +398,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                         value: isShowDayGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowDayGongmang = value!;
+                                            isShowDayGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -408,7 +409,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                         value: isShowRocGongmang,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowRocGongmang = value!;
+                                            isShowRocGongmang = value!;widget.reloadSetting();
                                           });
                                           SaveGongmangData();
                                         },
@@ -492,7 +493,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                     ),
                                     Text("십이신살", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetSibisinsal();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetSibisinsal();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -549,7 +550,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                     ),
                                     Text("기타 신살", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetEtcSinsal();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetEtcSinsal();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -587,7 +588,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowCheonuel,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowCheonuel = value!;
+                                                          isShowCheonuel = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(10, isShowCheonuel);
                                                       },
@@ -601,7 +602,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowMunchang,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowMunchang = value!;
+                                                          isShowMunchang = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(100, isShowMunchang);
                                                       },
@@ -615,7 +616,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowBaecho,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowBaecho = value!;
+                                                          isShowBaecho = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(1000, isShowBaecho);
                                                       },
@@ -652,7 +653,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowGuegang,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowGuegang = value!;
+                                                          isShowGuegang = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(10000, isShowGuegang);
                                                       },
@@ -666,7 +667,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowHyeonchim,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowHyeonchim = value!;
+                                                          isShowHyeonchim = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(100000, isShowHyeonchim);
                                                       },
@@ -680,7 +681,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                       value: isShowYangin,
                                                       onChanged: (value) {
                                                         setState(() {
-                                                          isShowYangin = value!;
+                                                          isShowYangin = value!;widget.reloadSetting();
                                                         });
                                                         SaveEtcSinsal(1000000, isShowYangin);
                                                       },

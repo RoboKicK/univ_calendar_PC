@@ -18,8 +18,9 @@ class BodyWidgetManager extends StatefulWidget {
 class _BodyWidgetManagerState extends State<BodyWidgetManager> {
 
   Widget settingWidget = SizedBox.shrink();
+  bool isEditSetting = false;
 
-
+  //설정 위젯 보이기 안보이기
   SetSettingWidget(bool isShow){
     if(isShow == true){
       settingWidget = Container(
@@ -27,11 +28,23 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
         height: MediaQuery.of(context).size.height - 6,
         alignment: Alignment.center,
         color: Colors.grey.withOpacity(0.1),
-        child: settingManagerWidget.SettingManagerWidget(setSettingPage: widget.setSettingPage),
+        child: settingManagerWidget.SettingManagerWidget(setSettingPage: widget.setSettingPage, reloadSetting: ReloadSetting),
       );
     } else {
       settingWidget = SizedBox.shrink();
     }
+  }
+
+  //설정 바뀜 감시자
+  ReloadSetting(){
+    setState(() {
+      isEditSetting = !isEditSetting;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -41,7 +54,7 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
 
     return Stack(
         children: [
-          calendarMain.CalendarMain(),
+          calendarMain.CalendarMain(isEditSetting: isEditSetting),
           Container(
             //color:Colors.yellow,
             width: MediaQuery.of(context).size.width,
@@ -49,7 +62,6 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
             alignment: Alignment.center,
             child: settingWidget,
           ),
-
         ]
     ) ;
 

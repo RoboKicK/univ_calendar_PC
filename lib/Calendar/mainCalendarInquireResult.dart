@@ -19,7 +19,7 @@ import '../Settings/personalDataManager.dart' as personalDataManager;  //개인�
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
-    required this.memo, required this.saveDataNum, required this.widgetWidth});
+    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting});
 
   final String name;
   final bool gender;
@@ -28,6 +28,7 @@ class MainCalendarInquireResult extends StatefulWidget {
   final String memo;
   final String saveDataNum;
   final double widgetWidth;
+  final bool isEditSetting;
 
   @override
   State<MainCalendarInquireResult> createState() => _MainCalendarInquireResultState();
@@ -65,6 +66,10 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
   bool isOneWidget = false;
   double widgetWidth = 0;
+
+  bool isEditSetting = false;
+
+  int calendarData = 0, sinsalData = 0, deunSeunData = 0, etcData = 0;
 
   SetPersonPaljaData(int personNum, bool isDeun, List<int> listGanji){
     setState(() {
@@ -224,7 +229,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
   Widget GetHabChungHyeongPaWidget(bool isCheongan, List<int> listPalja){
     if(isCheongan == true){
-      if((personalDataManager.calendarData % 10 != 9 && isShowDrawerHabChung == 1) || isShowDrawerHabChung == 2) {
+      if((calendarData % 10 != 9 && isShowDrawerHabChung == 1) || isShowDrawerHabChung == 2) {
         int cheonganHabChungContainerColorNum;
         if(isShowDrawerYugchin == 1){
           cheonganHabChungContainerColorNum = 1;  //어두운
@@ -237,7 +242,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
       }
     }
     else{
-      if((((personalDataManager.calendarData % 10000000000) / 10).floor() != 111119111  && isShowDrawerHabChung == 1) || isShowDrawerHabChung == 2) {
+      if((((calendarData % 10000000000) / 10).floor() != 111119111  && isShowDrawerHabChung == 1) || isShowDrawerHabChung == 2) {
         containerColorNum = (containerColorNum + 1) % 2;
         return habChungHyeongPa.HabChungHyeongPa().GetHabChungHyeongPaJiji(context, listContainerColor[containerColorNum], listPalja, isShowDrawerHabChung == 2? true:false, lastWidgetNum == 4?true:false, widgetWidth);
       }
@@ -271,7 +276,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   }
 
   Widget GetJijangganWidget(List<int> listPalja){
-    if((((personalDataManager.calendarData / 10000000000).floor() % 10) != 9 && isShowDrawerJijanggan == 1) ||  isShowDrawerJijanggan == 2){
+    if((((calendarData / 10000000000).floor() % 10) != 9 && isShowDrawerJijanggan == 1) ||  isShowDrawerJijanggan == 2){
       containerColorNum = (containerColorNum + 1) % 2;
       return jijanggan.Jijanggan().GetJijanggan(context, listContainerColor[containerColorNum], listPalja, isShowDrawerJijanggan == 2? true:false, lastWidgetNum == 2?true:false, widgetWidth);
     } else {
@@ -280,7 +285,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   }
 
   Widget GetGongmangWidget(List<int> listPalja, int personNum){
-    if((personalDataManager.sinsalData % 10 != 1 && isShowDrawerGongmang == 1) || isShowDrawerGongmang == 2){
+    if((sinsalData % 10 != 1 && isShowDrawerGongmang == 1) || isShowDrawerGongmang == 2){
       containerColorNum = (containerColorNum + 1) % 2;
       return gongmang.Gongmang().GetGongmang(context, listContainerColor[containerColorNum], listPalja, yearGongmangNum, dayGongmangNum, listRocGongmangNum, isShowDrawerGongmang == 2? true:false,lastWidgetNum == 5?true:false, widgetWidth);
     } else {
@@ -289,7 +294,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   }
 
   Widget Get12SinsalWidget(List<int> listPalja, bool person){
-    if(((((personalDataManager.sinsalData % 100) / 10).floor() == 2 || personalDataManager.etcSinsalData != personalDataManager.etcSinsalDataAllOff) && isShowDrawerSinsal == 1) || isShowDrawerSinsal == 2){
+    if(((((sinsalData % 100) / 10).floor() == 2 || personalDataManager.etcSinsalData != personalDataManager.etcSinsalDataAllOff) && isShowDrawerSinsal == 1) || isShowDrawerSinsal == 2){
       containerColorNum = (containerColorNum + 1) % 2;
       if (person == true) { //명식 1
         return sibiSinsal.SibiSinsal().Get12Sinsal(context, listContainerColor[containerColorNum], listPalja, listPalja[1], true, isShowDrawerSinsal, lastWidgetNum == 6?true:false, widgetWidth);
@@ -621,6 +626,78 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     });
   }
 
+  ReloadOptions(){
+    setState(() {
+      calendarData = personalDataManager.calendarData;
+      sinsalData = personalDataManager.sinsalData;
+      deunSeunData = personalDataManager.deunSeunData;
+      etcData = personalDataManager.etcData;
+
+      int optionDataNum = personalDataManager.calendarData % 10000000000;
+      if(optionDataNum != 1111191119){
+        isShowDrawerHabChung = 1; } else {isShowDrawerHabChung = 0;}
+
+      optionDataNum = ((personalDataManager.calendarData % 10000000000000) / 1000000000000).floor();
+      if(optionDataNum == 2){
+        isShowDrawerYugchin = 1; } else {isShowDrawerYugchin = 0;}
+
+      optionDataNum = ((personalDataManager.calendarData % 100000000000) / 10000000000).floor();
+      if(optionDataNum != 9){
+        isShowDrawerJijanggan = 1; } else {isShowDrawerJijanggan = 0;}
+
+      optionDataNum = ((personalDataManager.calendarData % 1000000000000) / 100000000000).floor();
+      if(optionDataNum == 2){
+        isShowDrawerSibiunseong = 1; } else {isShowDrawerSibiunseong = 0;}
+
+      optionDataNum = personalDataManager.sinsalData % 10;
+      if(optionDataNum != 9){
+        isShowDrawerGongmang = 1; } else {isShowDrawerGongmang = 0;}
+
+      optionDataNum = ((personalDataManager.sinsalData % 100) / 10).floor();
+      if(optionDataNum == 2 || personalDataManager.etcSinsalData != personalDataManager.etcSinsalDataAllOff){
+        isShowDrawerSinsal = 1; } else {isShowDrawerSinsal = 0;}
+
+      FindLastWidgetNum();
+
+      //대운세운
+      if(((personalDataManager.deunSeunData % 100) / 10).floor() == 2){
+        isShowDrawerDeunSeunYugchin = 1;
+      } else {isShowDrawerDeunSeunYugchin = 0;}
+      if(((personalDataManager.deunSeunData % 1000) / 100).floor() == 2){
+        isShowDrawerDeunSeunSibiunseong = 1;
+      } else {isShowDrawerDeunSeunSibiunseong = 0;}
+      if(((personalDataManager.deunSeunData % 10000) / 1000).floor() == 2){
+        isShowDrawerDeunSeunSibisinsal = 1;
+      } else {isShowDrawerDeunSeunSibisinsal = 0;}
+      if(((personalDataManager.deunSeunData % 100000) / 10000).floor() != 9){
+        isShowDrawerDeunSeunGongmang = 1;
+      } else {isShowDrawerDeunSeunGongmang = 0;}
+      if(((personalDataManager.deunSeunData % 1000000) / 100000).floor() == 2){ //세운에 나이 보기 활성화 되어있으면
+        isShowDrawerDeunSeunOld = 1;
+      } else {isShowDrawerDeunSeunOld = 0;}
+      if(((personalDataManager.etcData % 10000) / 1000).floor() != 1) { //인적사항 숨김에 나이 표시되어있으면
+        int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+        if (isShowPersonalDataNum == 2 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7) {
+          isShowDrawerDeunSeunOld = 0;
+        }
+      }
+
+      FindLastDeunSeunWidgetNum();
+
+      if(personalDataManager.etcData % 10 == 2){
+        isShowDrawerManOld = 1;
+      } else {isShowDrawerManOld = 0;}
+      if(((personalDataManager.etcData % 100) / 10).floor() == 2){
+        isShowDrawerUemyang = 1;
+      } else {
+        isShowDrawerUemyang = 0;
+      }
+      if(((personalDataManager.etcData % 1000) / 100).floor() == 2){
+        isShowDrawerKoreanGanji = 1;
+      } else {isShowDrawerKoreanGanji = 0;}
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -647,6 +724,11 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
     saveDataManager.SaveRecentPersonData(widget.name, widget.gender == true? '남' : '여', widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin, widget.memo);
     gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
+
+    calendarData = personalDataManager.calendarData;
+    sinsalData = personalDataManager.sinsalData;
+    deunSeunData = personalDataManager.deunSeunData;
+    etcData = personalDataManager.etcData;
 
     int optionDataNum = personalDataManager.calendarData % 10000000000;
     if(optionDataNum != 1111191119){
@@ -712,6 +794,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     }
 
     memoFocusNode = FocusNode();
+    isEditSetting = widget.isEditSetting;
   }
 
   @override
@@ -727,6 +810,11 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     } else {
       isOneWidget = false;
       widgetWidth = widget.widgetWidth;
+    }
+
+    if(isEditSetting != widget.isEditSetting){
+      ReloadOptions();
+      isEditSetting = widget.isEditSetting;
     }
 
     return Stack(

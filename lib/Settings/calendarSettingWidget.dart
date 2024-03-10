@@ -6,10 +6,11 @@ import '../style.dart' as style;
 import 'personalDataManager.dart' as personalDataManager;
 
 class CalendarSettingWidget extends StatefulWidget {
-  const CalendarSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight});
+  const CalendarSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<CalendarSettingWidget> createState() => _CalendarSettingState();
@@ -584,7 +585,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(true);
+                                    SetAllShow(true);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -607,7 +608,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    SetAllShow(false);
+                                    SetAllShow(false);widget.reloadSetting();
                                   });
                                 }),
                           ),
@@ -665,7 +666,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                             ),
                             Text("천간 합, 충, 극", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetCheonganHabChung(); SaveCheonganHabChungData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetCheonganHabChung(); SaveCheonganHabChungData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
@@ -697,7 +698,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                         value: isShowCheonganHab,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowCheonganHab = value!;
+                                            isShowCheonganHab = value!;widget.reloadSetting();
                                           });
                                           SaveCheonganHabChungData();
                                         },
@@ -708,7 +709,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                         value: isShowCheonganChung,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowCheonganChung = value!;
+                                            isShowCheonganChung = value!;widget.reloadSetting();
                                           });
                                           SaveCheonganHabChungData();
                                         },
@@ -719,7 +720,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                         value: isShowCheonganGeuc,
                                         onChanged: (value) {
                                           setState(() {
-                                            isShowCheonganGeuc = value!;
+                                            isShowCheonganGeuc = value!;widget.reloadSetting();
                                           });
                                           SaveCheonganHabChungData();
                                         },
@@ -803,7 +804,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     ),
                                     Text("방합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetBanguiHab();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetBanguiHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -867,7 +868,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     ),
                                     Text("삼합 또는 계절합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetSamHab();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetSamHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -931,7 +932,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     ),
                                     Text("육합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetYucHab();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetYucHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -988,7 +989,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     ),
                                     Text("형", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
-                                      onPressed: (){SetHyeong();SaveHyeongData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                      onPressed: (){SetHyeong();SaveHyeongData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                   ],
                                 ),
@@ -1020,7 +1021,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                 value: isShowJamyoHyeong,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    isShowJamyoHyeong = value!;
+                                                    isShowJamyoHyeong = value!;widget.reloadSetting();
                                                   });
                                                   SaveHyeongData();
                                                 },
@@ -1031,7 +1032,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                 value: isShowInsasin,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    isShowInsasin = value!;
+                                                    isShowInsasin = value!;widget.reloadSetting();
                                                   });
                                                   SaveHyeongData();
                                                 },
@@ -1042,7 +1043,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                 value: isShowChucsulmi,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    isShowChucsulmi = value!;
+                                                    isShowChucsulmi = value!;widget.reloadSetting();
                                                   });
                                                   SaveHyeongData();
                                                 },
@@ -1127,7 +1128,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("충", style: style.settingText0),
                                             ElevatedButton( //천간 합충극 스위치 버튼
-                                              onPressed: (){SetChung();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetChung();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1184,7 +1185,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("파", style: style.settingText0),
                                             ElevatedButton( //천간 합충극 스위치 버튼
-                                              onPressed: (){SetPa();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetPa();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1241,7 +1242,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("원진", style: style.settingText0),
                                             ElevatedButton(
-                                              onPressed: (){SetWonjin();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetWonjin();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1298,7 +1299,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("귀문", style: style.settingText0),
                                             ElevatedButton(
-                                              onPressed: (){SetGuimun();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetGuimun();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1355,7 +1356,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("격각", style: style.settingText0),
                                             ElevatedButton(
-                                              onPressed: (){SetGyeocgac();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetGyeocgac();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1412,7 +1413,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             ),
                                             Text("지장간", style: style.settingText0),
                                             ElevatedButton(
-                                              onPressed: (){SetJijanggan();SaveJijangganData();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                              onPressed: (){SetJijanggan();SaveJijangganData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                           ],
                                         ),
@@ -1444,7 +1445,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                         value: isShowJijangganYugchin,
                                                         onChanged: (value) {
                                                           setState(() {
-                                                            isShowJijangganYugchin = value!;
+                                                            isShowJijangganYugchin = value!;widget.reloadSetting();
                                                           });
                                                           SaveJijangganData();
                                                         },
@@ -1455,7 +1456,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                         value: isShowJijangganDay,
                                                         onChanged: (value) {
                                                           setState(() {
-                                                            isShowJijangganDay = value!;
+                                                            isShowJijangganDay = value!;widget.reloadSetting();
                                                           });
                                                           SaveJijangganData();
                                                         },
@@ -1540,7 +1541,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                     ),
                                                     Text("십이운성", style: style.settingText0),
                                                     ElevatedButton(
-                                                      onPressed: (){SetSibiunseong();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                                      onPressed: (){SetSibiunseong();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                                   ],
                                                 ),
@@ -1597,7 +1598,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                     ),
                                                     Text(personalDataManager.GetYugchinText(), style: style.settingText0),
                                                     ElevatedButton(
-                                                      onPressed: (){SetYugchin();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                                                      onPressed: (){SetYugchin();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                                                       style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                                                   ],
                                                 ),

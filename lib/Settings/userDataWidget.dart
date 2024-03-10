@@ -7,11 +7,12 @@ import '../findGanji.dart' as findGanji;
 import 'dart:io';
 
 class UserDataWidget extends StatefulWidget {
-  const UserDataWidget({super.key, required this.diaryFirstSet, required this.widgetWidth, required this.widgetHeight});
+  const UserDataWidget({super.key, required this.diaryFirstSet, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
 
   final diaryFirstSet;
   final double widgetWidth;
   final double widgetHeight;
+  final reloadSetting;
 
   @override
   State<UserDataWidget> createState() => _UserDataState();
