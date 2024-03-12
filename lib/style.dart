@@ -68,7 +68,7 @@ TextStyle settingButtonTextStyle0 = TextStyle(fontSize: 18, fontWeight: FontWeig
 double marginContainerWidth = 30;
 double UIButtonWidth = 340;
 
-double headLineHeight = 44; //헤드라인 총 높이
+double headLineHeight = 40; //헤드라인 총 높이
 
 double textFiledRadius = 14;//6;  //모든 창의 둥근 정도값
 double deunSeunGanjiRadius = 8;//대운간지 둥근값

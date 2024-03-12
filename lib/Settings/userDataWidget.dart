@@ -370,7 +370,7 @@ class _UserDataState extends State<UserDataWidget> {
         width: widget.widgetWidth,//MediaQuery.of(context).size.width,
       height: widget.widgetHeight,
       decoration: BoxDecoration(
-        color: style.colorBackGround,
+        //color: style.colorBackGround,
         borderRadius: BorderRadius.circular(style.textFiledRadius),
       ),
         child: Column(

@@ -144,6 +144,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   Widget nextPage = SizedBox.shrink();
   Widget backSpaceButton = SizedBox.shrink();
 
+  Widget mainPage = SizedBox.shrink();
+  Widget nowPage = SizedBox.shrink();
+
   SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타
     setState(() {
       switch(num){
@@ -171,8 +174,10 @@ class _SettingManagerState extends State<SettingManagerWidget> {
       }
       if(num == 0){
         SetBackSpaceButtonWidget(false);
+        nowPage = mainPage;
       } else {
         SetBackSpaceButtonWidget(true);
+        nowPage = nextPage;
       }
     });
   }
@@ -198,6 +203,250 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   }
 
   @override
+  initState(){
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    mainPage = Container(width: widgetWidth,
+      height: widgetHeight,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(style.textFiledRadius),
+      ),
+      child: ScrollConfiguration(
+        behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              Container(  //사용자 카테고리 텍스트
+                height: settingTextContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop),
+                child: Text("사용자", style: style.settingInfoText0),
+              ),
+              Container(  //사용자 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo,left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(1);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.transparent),
+                          foregroundColor: style.colorBackGround,
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Container(
+                          height: settingButtonContainerHeight,//style.saveDataNameLineHeight,
+                          //color:Colors.yellow,
+                          //padding: EdgeInsets.only(top: 6),
+                          child: GetUserDataText()
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                //만세력 카테고리 텍스트
+                height: settingTextContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop,left: style.UIMarginLeft),
+                child: Text("만세력",
+                    style: style.settingInfoText0),
+              ),
+              Container(
+                //단어 설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo,left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(2);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.transparent),
+                          foregroundColor: style.colorBackGround,
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('단어 설정',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                //만세력 보기 설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(3);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('만세력',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              //Container(
+              //  //궁합 보기 설정 버튼
+              //  height: settingButtonContainerHeight,
+              //  width: (MediaQuery.of(context).size.width -
+              //      (style.UIMarginLeft * 2)),
+              //  margin: EdgeInsets.only(top: style.SettingMarginTop),
+              //  child: Stack(
+              //    children: [
+              //      OutlinedButton(
+              //        onPressed: () {},
+              //        style: OutlinedButton.styleFrom(
+              //            foregroundColor: style.colorBackGround,
+              //            side: BorderSide(color: Colors.transparent),
+              //            padding: EdgeInsets.only(left: 0),
+              //            fixedSize: Size.fromWidth(
+              //                MediaQuery.of(context).size.width -
+              //                    (style.UIMarginLeft * 2)),
+              //            alignment: Alignment.centerLeft),
+              //        child: Text('궁합',
+              //            style: style.settingText0),
+              //      ),
+              //    ],
+              //  ),
+              //),
+              Container(  //대운세운 보기 설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(4);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('대운과 세운',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              Container(  //신살 보기 설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(5);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('신살',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              Container(  //기타 설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(6);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('기타',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                //데이터 전송 카테고리 텍스트
+                height: settingTextContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
+                child: Text("데이터 전송",
+                    style: style.settingInfoText0),
+              ),
+              Container(
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {},
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('저장 목록 전송',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    nowPage = mainPage;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if(MediaQuery.of(context).size.height - 60 <= 560){
       widgetHeight = MediaQuery.of(context).size.height - 120;
@@ -207,246 +456,13 @@ class _SettingManagerState extends State<SettingManagerWidget> {
       width: widgetWidth,
       height: widgetHeight,
       decoration: BoxDecoration(
-        color: style.colorBackGround,
+        color: style.colorBackGround.withOpacity(0.98),
         borderRadius: BorderRadius.circular(style.textFiledRadius),
       ),
       child: Stack(
         children:
         [
-          Container(width: widgetWidth,
-            height: widgetHeight,
-            decoration: BoxDecoration(
-              color: style.colorBackGround,
-              borderRadius: BorderRadius.circular(style.textFiledRadius),
-            ),
-            child: ScrollConfiguration(
-              behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                children: [
-                  Container(  //사용자 카테고리 텍스트
-                    height: settingTextContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop),
-                    child: Text("사용자", style: style.settingInfoText0),
-                  ),
-                  Container(  //사용자 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo,left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(1);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.transparent),
-                              foregroundColor: style.colorBackGround,
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Container(
-                              height: settingButtonContainerHeight,//style.saveDataNameLineHeight,
-                              //color:Colors.yellow,
-                              //padding: EdgeInsets.only(top: 6),
-                              child: GetUserDataText()
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //만세력 카테고리 텍스트
-                    height: settingTextContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop,left: style.UIMarginLeft),
-                    child: Text("만세력",
-                        style: style.settingInfoText0),
-                  ),
-                  Container(
-                    //단어 설정 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo,left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(2);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.transparent),
-                              foregroundColor: style.colorBackGround,
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('단어 설정',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //만세력 보기 설정 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(3);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              foregroundColor: style.colorBackGround,
-                              side: BorderSide(color: Colors.transparent),
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('만세력',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //Container(
-                  //  //궁합 보기 설정 버튼
-                  //  height: settingButtonContainerHeight,
-                  //  width: (MediaQuery.of(context).size.width -
-                  //      (style.UIMarginLeft * 2)),
-                  //  margin: EdgeInsets.only(top: style.SettingMarginTop),
-                  //  child: Stack(
-                  //    children: [
-                  //      OutlinedButton(
-                  //        onPressed: () {},
-                  //        style: OutlinedButton.styleFrom(
-                  //            foregroundColor: style.colorBackGround,
-                  //            side: BorderSide(color: Colors.transparent),
-                  //            padding: EdgeInsets.only(left: 0),
-                  //            fixedSize: Size.fromWidth(
-                  //                MediaQuery.of(context).size.width -
-                  //                    (style.UIMarginLeft * 2)),
-                  //            alignment: Alignment.centerLeft),
-                  //        child: Text('궁합',
-                  //            style: style.settingText0),
-                  //      ),
-                  //    ],
-                  //  ),
-                  //),
-                  Container(  //대운세운 보기 설정 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(4);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              foregroundColor: style.colorBackGround,
-                              side: BorderSide(color: Colors.transparent),
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('대운과 세운',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(  //신살 보기 설정 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(5);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              foregroundColor: style.colorBackGround,
-                              side: BorderSide(color: Colors.transparent),
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('신살',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(  //기타 설정 버튼
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {
-                            SetNextPageWidget(6);
-                          },
-                          style: OutlinedButton.styleFrom(
-                              foregroundColor: style.colorBackGround,
-                              side: BorderSide(color: Colors.transparent),
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('기타',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    //데이터 전송 카테고리 텍스트
-                    height: settingTextContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Text("데이터 전송",
-                        style: style.settingInfoText0),
-                  ),
-                  Container(
-                    height: settingButtonContainerHeight,
-                    width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
-                    child: Stack(
-                      children: [
-                        OutlinedButton(
-                          onPressed: () {},
-                          style: OutlinedButton.styleFrom(
-                              foregroundColor: style.colorBackGround,
-                              side: BorderSide(color: Colors.transparent),
-                              padding: EdgeInsets.only(left: 0),
-                              fixedSize: Size.fromWidth(
-                                  MediaQuery.of(context).size.width -
-                                      (style.UIMarginLeft * 2)),
-                              alignment: Alignment.centerLeft),
-                          child: Text('저장 목록 전송',
-                              style: style.settingText0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-                        ),
-              ),
-            ),
-          ),
-          nextPage,
+          nowPage,
           Container(
             width: widgetWidth,
             height: widgetHeight,

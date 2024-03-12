@@ -116,7 +116,7 @@ class _WordSettingState extends State<WordSettingWidget> {
       width: widgetWidth,//MediaQuery.of(context).size.width,
       height: widgetHeight,
       decoration: BoxDecoration(
-        color: style.colorBackGround,
+        //color: style.colorBackGround,
         borderRadius: BorderRadius.circular(style.textFiledRadius),
       ),
       child: Column(

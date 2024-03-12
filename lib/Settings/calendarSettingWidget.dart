@@ -538,7 +538,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
         width: widgetWidth,//widgetWidth,
         height: widgetHeight,
         decoration: BoxDecoration(
-          color: style.colorBackGround,
+          //color: style.colorBackGround,
           borderRadius: BorderRadius.circular(style.textFiledRadius),
         ),
         child: Column(

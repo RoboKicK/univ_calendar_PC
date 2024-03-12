@@ -140,9 +140,6 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   Widget GetBirthTextWidget(){
     if(widget.isOneWidget == true){
       textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
-    } else {
-      textStyle = TextStyle(color : Colors.white, fontSize: 16, fontWeight: FontWeight.w500);
-    }
       return Container(
         width: widget.widgetWidth,
         height: containerHeight,
@@ -163,10 +160,42 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                   GetBirthText(),
                 ],
               ),
-              ],
+            ],
           ),
         ),
       );
+    } else {
+      textStyle = TextStyle(color : Colors.white, fontSize: 14, fontWeight: FontWeight.w500);
+      return Container(
+        width: widget.widgetWidth,
+        height: containerHeight,
+        child: Container(
+          width: widget.widgetWidth,
+          height: containerHeight,
+          margin: EdgeInsets.only(top: 6),
+          //color: Colors.blue,
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(GetName(), style: textStyle),
+                  GetGenderTextWidget(),
+                  Text('${GetOld()} ', style: textStyle),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GetManTextWidget(),
+                  GetBirthText(),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   }
   @override
   void initState() {

@@ -195,7 +195,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
         width: widgetWidth,//widgetWidth,
         height: widgetHeight,
         decoration: BoxDecoration(
-          color: style.colorBackGround,
+          //color: style.colorBackGround,
           borderRadius: BorderRadius.circular(style.textFiledRadius),
         ),
         child: Column(

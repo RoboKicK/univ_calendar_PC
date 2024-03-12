@@ -223,7 +223,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
         width: widgetWidth,//widgetWidth,
         height: widgetHeight,
         decoration: BoxDecoration(
-          color: style.colorBackGround,
+          //color: style.colorBackGround,
           borderRadius: BorderRadius.circular(style.textFiledRadius),
         ),
         child: Column(

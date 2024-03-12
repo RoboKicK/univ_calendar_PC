@@ -11,11 +11,10 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
   final filedirectory = await getApplicationDocumentsDirectory();
   fileDirPath = filedirectory.path;
   await LoadSavedPeople();
-  await LoadSavedMatch();
   await LoadRecentPeople();
   await LoadSavedDiary();
 }
-// 저장번호 - 단일명식 a001, 궁합명식 b001, 최근명식 r001, 일기 d001
+// 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001
 int saveDataLimitCount = 200; //단일,궁합 공용
 int recentDataLimitCount = 30;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
@@ -23,8 +22,8 @@ int diaryDataLimitCount = 1000; //일진일기
 //int savedPersonDataCount = 0;
 List<Map> mapPerson = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
 List<Map> mapPersonSortedMark = []; //즐겨찾기로 정렬된 리스트
-List<Map> mapMatch = [];  //String name0, bool gender0, int uemYang0, int birth---0, String name1, bool gender1, int uemYang1, int birth---1, String saveDate, String memo, bool mark
-List<Map> mapMatchSortedMark = []; //즐겨찾기로 정렬된 궁합 리스트
+List<Map> mapGroup = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
+List<Map> mapGroupSortedMark = []; //즐겨찾기로 정렬된 리스트
 
 List<Map> mapRecentPerson = [];
 List<Map> mapDiary = [];  //일진일기
@@ -38,42 +37,20 @@ List<Map> mapDiary = [];  //일진일기
       if(i < 10){
         try {
           mapPerson.add(
-              jsonDecode(await File('${fileDirPath}/a00${i}').readAsString()));
+              jsonDecode(await File('${fileDirPath}/p00${i}').readAsString()));
         } catch(e){break;}
       }
       else if(i < 100){
-        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/a0${i}').readAsString()));}
+        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/p0${i}').readAsString()));}
             catch(e){break;}
       }
       else{
-        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/a${i}').readAsString()));}
+        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/p${i}').readAsString()));}
             catch(e){break;}
       }
     }
     SortPersonFromMark();
   }
-  LoadSavedMatch() async {
-  if(mapMatch.length != 0)
-    return;
-
-  for(int i = 0; i <= saveDataLimitCount; i++){
-    if(i < 10){
-      try {
-        mapMatch.add(
-            jsonDecode(await File('${fileDirPath}/b00${i}').readAsString()));
-      } catch(e){break;}
-    }
-    else if(i < 100){
-      try{mapMatch.add(jsonDecode(await File('${fileDirPath}/b0${i}').readAsString()));}
-      catch(e){break;}
-    }
-    else{
-      try{mapMatch.add(jsonDecode(await File('${fileDirPath}/b${i}').readAsString()));}
-      catch(e){break;}
-    }
-  }
-  SortMatchFromMark();
-}
   LoadRecentPeople() async {
   if(mapRecentPerson.length != 0)
     return;
@@ -82,15 +59,15 @@ List<Map> mapDiary = [];  //일진일기
     if(i < 10){
       try {
         mapRecentPerson.add(
-            jsonDecode(await File('${fileDirPath}/r00${i}').readAsString()));
+            jsonDecode(await File('${fileDirPath}/l00${i}').readAsString()));
       } catch(e){break;}
     }
     else if(i < 100){
-      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/r0${i}').readAsString()));}
+      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/l0${i}').readAsString()));}
       catch(e){break;}
     }
     else{
-      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/r${i}').readAsString()));}
+      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/l${i}').readAsString()));}
       catch(e){break;}
     }
   }
@@ -103,44 +80,43 @@ List<Map> mapDiary = [];  //일진일기
     if(i < 10){
       try {
         mapDiary.add(
-            jsonDecode(await File('${fileDirPath}/d000${i}').readAsString()));
+            jsonDecode(await File('${fileDirPath}/j000${i}').readAsString()));
       } catch(e){break;}
     }
     else if(i < 100){
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d00${i}').readAsString()));}
+      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j00${i}').readAsString()));}
       catch(e){break;}
     }
     else if(i < 1000){
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d0${i}').readAsString()));}
+      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j0${i}').readAsString()));}
       catch(e){break;}
     }
     else{
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d${i}').readAsString()));}
+      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j${i}').readAsString()));}
       catch(e){break;}
     }
   }
 }
 
   //북마크 순으로 정렬
-  SortPersonFromMark() {
-    mapPersonSortedMark.clear();
+SortPersonFromMark() {
+  mapPersonSortedMark.clear();
 
-    for(int i = 0; i < mapPerson.length; i++){
-      mapPersonSortedMark.add(mapPerson[i]);
-    }
-
-    mapPersonSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
-  }
-  SortMatchFromMark() {
-  mapMatchSortedMark.clear();
-
-  for(int i = 0; i < mapMatch.length; i++){
-    mapMatchSortedMark.add(mapMatch[i]);
+  for(int i = 0; i < mapPerson.length; i++){
+    mapPersonSortedMark.add(mapPerson[i]);
   }
 
-  mapMatchSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
+  mapPersonSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
 }
+SortGroupFromMark() {
+  mapGroupSortedMark.clear();
 
+  for(int i = 0; i < mapGroup.length; i++){
+    mapGroupSortedMark.add(mapGroup[i]);
+  }
+
+  mapGroupSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
+}
   //저장할 때 내용을 저장할 빈 파일을 생성함
   Future<File> CreateSaveFile(String fileNum) async {
         return File('${fileDirPath}/${fileNum}');
@@ -156,13 +132,13 @@ List<Map> mapDiary = [];  //일진일기
       int count = mapPerson.length;
       String fileNum = '';
       if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'a00${count}';
+        fileNum = 'p00${count}';
       }
       else if(count < 100){
-        fileNum = 'a0${count}';
+        fileNum = 'p0${count}';
       }
       else{
-        fileNum = 'a${count}';
+        fileNum = 'p${count}';
       }
       final file = await CreateSaveFile(fileNum);
 
@@ -241,13 +217,13 @@ List<Map> mapDiary = [];  //일진일기
     if(index == mapPerson.length-1){  //map의 마지막 파일이면
       String fileNum = '';
       if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'a00${index}';
+        fileNum = 'p00${index}';
       }
       else if(index < 100){
-        fileNum = 'a0${index}';
+        fileNum = 'p0${index}';
       }
       else{
-        fileNum = 'a${index}';
+        fileNum = 'p${index}';
       }
       File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
       mapPerson.removeLast();
@@ -256,13 +232,13 @@ List<Map> mapDiary = [];  //일진일기
       for(int i = index; i < mapPerson.length-1; i++){
         String fileNum = '';
         if(i < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-          fileNum = 'a00${i}';
+          fileNum = 'p00${i}';
         }
         else if(i < 100){
-          fileNum = 'a0${i}';
+          fileNum = 'p0${i}';
         }
         else{
-          fileNum = 'a${i}';
+          fileNum = 'p${i}';
         }
         mapPerson[i]['name'] = mapPerson[i+1]['name'];
         mapPerson[i]['gender'] = mapPerson[i+1]['gender'];
@@ -284,13 +260,13 @@ List<Map> mapDiary = [];  //일진일기
       }
       String fileNum = '';
       if(mapPerson.length < 11){
-        fileNum = 'a00${mapPerson.length - 1}';
+        fileNum = 'p00${mapPerson.length - 1}';
       }
       else if(mapPerson.length < 101){
-        fileNum = 'a0${mapPerson.length - 1}';
+        fileNum = 'p0${mapPerson.length - 1}';
       }
       else{
-        fileNum = 'a${mapPerson.length - 1}';
+        fileNum = 'p${mapPerson.length - 1}';
       }
 
       File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
@@ -363,13 +339,13 @@ List<Map> mapDiary = [];  //일진일기
 
     String fileNum = '';
     if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-      fileNum = 'a00${index}';
+      fileNum = 'p00${index}';
     }
     else if(index < 100){
-      fileNum = 'a0${index}';
+      fileNum = 'p0${index}';
     }
     else{
-      fileNum = 'a${index}';
+      fileNum = 'p${index}';
     }
     try{
       //File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);  //원래 있던 파일을 삭제하고
@@ -385,7 +361,7 @@ List<Map> mapDiary = [];  //일진일기
   }
 
   //궁합을 최초 저장할 때 사용
-  Future<void> SaveMatchData(String name0, String genderString0, int uemYang0, int birthYear0, int birthMonth0, int birthDay0, int birthHour0, int birthMin0,
+  Future<void> SaveGroupData(String name0, String genderString0, int uemYang0, int birthYear0, int birthMonth0, int birthDay0, int birthHour0, int birthMin0,
       String name1, String genderString1, int uemYang1, int birthYear1, int birthMonth1, int birthDay1, int birthHour1, int birthMin1) async {
   bool gender0 = true, gender1 = true;
   if(genderString0 == '여'){
@@ -395,16 +371,16 @@ List<Map> mapDiary = [];  //일진일기
     gender1 = false;
   }
 
-  int count = mapMatch.length;
+  int count = mapGroup.length;
   String fileNum = '';
   if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-    fileNum = 'b00${count}';
+    fileNum = 'g00${count}';
   }
   else if(count < 100){
-    fileNum = 'b0${count}';
+    fileNum = 'g0${count}';
   }
   else{
-    fileNum = 'b${count}';
+    fileNum = 'g${count}';
   }
   final file = await CreateSaveFile(fileNum);
 
@@ -412,150 +388,150 @@ List<Map> mapDiary = [];  //일진일기
   await file.writeAsString(jsonEncode({'num':fileNum, 'name0': name0, 'gender0':gender0, 'uemYang0': uemYang0, 'birthYear0':birthYear0, 'birthMonth0':birthMonth0,
     'birthDay0':birthDay0, 'birthHour0':birthHour0, 'birthMin0':birthMin0, 'name1': name1, 'gender1':gender1, 'uemYang1': uemYang1, 'birthYear1':birthYear1, 'birthMonth1':birthMonth1,
     'birthDay1':birthDay1, 'birthHour1':birthHour1, 'birthMin1':birthMin1, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
-  mapMatch.add(jsonDecode(await file.readAsString()));
-  SortMatchFromMark();
+  mapGroup.add(jsonDecode(await file.readAsString()));
+  SortGroupFromMark();
 
   Fluttertoast.showToast(msg: '궁합이 저장되었습니다');
   }
 
   //궁합을 삭제할 때 사용
-  DeleteMatchData(String num) async {
+  DeleteGroupData(String num) async {
   int index = int.parse(num.substring(1,4));
 
-  if(index == mapMatch.length-1){  //map의 마지막 파일이면
+  if(index == mapGroup.length-1){  //map의 마지막 파일이면
     String fileNum = '';
     if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-      fileNum = 'b00${index}';
+      fileNum = 'g00${index}';
     }
     else if(index < 100){
-      fileNum = 'b0${index}';
+      fileNum = 'g0${index}';
     }
     else{
-      fileNum = 'b${index}';
+      fileNum = 'g${index}';
     }
     File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-    mapMatch.removeLast();
+    mapGroup.removeLast();
   }
   else{
-    for(int i = index; i < mapMatch.length-1; i++){
+    for(int i = index; i < mapGroup.length-1; i++){
       String fileNum = '';
       if(i < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'b00${i}';
+        fileNum = 'g00${i}';
       }
       else if(i < 100){
-        fileNum = 'b0${i}';
+        fileNum = 'g0${i}';
       }
       else{
-        fileNum = 'b${i}';
+        fileNum = 'g${i}';
       }
-      mapMatch[i]['name0'] = mapMatch[i+1]['name0'];
-      mapMatch[i]['gender0'] = mapMatch[i+1]['gender0'];
-      mapMatch[i]['uemYang0'] = mapMatch[i+1]['uemYang0'];
-      mapMatch[i]['birthYear0'] = mapMatch[i+1]['birthYear0'];
-      mapMatch[i]['birthMonth0'] = mapMatch[i+1]['birthMonth0'];
-      mapMatch[i]['birthDay0'] = mapMatch[i+1]['birthDay0'];
-      mapMatch[i]['birthHour0'] = mapMatch[i+1]['birthHour0'];
-      mapMatch[i]['birthMin0'] = mapMatch[i+1]['birthMin0'];
-      mapMatch[i]['name1'] = mapMatch[i+1]['name1'];
-      mapMatch[i]['gender1'] = mapMatch[i+1]['gender1'];
-      mapMatch[i]['uemYang1'] = mapMatch[i+1]['uemYang1'];
-      mapMatch[i]['birthYear1'] = mapMatch[i+1]['birthYear1'];
-      mapMatch[i]['birthMonth1'] = mapMatch[i+1]['birthMonth1'];
-      mapMatch[i]['birthDay1'] = mapMatch[i+1]['birthDay1'];
-      mapMatch[i]['birthHour1'] = mapMatch[i+1]['birthHour1'];
-      mapMatch[i]['birthMin1'] = mapMatch[i+1]['birthMin1'];
-      mapMatch[i]['saveDate'] = mapMatch[i+1]['saveDate'];
-      mapMatch[i]['memo'] = mapMatch[i+1]['memo'];
-      mapMatch[i]['mark'] = mapMatch[i+1]['mark'];
+      mapGroup[i]['name0'] = mapGroup[i+1]['name0'];
+      mapGroup[i]['gender0'] = mapGroup[i+1]['gender0'];
+      mapGroup[i]['uemYang0'] = mapGroup[i+1]['uemYang0'];
+      mapGroup[i]['birthYear0'] = mapGroup[i+1]['birthYear0'];
+      mapGroup[i]['birthMonth0'] = mapGroup[i+1]['birthMonth0'];
+      mapGroup[i]['birthDay0'] = mapGroup[i+1]['birthDay0'];
+      mapGroup[i]['birthHour0'] = mapGroup[i+1]['birthHour0'];
+      mapGroup[i]['birthMin0'] = mapGroup[i+1]['birthMin0'];
+      mapGroup[i]['name1'] = mapGroup[i+1]['name1'];
+      mapGroup[i]['gender1'] = mapGroup[i+1]['gender1'];
+      mapGroup[i]['uemYang1'] = mapGroup[i+1]['uemYang1'];
+      mapGroup[i]['birthYear1'] = mapGroup[i+1]['birthYear1'];
+      mapGroup[i]['birthMonth1'] = mapGroup[i+1]['birthMonth1'];
+      mapGroup[i]['birthDay1'] = mapGroup[i+1]['birthDay1'];
+      mapGroup[i]['birthHour1'] = mapGroup[i+1]['birthHour1'];
+      mapGroup[i]['birthMin1'] = mapGroup[i+1]['birthMin1'];
+      mapGroup[i]['saveDate'] = mapGroup[i+1]['saveDate'];
+      mapGroup[i]['memo'] = mapGroup[i+1]['memo'];
+      mapGroup[i]['mark'] = mapGroup[i+1]['mark'];
       try{
-        await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'name0': mapMatch[i+1]['name0'], 'gender0':mapMatch[i+1]['gender0'], 'uemYang0': mapMatch[i+1]['uemYang0'],
-          'birthYear0':mapMatch[i+1]['birthYear0'], 'birthMonth0':mapMatch[i+1]['birthMonth0'],'birthDay0':mapMatch[i+1]['birthDay0'], 'birthHour0':mapMatch[i+1]['birthHour0'],
-          'birthMin0':mapMatch[i+1]['birthMin0'],
-          'name1': mapMatch[i+1]['name1'], 'gender1':mapMatch[i+1]['gender1'], 'uemYang1': mapMatch[i+1]['uemYang1'],
-          'birthYear1':mapMatch[i+1]['birthYear1'], 'birthMonth1':mapMatch[i+1]['birthMonth1'],'birthDay1':mapMatch[i+1]['birthDay1'], 'birthHour1':mapMatch[i+1]['birthHour1'],
-          'birthMin1':mapMatch[i+1]['birthMin1'],
-          'saveDate':mapMatch[i+1]['saveDate'], 'memo':mapMatch[i+1]['memo'], 'mark':mapMatch[i+1]['mark']}));
+        await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'name0': mapGroup[i+1]['name0'], 'gender0':mapGroup[i+1]['gender0'], 'uemYang0': mapGroup[i+1]['uemYang0'],
+          'birthYear0':mapGroup[i+1]['birthYear0'], 'birthMonth0':mapGroup[i+1]['birthMonth0'],'birthDay0':mapGroup[i+1]['birthDay0'], 'birthHour0':mapGroup[i+1]['birthHour0'],
+          'birthMin0':mapGroup[i+1]['birthMin0'],
+          'name1': mapGroup[i+1]['name1'], 'gender1':mapGroup[i+1]['gender1'], 'uemYang1': mapGroup[i+1]['uemYang1'],
+          'birthYear1':mapGroup[i+1]['birthYear1'], 'birthMonth1':mapGroup[i+1]['birthMonth1'],'birthDay1':mapGroup[i+1]['birthDay1'], 'birthHour1':mapGroup[i+1]['birthHour1'],
+          'birthMin1':mapGroup[i+1]['birthMin1'],
+          'saveDate':mapGroup[i+1]['saveDate'], 'memo':mapGroup[i+1]['memo'], 'mark':mapGroup[i+1]['mark']}));
       }catch(e){return {};}
     }
     String fileNum = '';
-    if(mapMatch.length < 11){
-      fileNum = 'b00${mapMatch.length - 1}';
+    if(mapGroup.length < 11){
+      fileNum = 'g00${mapGroup.length - 1}';
     }
-    else if(mapMatch.length < 101){
-      fileNum = 'b0${mapMatch.length - 1}';
+    else if(mapGroup.length < 101){
+      fileNum = 'g0${mapGroup.length - 1}';
     }
     else{
-      fileNum = 'b${mapMatch.length - 1}';
+      fileNum = 'g${mapGroup.length - 1}';
     }
 
     File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-    mapMatch.removeLast();
+    mapGroup.removeLast();
   }
 
   Fluttertoast.showToast(msg: '궁합이 삭제되었습니다');
 }
 
   //궁합의 메모를 최초, 또는 수정하여 저장할 때 사용
-  SaveMatchDataMemo(String saveDataNum, String memo) async {
+  SaveGroupDataMemo(String saveDataNum, String memo) async {
   int index;
   if(saveDataNum == ''){
-    index = mapMatch.length - 1;
+    index = mapGroup.length - 1;
   }
   else{
     index = int.parse(saveDataNum.substring(1,4));
   }
-  mapMatch[index]['memo'] = memo;
+  mapGroup[index]['memo'] = memo;
 
-  UpdateMatchDataFromMap(index);
+  UpdateGroupDataFromMap(index);
 
   Fluttertoast.showToast(msg: '메모가 저장되었습니다');
 }
 
   //궁합을 즐겨찾기 하거나 해제하여 저장할 때 사용
-  SaveMatchMark(String saveDataNum) async {
+  SaveGroupMark(String saveDataNum) async {
   int index = 0;
 
   if(saveDataNum != '') {
     index = int.parse(saveDataNum.substring(1, 4));
   }
   else{
-    index = mapMatch.length - 1;
+    index = mapGroup.length - 1;
   }
 
-  if(mapMatch[index]['mark'] == true){
-    mapMatch[index]['mark'] = false;
+  if(mapGroup[index]['mark'] == true){
+    mapGroup[index]['mark'] = false;
   }
   else{
-    mapMatch[index]['mark'] = true;
+    mapGroup[index]['mark'] = true;
     Fluttertoast.showToast(msg: '즐겨찾기 되었습니다');
   }
 
-  UpdateMatchDataFromMap(index);
+  UpdateGroupDataFromMap(index);
 }
 
   //명식의 내용을 수정하여 저장한 후 map에 업데이트 함
-  UpdateMatchDataFromMap(int index) async{
-  SortMatchFromMark();
+  UpdateGroupDataFromMap(int index) async{
+  SortGroupFromMark();
 
   String fileNum = '';
   if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-    fileNum = 'b00${index}';
+    fileNum = 'g00${index}';
   }
   else if(index < 100){
-    fileNum = 'b0${index}';
+    fileNum = 'g0${index}';
   }
   else{
-    fileNum = 'b${index}';
+    fileNum = 'g${index}';
   }
   try{
     final file = File('${fileDirPath}/${fileNum}');
 
-    await file.writeAsString(jsonEncode({'num':fileNum, 'name0': mapMatch[index]['name0'], 'gender0':mapMatch[index]['gender0'], 'uemYang0': mapMatch[index]['uemYang0'],
-      'birthYear0':mapMatch[index]['birthYear0'], 'birthMonth0':mapMatch[index]['birthMonth0'],'birthDay0':mapMatch[index]['birthDay0'], 'birthHour0':mapMatch[index]['birthHour0'],
-      'birthMin0':mapMatch[index]['birthMin0'],
-      'name1': mapMatch[index]['name1'], 'gender1':mapMatch[index]['gender1'], 'uemYang1': mapMatch[index]['uemYang1'],
-      'birthYear1':mapMatch[index]['birthYear1'], 'birthMonth1':mapMatch[index]['birthMonth1'],'birthDay1':mapMatch[index]['birthDay1'], 'birthHour1':mapMatch[index]['birthHour1'],
-      'birthMin1':mapMatch[index]['birthMin1'], 'saveDate':mapMatch[index]['saveDate'], 'memo':mapMatch[index]['memo'], 'mark':mapMatch[index]['mark']}));
+    await file.writeAsString(jsonEncode({'num':fileNum, 'name0': mapGroup[index]['name0'], 'gender0':mapGroup[index]['gender0'], 'uemYang0': mapGroup[index]['uemYang0'],
+      'birthYear0':mapGroup[index]['birthYear0'], 'birthMonth0':mapGroup[index]['birthMonth0'],'birthDay0':mapGroup[index]['birthDay0'], 'birthHour0':mapGroup[index]['birthHour0'],
+      'birthMin0':mapGroup[index]['birthMin0'],
+      'name1': mapGroup[index]['name1'], 'gender1':mapGroup[index]['gender1'], 'uemYang1': mapGroup[index]['uemYang1'],
+      'birthYear1':mapGroup[index]['birthYear1'], 'birthMonth1':mapGroup[index]['birthMonth1'],'birthDay1':mapGroup[index]['birthDay1'], 'birthHour1':mapGroup[index]['birthHour1'],
+      'birthMin1':mapGroup[index]['birthMin1'], 'saveDate':mapGroup[index]['saveDate'], 'memo':mapGroup[index]['memo'], 'mark':mapGroup[index]['mark']}));
   }catch(e){return {};} //내용을 덮어쓴다
 }
 
@@ -575,10 +551,10 @@ List<Map> mapDiary = [];  //일진일기
   if(count > 0){
     for(int i = count; i > -1; i--){
       if(i < 9){ //최근 목록은 r로 시작
-        fileNum = 'r00${i+1}';
+        fileNum = 'l00${i+1}';
       }
       else if(i < 30){
-        fileNum = 'r0${i+1}';
+        fileNum = 'l0${i+1}';
       }
       final file = await CreateSaveFile(fileNum);
 
@@ -589,7 +565,7 @@ List<Map> mapDiary = [];  //일진일기
   }
 
   count = mapRecentPerson.length;
-  fileNum = 'r000';
+  fileNum = 'l000';
   final file = await CreateSaveFile(fileNum);
 
   await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
@@ -644,16 +620,16 @@ List<Map> mapDiary = [];  //일진일기
       if(index == count || count == 0){ //가장 최근 날짜의 데이터 저장
         String fileNum = '';
         if(index < 10){ //일기는 d로 시작
-          fileNum = 'd000${index}';
+          fileNum = 'j000${index}';
         }
         else if(index < 100){
-          fileNum = 'd00${index}';
+          fileNum = 'j00${index}';
         }
         else if(index < 1000){
-          fileNum = 'd0${index}';
+          fileNum = 'j0${index}';
         }
         else{
-          fileNum = 'd${index}';
+          fileNum = 'j${index}';
         }
         mapDiary.add({'num':fileNum, 'year':year, 'month':month, 'day':day, 'labelData':labelData, 'dayPaljaData':dayPaljaData, 'dayString':dayString, 'memo':memo});
         final file = await CreateSaveFile(fileNum);
@@ -667,16 +643,16 @@ List<Map> mapDiary = [];  //일진일기
           print(i);
           String fileNum = '';
           if(i < 10){ //일기는 d로 시작
-            fileNum = 'd000${i}';
+            fileNum = 'j000${i}';
           }
           else if(i < 100){
-            fileNum = 'd00${i}';
+            fileNum = 'j00${i}';
           }
           else if(i < 1000){
-            fileNum = 'd0${i}';
+            fileNum = 'j0${i}';
           }
           else{
-            fileNum = 'd${i}';
+            fileNum = 'j${i}';
           }
           mapDiary[i]['num'] = fileNum;
           mapDiary[i]['year'] = mapDiary[i-1]['year'];
@@ -694,16 +670,16 @@ List<Map> mapDiary = [];  //일진일기
         }
         String fileNum = '';
         if(index < 10){ //일기는 d로 시작
-          fileNum = 'd000${index}';
+          fileNum = 'j000${index}';
         }
         else if(index < 100){
-          fileNum = 'd00${index}';
+          fileNum = 'j00${index}';
         }
         else if(index < 1000){
-          fileNum = 'd0${index}';
+          fileNum = 'j0${index}';
         }
         else{
-          fileNum = 'd${index}';
+          fileNum = 'j${index}';
         }
         mapDiary[index]['num'] = fileNum;
         mapDiary[index]['year'] = year;
@@ -745,16 +721,16 @@ List<Map> mapDiary = [];  //일진일기
     if(index == mapDiary.length-1){  //map의 마지막 파일이면
       String fileNum = '';
       if(index < 10){ //일기는 d로 시작
-        fileNum = 'd000${index}';
+        fileNum = 'j000${index}';
       }
       else if(index < 100){
-        fileNum = 'd00${index}';
+        fileNum = 'j00${index}';
       }
       else if(index < 1000){
-        fileNum = 'd0${index}';
+        fileNum = 'j0${index}';
       }
       else{
-        fileNum = 'd${index}';
+        fileNum = 'j${index}';
       }
       File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
       mapDiary.removeLast();
@@ -763,16 +739,16 @@ List<Map> mapDiary = [];  //일진일기
       for(int i = index; i < mapDiary.length-1; i++){
         String fileNum = '';
         if(index < 10){ //일기는 d로 시작
-          fileNum = 'd000${i}';
+          fileNum = 'j000${i}';
         }
         else if(index < 100){
-          fileNum = 'd00${i}';
+          fileNum = 'j00${i}';
         }
         else if(index < 1000){
-          fileNum = 'd0${i}';
+          fileNum = 'j0${i}';
         }
         else{
-          fileNum = 'd${i}';
+          fileNum = 'j${i}';
         }
         mapDiary[i]['year'] = mapDiary[i+1]['year'];
         mapDiary[i]['month'] = mapDiary[i+1]['month'];
@@ -788,16 +764,16 @@ List<Map> mapDiary = [];  //일진일기
       }
       String delFileNum = '';
       if(mapDiary.length < 11){
-        delFileNum = 'd000${mapDiary.length - 1}';
+        delFileNum = 'j000${mapDiary.length - 1}';
       }
       else if(mapDiary.length < 101){
-        delFileNum = 'd00${mapDiary.length - 1}';
+        delFileNum = 'j00${mapDiary.length - 1}';
       }
       else if(mapDiary.length < 1001){
-        delFileNum = 'd0${mapDiary.length - 1}';
+        delFileNum = 'j0${mapDiary.length - 1}';
       }
       else{
-        delFileNum = 'd${mapDiary.length - 1}';
+        delFileNum = 'j${mapDiary.length - 1}';
       }
 
       File('${fileDirPath}/${delFileNum}').deleteSync(recursive: true);
