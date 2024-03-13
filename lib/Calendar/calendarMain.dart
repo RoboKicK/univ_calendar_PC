@@ -11,6 +11,7 @@ import '../../Settings/personalDataManager.dart' as personalDataManager;
 import '../CalendarResult/calendarResultBirthTextWidget.dart' as calendarResultBirthTextWidget;  //이름과 생년월일
 import 'MainCalendarChange/mainCalendarChange.dart' as mainCalendarChange;
 import 'MainCalendarSaveList/mainCalendarSaveList.dart' as mainCalendarSaveList;
+import 'mainCalendarRecentList.dart' as mainCalendarRecentList;
 
 class CalendarMain extends StatefulWidget {
   const CalendarMain({super.key, required this.isEditSetting});
@@ -1156,7 +1157,6 @@ class _CalendarWidget extends State<CalendarWidget> {
                                               value: popUpSelect,
                                               style: Theme.of(context).textTheme.labelMedium,
                                               menuMaxHeight: MediaQuery.of(context).size.height,
-                                              focusColor: Colors.white.withOpacity(1),
                                               iconSize: 0.0,
                                               underline: SizedBox.shrink(),
                                               dropdownColor: Colors.black, //style.colorMainBlue,//colorBackGround,
@@ -1266,7 +1266,12 @@ class _CalendarWidget extends State<CalendarWidget> {
                             child:
                             mainCalendarSaveList.MainCalendarSaveList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
                         ),
-                        SizedBox.shrink(),
+                        Container(
+                            width: widgetWidth,
+                            height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+                            child:
+                            mainCalendarRecentList.MainCalendarRecentList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
+                        ),
                       ][nowCalendarHeadLine],
                     ],
                   ),

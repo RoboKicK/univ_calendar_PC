@@ -16,7 +16,7 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001
 int saveDataLimitCount = 200; //단일,궁합 공용
-int recentDataLimitCount = 30;  //최근목록
+int recentDataLimitCount = 300;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
 
 //int savedPersonDataCount = 0;
@@ -542,7 +542,17 @@ SortGroupFromMark() {
     gender = false;
   }
 
-  if(mapRecentPerson.isNotEmpty && mapRecentPerson[0]['gender'] == gender && mapRecentPerson[0]['uemYang'] == uemYang && mapRecentPerson[0]['birthYear'] == birthYear && mapRecentPerson[0]['birthMonth'] == birthMonth && mapRecentPerson[0]['birthDay'] == birthDay && mapRecentPerson[0]['birthHour'] == birthHour && mapRecentPerson[0]['birthMin'] == birthMin){
+  bool isSameData = false;
+  int sameDataCheckCount = 9;
+  if((mapRecentPerson.length - 1) < sameDataCheckCount){
+    sameDataCheckCount = (mapRecentPerson.length - 1);
+  }
+  for(int i = 0; i < sameDataCheckCount; i++){
+    if(mapRecentPerson.isNotEmpty && mapRecentPerson[i]['gender'] == gender && mapRecentPerson[i]['uemYang'] == uemYang && mapRecentPerson[i]['birthYear'] == birthYear && mapRecentPerson[i]['birthMonth'] == birthMonth && mapRecentPerson[i]['birthDay'] == birthDay && mapRecentPerson[i]['birthHour'] == birthHour && mapRecentPerson[i]['birthMin'] == birthMin){
+      isSameData = true;
+    }
+  }
+  if(isSameData == true){
     return;
   }
 
