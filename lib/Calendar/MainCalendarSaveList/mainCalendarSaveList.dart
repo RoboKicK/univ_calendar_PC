@@ -272,7 +272,6 @@ List<Widget> GetPersonalDataText(int num){
             ),
             Expanded(
               child: Container(  //저장목록
-                //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
                 width: style.UIButtonWidth,
                 alignment: Alignment.topCenter,
                 height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,

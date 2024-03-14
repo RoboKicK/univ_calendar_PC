@@ -1263,14 +1263,20 @@ class _CalendarWidget extends State<CalendarWidget> {
                         Container(
                             width: widgetWidth,
                             height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
-                            child:
-                            mainCalendarSaveList.MainCalendarSaveList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
+                            child: Column(
+                              children: [
+                                mainCalendarSaveList.MainCalendarSaveList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
+                              ],
+                            ),
                         ),
                         Container(
                             width: widgetWidth,
                             height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
-                            child:
-                            mainCalendarRecentList.MainCalendarRecentList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
+                            child: Column(
+                              children: [
+                                mainCalendarRecentList.MainCalendarRecentList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
+                              ]
+                            ),
                         ),
                       ][nowCalendarHeadLine],
                     ],

@@ -975,11 +975,10 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                             ElevatedButton(
                                                 onPressed: () async {
                                                   await saveDataManager.DeletePersonData(widget.saveDataNum);
-                                                  Navigator.of(context).pop(true);
-                                                  Navigator.of(context).pop(true);
                                                   setState(() {
                                                     print(saveDataManager.fileDirPath);
                                                   });
+                                                  widget.closeOption(false,0);
                                                 },
                                                 child: Text('네')),
                                             ElevatedButton(
