@@ -4,7 +4,7 @@ import 'Calendar/calendarMain.dart' as calendarMain;
 import 'Settings/settingManagerWidget.dart' as settingManagerWidget;
 import 'style.dart' as style;
 import 'package:provider/provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+//import 'package:win_toast/win_toast.dart';
 
 
 class BodyWidgetManager extends StatefulWidget {
@@ -60,6 +60,7 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
     setState(() {
       listCalendarMain.removeAt(num);
       listCalendarMain.insert(num,calendarMain.CalendarMain(isEditSetting: isEditSetting, key:UniqueKey()));
+      //ShowToast();
     });
   }
 
@@ -74,6 +75,27 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
     });
   }
 
+ //Future<void> ShowToast() async {
+ //  const xml = """
+ //<?xml version="1.0" encoding="UTF-8"?>
+ //<toast launch="action=viewConversation&amp;conversationId=9813">
+ // <visual>
+ //    <binding template="ToastGeneric">
+ //       <text>Andrew sent you a picture</text>
+ //       <text>Check this out, Happy Canyon in Utah!</text>
+ //    </binding>
+ // </visual>
+ // <actions>
+ //    <input id="tbReply" type="text" placeHolderContent="Type a reply" />
+ //    <action content="Reply" activationType="background" arguments="action=reply&amp;conversationId=9813" />
+ //    <action content="Like" activationType="background" arguments="action=like&amp;conversationId=9813" />
+ //    <action content="View" activationType="background" arguments="action=viewImage&amp;imageUrl=https://picsum.photos/364/202?image=883" />
+ // </actions>
+ //</toast>
+ //""";
+ //  WinToast.instance().showCustomToast(xml: xml);
+ //}
+
   @override
   void initState() {
     super.initState();
@@ -82,6 +104,12 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
       //listCalendarKey.add(GlobalKey<calendarMain._CalendarMainState?>());
       listCalendarMain.add(calendarMain.CalendarMain(isEditSetting: isEditSetting, key:UniqueKey()));
     }
+    //WinToast.instance().initialize(
+    //  aumId: 'WuNeulByeol.lucia_one_calendar.WinToastExample',
+    //  displayName: 'Example Application',
+    //  iconPath: '',
+    //  clsid: 'your-notification-activator-guid-2EB1AE5198B7',
+    //);
   }
 
   @override

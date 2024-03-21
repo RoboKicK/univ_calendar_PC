@@ -50,7 +50,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   var appBarTitle = ['  루시아 원 만세력', '  일진일기'];
   int _nowMainTap = 0;
@@ -84,18 +84,39 @@ class _MyAppState extends State<MyApp> {
   }
 
   SetClearPageNum({int num = -1}){
-      if(num == -1){
-        clearPageNum  = -1;
-      } else if(num == -2){
+    if(num == -1){
+      clearPageNum  = -1;
+    } else {
+      String snackBarString = '';
+      if (num == -2) {
         setState(() {
           clearPageNum = -2;
           SetNowCalendarNum(0);
+          snackBarString = '모든 페이지를 비웠습니다';
         });
       } else {
         setState(() {
           clearPageNum = nowPageNum;
+          snackBarString = '현재 페이지를 비웠습니다';
         });
       }
+
+      SnackBar snackBar = SnackBar(
+        content: Text(snackBarString, style: Theme.of(context).textTheme.displayLarge, textAlign: TextAlign.center),
+        backgroundColor: Colors.white,
+        //style.colorMainBlue,
+        shape: StadiumBorder(),
+        duration: Duration(milliseconds: 600),
+        dismissDirection: DismissDirection.down,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+            bottom: 20,
+            left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+            right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override initState(){
@@ -109,29 +130,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      //appBar: AppBar(
-      //  toolbarHeight: style.appBarHeight,
-      //  //centerTitle: true,
-      //  title: Transform(
-      //    transform: Matrix4.translationValues(0.0, 0.0, 0.0),
-      //    child: Text(appBarTitle[_nowMainTap]),
-      //  ),
-      //  actions: [
-      //    Container(
-      //      width: 40,
-      //      height: 40,
-      //      margin: EdgeInsets.only(right: 20),
-      //      child: ElevatedButton(
-      //        onPressed: (){
-      //          ShowSettingPage();
-      //        },
-      //        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
-      //        child: Icon(Icons.settings, size: 20, color:Colors.white),
-      //      ),
-      //    ),
-      //  ],
-      //  elevation: 0.0, //Drop Shadow, 붕 떠 있는 느낌의 수치
-      //),
       body: Column(
         children: [
           Container(
@@ -284,3 +282,30 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+
+
+
+//appBar: AppBar(
+//  toolbarHeight: style.appBarHeight,
+//  //centerTitle: true,
+//  title: Transform(
+//    transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+//    child: Text(appBarTitle[_nowMainTap]),
+//  ),
+//  actions: [
+//    Container(
+//      width: 40,
+//      height: 40,
+//      margin: EdgeInsets.only(right: 20),
+//      child: ElevatedButton(
+//        onPressed: (){
+//          ShowSettingPage();
+//        },
+//        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+//        child: Icon(Icons.settings, size: 20, color:Colors.white),
+//      ),
+//    ),
+//  ],
+//  elevation: 0.0, //Drop Shadow, 붕 떠 있는 느낌의 수치
+//),
