@@ -162,3 +162,5 @@ Color SetOhengColor(bool isCheongan, int num){  //오행 박스 컬러
 
   return Colors.white;
 }
+
+double appBarHeight = 40;

@@ -10,16 +10,35 @@ import 'findGanji.dart' as findGangi;
 import 'SaveData/saveDataManager.dart' as saveDataManager;
 import 'Settings/personalDataManager.dart' as personalDataManager;
 
+import 'package:provider/provider.dart';
 import 'bodyWidgetManager.dart' as bodyWidgetManager;
+import 'package:window_size/window_size.dart';
+
+class Store extends ChangeNotifier {
+  bool isEditSetting = false;
+  SetEditSetting(){
+    isEditSetting = !isEditSetting;
+    notifyListeners();
+  }
+}
 
 void main() async {
   //일진일기 달력 초기화
   await initializeDateFormatting();
+  WidgetsFlutterBinding.ensureInitialized();
 
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowTitle('루시아 원 만세력');
+    //setWindowMaxSize(const Size(max_width, max_height));
+    setWindowMinSize(Size(1280, 720));
+  }
   runApp(
-      MaterialApp(
-        theme: style.theme,
-        home : MyApp(),
+      ChangeNotifierProvider(
+        create: (c) => Store(),
+        child: MaterialApp(
+          theme: style.theme,
+          home : MyApp(),
+        ),
       ),
   );
 }
@@ -33,14 +52,50 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
 
-  var appBarTitle = ['만세력', '일진일기'];
+  var appBarTitle = ['  루시아 원 만세력', '  일진일기'];
   int _nowMainTap = 0;
   bool _isShowSettingPage = false;
+
+  int nowPageNum = 0;
+  double calendarButtonSize = 16;
+  double nowCalendarButtonSize = 20;
+  List<Color> listCalendarButtonColor = [style.colorMainBlue,Colors.white,Colors.white,Colors.white,Colors.white];
+  List<double> listCalendarButtonSize = [20,16,16,16,16];
+
+  int clearPageNum = -1;
 
   ShowSettingPage(){ //  설정 페이지 온오프
     setState(() {
       _isShowSettingPage = !_isShowSettingPage;
     });
+  }
+
+  SetNowCalendarNum(int num){
+    if(nowPageNum == num){
+      return;
+    }
+    setState(() {
+      listCalendarButtonSize[nowPageNum] = calendarButtonSize;
+      listCalendarButtonColor[nowPageNum] = Colors.white;
+      nowPageNum = num;
+      listCalendarButtonColor[nowPageNum] = style.colorMainBlue;
+      listCalendarButtonSize[nowPageNum] = nowCalendarButtonSize;
+    });
+  }
+
+  SetClearPageNum({int num = -1}){
+      if(num == -1){
+        clearPageNum  = -1;
+      } else if(num == -2){
+        setState(() {
+          clearPageNum = -2;
+          SetNowCalendarNum(0);
+        });
+      } else {
+        setState(() {
+          clearPageNum = nowPageNum;
+        });
+      }
   }
 
   @override initState(){
@@ -54,31 +109,178 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 60,
-        centerTitle: true,
-        title: Transform(
-          transform: Matrix4.translationValues(0.0, 0.0, 0.0),
-          child: Text(appBarTitle[_nowMainTap]),
-        ),
-        actions: [
+      //appBar: AppBar(
+      //  toolbarHeight: style.appBarHeight,
+      //  //centerTitle: true,
+      //  title: Transform(
+      //    transform: Matrix4.translationValues(0.0, 0.0, 0.0),
+      //    child: Text(appBarTitle[_nowMainTap]),
+      //  ),
+      //  actions: [
+      //    Container(
+      //      width: 40,
+      //      height: 40,
+      //      margin: EdgeInsets.only(right: 20),
+      //      child: ElevatedButton(
+      //        onPressed: (){
+      //          ShowSettingPage();
+      //        },
+      //        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+      //        child: Icon(Icons.settings, size: 20, color:Colors.white),
+      //      ),
+      //    ),
+      //  ],
+      //  elevation: 0.0, //Drop Shadow, 붕 떠 있는 느낌의 수치
+      //),
+      body: Column(
+        children: [
           Container(
-            width: 40,
-            height: 40,
-            margin: EdgeInsets.only(right: 20),
-            child: ElevatedButton(
-              onPressed: (){
-                ShowSettingPage();
-              },
-              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
-              child: Icon(Icons.settings, size: 20, color:Colors.white),
+            width: MediaQuery.of(context).size.width,
+            height: style.appBarHeight,
+            padding: EdgeInsets.only(left: 20, right: 20),
+            child: Stack(
+              children: [
+                Row(  //루시아원만세력, 설정 버튼
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(  //페이지 버튼
+                      children: [
+                        Container(  //저장
+                          width: 40,
+                          height: 40,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            child: Icon(Icons.save, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //복사
+                          width: 40,
+                          height: 40,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            child: Icon(Icons.copy, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //한 페이지 비우기
+                          width: 40,
+                          height: 40,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              SetClearPageNum(num: nowPageNum);
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            child: Icon(Icons.clear, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //모든 페이지 비우기
+                          width: 40,
+                          height: 40,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              SetClearPageNum(num: -2);
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            child: Icon(Icons.clear, size: 20, color:Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(  //설정 버튼
+                      width: 40,
+                      height: 40,
+                      margin: EdgeInsets.only(right: 00),
+                      child: ElevatedButton(
+                        onPressed: (){
+                          ShowSettingPage();
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.settings, size: 20, color:Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 20,
+                      height: style.appBarHeight,
+                      alignment: Alignment.center,
+                      child:  ElevatedButton(
+                        onPressed: (){
+                          SetNowCalendarNum(0);
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.circle, size: listCalendarButtonSize[0], color:listCalendarButtonColor[0]),
+                      ),
+                    ),
+                    Container(
+                      width: 20,
+                      height: style.appBarHeight,
+                      alignment: Alignment.center,
+                      child:  ElevatedButton(
+                        onPressed: (){
+                          SetNowCalendarNum(1);
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.circle, size: listCalendarButtonSize[1], color:listCalendarButtonColor[1]),
+                      ),
+                    ),
+                    Container(
+                      width: 20,
+                      height: style.appBarHeight,
+                      alignment: Alignment.center,
+                      child:  ElevatedButton(
+                        onPressed: (){
+                          SetNowCalendarNum(2);
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.circle, size: listCalendarButtonSize[2], color:listCalendarButtonColor[2]),
+                      ),
+                    ),
+                    Container(
+                      width: 20,
+                      height: style.appBarHeight,
+                      alignment: Alignment.center,
+                      child:  ElevatedButton(
+                        onPressed: (){
+                          SetNowCalendarNum(3);
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.circle, size: listCalendarButtonSize[3], color:listCalendarButtonColor[3]),
+                      ),
+                    ),
+                    Container(
+                      width: 20,
+                      height: style.appBarHeight,
+                      alignment: Alignment.center,
+                      child:  ElevatedButton(
+                        onPressed: (){
+                          SetNowCalendarNum(4);
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        child: Icon(Icons.circle, size: listCalendarButtonSize[4], color:listCalendarButtonColor[4]),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-
+          bodyWidgetManager.BodyWidgetManager(nowMainTap: _nowMainTap, isShowSettingPage: _isShowSettingPage, setSettingPage: ShowSettingPage, nowCalendarNum: nowPageNum, clearPageNum: clearPageNum,
+          setClearPageNum: SetClearPageNum),
         ],
-        elevation: 0.0, //Drop Shadow, 붕 떠 있는 느낌의 수치
       ),
-      body:bodyWidgetManager.BodyWidgetManager(nowMainTap: _nowMainTap, isShowSettingPage: _isShowSettingPage, setSettingPage: ShowSettingPage),
     );
   }
 }

@@ -650,7 +650,6 @@ SortGroupFromMark() {
         Map newOne = {'num':'a', 'year':0, 'month':0, 'day':0, 'labelData':0,'memo':''};
         mapDiary.add(newOne);
         for(int i = mapDiary.length - 1; i > index; i--){
-          print(i);
           String fileNum = '';
           if(i < 10){ //일기는 d로 시작
             fileNum = 'j000${i}';

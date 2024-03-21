@@ -75,7 +75,6 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
     {setState(() {
       isShowYugchin = (isShowYugchin + 1) % 2;
       personalDataManager.SaveDeunSeunData(10, isShowYugchin + 1);
-      print(personalDataManager.deunSeunData);
     });}
 
     if(isShowYugchin == 0){

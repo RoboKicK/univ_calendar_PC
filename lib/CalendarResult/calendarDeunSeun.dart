@@ -204,10 +204,10 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           nowDeunNum0 = count;
           int hidePersonSaveDataNum = ((personalDataManager.etcData % 10000) / 1000).floor();
           int hideOldSaveDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
-          print(hidePersonSaveDataNum);
+          //print(hidePersonSaveDataNum);
           if(hidePersonSaveDataNum == 1 || (hideOldSaveDataNum == 1 || hideOldSaveDataNum == 4 || hideOldSaveDataNum == 5)){//widget.isShowDrawerDeunSeunOld == 1){
             SetDeunButtonSelectColor(nowDeunNum0);  //선택한 대운 버튼 표시함
-            print(nowDeunNum0);
+            //print(nowDeunNum0);
           }
           //SetSeun();
           InitSeun(); //현재 나이에 맞는 세운을 보여줌

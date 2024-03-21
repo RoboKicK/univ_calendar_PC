@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:univ_calendar_pc/main.dart';
 import '../style.dart' as style;
 import '../findGanji.dart' as findGanji;
 import '../SaveData/saveDataManager.dart' as saveDataManager;
@@ -16,6 +17,7 @@ import '../CalendarResult/InquireSinsals/MinorSinsals/sibiSinsal.dart' as sibiSi
 import '../CalendarResult/calendarDeunSeun.dart' as deunSeun;  //대운
 import '../CalendarResult/calendarOptionDrawer.dart' as calendarOptionDrawer; //옵션창
 import '../Settings/personalDataManager.dart' as personalDataManager;  //개인설정
+import 'package:provider/provider.dart';
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
@@ -341,7 +343,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
         alignment: Alignment.topCenter,
         children:[
           Container(
-          height: MediaQuery.of(context).size.height - 60 - 16 - 50,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
           color: style.colorBackGround,
           child: ScrollConfiguration(
             behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -400,13 +402,13 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
           alignment: Alignment.topCenter,
         children: [
           Container(
-          height: MediaQuery.of(context).size.height - 60 - 16 - 50,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
           color: style.colorBackGround,
           alignment: Alignment.topCenter,
           child: Row(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height - 60 - 16 - 50,
+                height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
                 width: widgetWidth,
                 child: ScrollConfiguration(
                   behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -444,7 +446,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
               ),
               Container(
                 width: widgetWidth,
-                height: MediaQuery.of(context).size.height - 60 - 16 - 50,
+                height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
                 //color:Colors.red,
                 child: ScrollConfiguration(
                   behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -639,7 +641,9 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
       optionDataNum = ((personalDataManager.calendarData % 10000000000000) / 1000000000000).floor();
       if(optionDataNum == 2){
-        isShowDrawerYugchin = 1; } else {isShowDrawerYugchin = 0;}
+        isShowDrawerYugchin = 1;
+        } else {isShowDrawerYugchin = 0;
+      }
 
       optionDataNum = ((personalDataManager.calendarData % 100000000000) / 10000000000).floor();
       if(optionDataNum != 9){
@@ -807,14 +811,18 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     if(widget.widgetWidth > MediaQuery.of(context).size.width * 0.6){
       isOneWidget = true;
       widgetWidth = widget.widgetWidth * 0.5;
-    } else {
+      } else {
       isOneWidget = false;
       widgetWidth = widget.widgetWidth;
     }
 
-    if(isEditSetting != widget.isEditSetting){
+    //if(isEditSetting != widget.isEditSetting){
+    //  ReloadOptions();
+    //  isEditSetting = widget.isEditSetting;
+    //}
+    if(isEditSetting != context.watch<Store>().isEditSetting){
       ReloadOptions();
-      isEditSetting = widget.isEditSetting;
+      isEditSetting = context.watch<Store>().isEditSetting;
     }
 
     return Stack(

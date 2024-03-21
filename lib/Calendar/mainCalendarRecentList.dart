@@ -244,12 +244,12 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
           Expanded(
             child: Container(  //저장목록
               //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
-              height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+              height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
               width: style.UIButtonWidth,
               margin: EdgeInsets.only(top: style.UIMarginTop),
               child: ScrollConfiguration(
                 behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-                child: ListView.builder(
+                child: ListView.separated(//builder(//
                   scrollDirection: Axis.vertical,
                   itemCount:saveDataManager.mapRecentPerson.length,
                   itemBuilder: (context, i){
@@ -300,6 +300,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                       return SizedBox.shrink();
                     }
                   },
+                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, color: style.colorBlack,); }
                 ),
               ),
             ),

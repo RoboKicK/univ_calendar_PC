@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:univ_calendar_pc/main.dart';
 import '../../style.dart' as style;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
+import 'package:provider/provider.dart';
 
 class CalendarResultBirthTextWidget extends StatefulWidget {
-  const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth});
+  const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth, required this.isEditSetting});
 
   final String name;
   final String gender;
@@ -12,14 +14,18 @@ class CalendarResultBirthTextWidget extends StatefulWidget {
   final int isShowDrawerManOld;
   final double widgetWidth;
   final bool isOneWidget;
+  final bool isEditSetting;
 
   @override
   State<CalendarResultBirthTextWidget> createState() => _CalendarResultBirthTextWidgetState();
 }
 
 class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextWidget> {
-  double containerHeight = 50;
+
   bool isShowPersonalName = true, isShowPersonalOld = true, isShowPersonalBirth = true;
+  bool isEditSetting = false;
+  int isShowPersonalData = 0;
+  int personalDataNum = 0;
 
   TextStyle textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
 
@@ -30,17 +36,17 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       }
     }
     int old = DateTime.now().year - widget.birthYear + 1;
-    if(widget.isShowDrawerManOld == 1){ //만으로 표시
+    if((personalDataManager.etcData % 10) == 2){ //만으로 표시
       old--;
       if(DateTime.now().month < widget.birthMonth || (DateTime.now().month == widget.birthMonth && DateTime.now().day < widget.birthDay)){
         old--;
       }
       if (old >= 0) {
-        return '${old}세';
+        return '${old}세(만 나이)';
       }
     } else {
       if (old > 0) {
-        return '${old}세';
+        return '${old}';
       }
     }
     return '';
@@ -82,7 +88,9 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   }
 
   String GetName(){
-    if(((personalDataManager.etcData % 10000) / 1000).floor() != 1){
+   // print(isShowPersonalData);
+   // print(isShowPersonalName);
+    if(isShowPersonalData != 1){
       if(isShowPersonalName == false){
         return '';
       }
@@ -142,10 +150,10 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
       return Container(
         width: widget.widgetWidth,
-        height: containerHeight,
+        //height: containerHeight,
         child: Container(
           width: widget.widgetWidth,
-          height: containerHeight,
+          //height: containerHeight,
           margin: EdgeInsets.only(top: style.UIMarginLeft),
           //color: Colors.blue,
           child: Column(
@@ -168,10 +176,10 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       textStyle = TextStyle(color : Colors.white, fontSize: 14, fontWeight: FontWeight.w500);
       return Container(
         width: widget.widgetWidth,
-        height: containerHeight,
+        //height: containerHeight,
         child: Container(
           width: widget.widgetWidth,
-          height: containerHeight,
+          //height: containerHeight,
           margin: EdgeInsets.only(top: 6),
           //color: Colors.blue,
           child: Column(
@@ -197,27 +205,50 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       );
     }
   }
+
+  SetPersonalDataNum(){
+    isShowPersonalData = ((personalDataManager.etcData % 10000) / 1000).floor();
+    personalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+
+    if(personalDataNum == 1 || personalDataNum == 3 || personalDataNum == 5 || personalDataNum == 7){
+      isShowPersonalName = false;
+    } else {isShowPersonalName = true;}
+    if(personalDataNum == 2 || personalDataNum == 3 || personalDataNum == 6 || personalDataNum == 7){
+      isShowPersonalOld = false;
+    }else {isShowPersonalOld = true;}
+    if(personalDataNum == 4 || personalDataNum == 5 || personalDataNum == 6 || personalDataNum == 7){
+      isShowPersonalBirth = false;
+    }else {isShowPersonalBirth = true;}
+  }
+
   @override
   void initState() {
     super.initState();
 
-    if(((personalDataManager.etcData % 10000) / 1000).floor() != 1){
-      int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
-      if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
-        isShowPersonalName = false;
-      }
-      if(isShowPersonalDataNum == 2 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
-        isShowPersonalOld = false;
-      }
-      if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
-        containerHeight = 40;
-        isShowPersonalBirth = false;
-      }
+    isShowPersonalData = ((personalDataManager.etcData % 10000) / 1000).floor();
+    if(isShowPersonalData != 1){
+      SetPersonalDataNum();
     }
+
+    isEditSetting = widget.isEditSetting;
   }
 
   @override
   Widget build(BuildContext context) {
+    if(isEditSetting != widget.isEditSetting){
+  setState(() {
+    SetPersonalDataNum();
+  });
+      isEditSetting = widget.isEditSetting;
+    }
+
+    if(isEditSetting != context.watch<Store>().isEditSetting){
+      setState(() {
+        SetPersonalDataNum();
+      });
+      isEditSetting = context.watch<Store>().isEditSetting;
+    }
+
     return GetBirthTextWidget();
   }
 }

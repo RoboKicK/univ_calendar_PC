@@ -65,7 +65,7 @@ class _CalendarMainState extends State<CalendarMain> {
       }
       unlimitedCalendarNum++;
       for(int i = 0; i < listKey.length; i++){
-        listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1);
+        listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1, fromMain : true);
       }
     }
     );
@@ -95,7 +95,7 @@ class _CalendarMainState extends State<CalendarMain> {
       }
 
       for(int i = 0; i < listKey.length; i++){
-        listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1);
+        listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1, fromMain : true);
       }
     });
   }
@@ -122,8 +122,8 @@ class _CalendarMainState extends State<CalendarMain> {
     });
 
     return Container(
-        height: MediaQuery.of(context).size.height - 60,
-        color: style.colorDarkGrey,
+        height: MediaQuery.of(context).size.height - style.appBarHeight,
+        color: style.colorBlack,//colorDarkGrey,
         child:Stack(
           children: [
             ScrollConfiguration(
@@ -144,7 +144,7 @@ class _CalendarMainState extends State<CalendarMain> {
             ),
             Container(  //위젯 추가 버튼
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height - 60,
+              height: MediaQuery.of(context).size.height - style.appBarHeight,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -539,6 +539,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   MaterialStateColor? genderColorMale, genderColorFemale;
 
   double widgetWidth = 1200;
+  int nowWidgetCount = 0;
 
   Widget closeButtonWidget = SizedBox(width: 50,height: 50,);
   Widget backButtonWidget = SizedBox.shrink();
@@ -550,6 +551,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   Widget calendarBirthTextWidget = SizedBox.shrink();
 
   int nowState = 0; //0:만세력 입력화면, 1:만세력 조회화면
+  int prevState = 0;
   bool isEditSetting = false;
 
   FocusNode maleFocusNode = FocusNode();
@@ -566,7 +568,6 @@ class _CalendarWidget extends State<CalendarWidget> {
   var underLineOpacity = [1.0,0.0,0.0,0.0];
   List<String> calendarHeadLineTitle = ['조회하기', '간지변환', '저장목록', '최근목록'];
   List<Color> listCalendarTextColor = [Colors.white, style.colorGrey, style.colorGrey, style.colorGrey];
-  double sizedBoxWidth = 16;  //헤드라인 사이 빈칸 크기
 
   int isSaved = 1; //저장되어 있는 명식인가? 0:네, 1:아니오
 
@@ -588,13 +589,16 @@ class _CalendarWidget extends State<CalendarWidget> {
   }
 
   //위젯 가로 크기 정하기
-  SetWidgetWidth(int widgetCount){
+  SetWidgetWidth(int widgetCount, {bool fromMain = false}){
+    if(fromMain == true) {
+      nowWidgetCount = widgetCount;
+    }
     setState(() {
-        if (widgetCount == 0) {
+        if (nowWidgetCount == 0) {
           widgetWidth = MediaQuery.of(context).size.width - 60 - 8; //1200;
-        } else if (widgetCount == 1) {
+        } else if (nowWidgetCount == 1) {
           widgetWidth = ((MediaQuery.of(context).size.width - 60) * 0.5) - 8; //596;
-        } else if (widgetCount == 2) {
+        } else if (nowWidgetCount == 2) {
           widgetWidth = widgetWidth = ((MediaQuery.of(context).size.width - 60) * 0.33333333) - 8; //596;//440; //394.4;
         } else {
           widgetWidth = widgetWidth = ((MediaQuery.of(context).size.width - 60) * 0.25) - 8;//440; //394.4;
@@ -604,9 +608,11 @@ class _CalendarWidget extends State<CalendarWidget> {
           widgetWidth = 440;
         }
 
-      SetWidgetCloseButton(widgetCount);
-      if(nowState == 1){
+      SetWidgetCloseButton(nowWidgetCount);
+      if(prevState == 1 && nowState == 1){
         SetCalendarResultWidget();
+    } else {
+        prevState = 1;
       }
     });
   }
@@ -738,6 +744,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           isShowDrawerManOld: 0,
         widgetWidth: widgetWidth,
         isOneWidget: (widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false,
+        isEditSetting: isEditSetting,
       );//isShowDrawerManOld);
     }
   }
@@ -758,8 +765,8 @@ class _CalendarWidget extends State<CalendarWidget> {
   //만세력 조회 화면 생성
   SetCalendarResultWidget(){
     nowState = 1;
-    isEditSetting = !isEditSetting;
     setState(() {
+      isEditSetting = !isEditSetting;
       double _widgetWidth = widgetWidth;
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
@@ -792,6 +799,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     genderColorFemale = MaterialStateColor.resolveWith((states) => style.colorGrey);
 
     widgetNum = widget.widgetNum;
+    nowWidgetCount = widget.getCalendarWidgetCount();
     isEditSetting = widget.isEditSetting;
 
     listCalendarTexts.add(Text(calendarHeadLineTitle[0], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[0]), ));
@@ -815,7 +823,8 @@ class _CalendarWidget extends State<CalendarWidget> {
   @override
   Widget build(BuildContext context) {
 
-    SetWidgetWidth(widget.getCalendarWidgetCount());
+    nowWidgetCount = widget.getCalendarWidgetCount();
+    //SetWidgetWidth(widget.getCalendarWidgetCount());
 
     return Container(
       width: widgetWidth,
@@ -856,58 +865,53 @@ class _CalendarWidget extends State<CalendarWidget> {
             children:[
               Column(
                 children: [
-                  Row(  //헤드라인 글자
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:[
-                      Container(
-                          height: style.headLineHeight,
-                          alignment: Alignment.topCenter,
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[0])))),
-                          child: TextButton(
-                              style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                  padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                              child:listCalendarTexts[0]
-                              , onPressed:(){HeadLineButtonAction(0);})
-                      ),
-                      SizedBox(
-                        width: sizedBoxWidth,
-                      ),
-                      Container(
-                          height: style.headLineHeight,
-                          alignment: Alignment.topCenter,
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[1])))),
-                          child:TextButton(
-                              style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                  padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                              child:listCalendarTexts[1]
-                              , onPressed:(){HeadLineButtonAction(1);})
-                      ),
-                      SizedBox(
-                        width: sizedBoxWidth,
-                      ),
-                      Container(
-                          height: style.headLineHeight,
-                          alignment: Alignment.topCenter,
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[2])))),
-                          child:TextButton(
-                              style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                  padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                              child:listCalendarTexts[2]
-                              , onPressed:(){HeadLineButtonAction(2);})
-                      ),
-                      SizedBox(
-                        width: sizedBoxWidth,
-                      ),
-                      Container(
-                          height: style.headLineHeight,
-                          alignment: Alignment.topCenter,
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[3])))),
-                          child:TextButton(
-                              style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                  padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                              child:listCalendarTexts[3]
-                              , onPressed:(){HeadLineButtonAction(3);})
-                      )],
+                  Container(
+                    width: style.UIButtonWidth,
+                    height: style.headLineHeight,
+                    child: Row(  //헤드라인 글자
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Container(
+                            height: style.headLineHeight,
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[0])))),
+                            child: TextButton(
+                                style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                    padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                child:listCalendarTexts[0]
+                                , onPressed:(){HeadLineButtonAction(0);})
+                        ),
+                        Container(
+                            height: style.headLineHeight,
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[1])))),
+                            child:TextButton(
+                                style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                    padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                child:listCalendarTexts[1]
+                                , onPressed:(){HeadLineButtonAction(1);})
+                        ),
+                        Container(
+                            height: style.headLineHeight,
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[2])))),
+                            child:TextButton(
+                                style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                    padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                child:listCalendarTexts[2]
+                                , onPressed:(){HeadLineButtonAction(2);})
+                        ),
+                        Container(
+                            height: style.headLineHeight,
+                            alignment: Alignment.topCenter,
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[3])))),
+                            child:TextButton(
+                                style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                    padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                child:listCalendarTexts[3]
+                                , onPressed:(){HeadLineButtonAction(3);})
+                        )],
+                    ),
                   ),
                   Stack(
                     children: [
@@ -1256,13 +1260,13 @@ class _CalendarWidget extends State<CalendarWidget> {
                       ),
                         Container(
                             width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
                             child:
                             mainCalendarChange.MainCalendarChange(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
                         ),
                         Container(
                             width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
                             child: Column(
                               children: [
                                 mainCalendarSaveList.MainCalendarSaveList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
@@ -1271,7 +1275,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                         ),
                         Container(
                             width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
                             child: Column(
                               children: [
                                 mainCalendarRecentList.MainCalendarRecentList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)

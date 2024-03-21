@@ -1000,7 +1000,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                         Container(  //조회 버튼
                           width: style.UIButtonWidth,
                           height: style.fullSizeButtonHeight,
-                          margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonWidth*0.02),
+                          margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
                           child:ElevatedButton(
                               onPressed: (){
                                 widget.SetInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
@@ -1017,7 +1017,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                     Container(  //메모 저장 버튼
                       width: style.UIButtonWidth,
                       height: style.fullSizeButtonHeight,
-                      margin: EdgeInsets.only(top:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02,bottom: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02),
+                      margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
                       child:ElevatedButton(
                           onPressed: (){
                             setState(() {

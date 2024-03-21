@@ -109,7 +109,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       } else {
         mainCalendarSaveListOptionWidget = Container(
           width: style.UIButtonWidth,
-          height: MediaQuery.of(context).size.height - 60 - style.headLineHeight - 4,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - style.headLineHeight - 4,
           color: style.colorBackGround,
           child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPersonSortedMark[i]['name'], gender0: saveDataManager.mapPersonSortedMark[i]['gender'], uemYang0: saveDataManager.mapPersonSortedMark[i]['uemYang'],
               birthYear0: saveDataManager.mapPersonSortedMark[i]['birthYear'], birthMonth0: saveDataManager.mapPersonSortedMark[i]['birthMonth'],
@@ -274,7 +274,7 @@ List<Widget> GetPersonalDataText(int num){
               child: Container(  //저장목록
                 width: style.UIButtonWidth,
                 alignment: Alignment.topCenter,
-                height: MediaQuery.of(context).size.height - 60 - 16 - 50 - 44,
+                height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
                 margin: EdgeInsets.only(top: style.UIMarginTop),
                 child: ScrollConfiguration(
                   behavior: MyCustomScrollBehavior().copyWith(overscroll: false),

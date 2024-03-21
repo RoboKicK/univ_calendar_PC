@@ -448,7 +448,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if(MediaQuery.of(context).size.height - 60 <= 560){
+    if(MediaQuery.of(context).size.height - style.appBarHeight <= 560){
       widgetHeight = MediaQuery.of(context).size.height - 120;
     }
 

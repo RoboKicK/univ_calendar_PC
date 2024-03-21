@@ -48,6 +48,10 @@ dev_dependencies:
   table_calendar: ^3.0.9
   desktop_window: ^0.4.0
   msix: ^3.16.6
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding
+      path: plugins/window_size
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -63,12 +67,13 @@ msix_config:
   display_name: Lucia One Calendar
   publisher_display_name: WuNeulByeol
   identity_name: company.suite.flutterapp
-  msix_version: ^3.16.6
+  msix_version: 1.0.0.0
   #logo_path: C:\path\to\logo.png
-  capabilities: internetClient, location, microphone, webcam
+  #capabilities: internetClient, location, microphone, webcam
   certificate_path: C:\Users\hoon87\certs\CERTIFICATE.pfx
+  certificate_password: 524200
   app_installer:
-    publish_folder_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_PC\build\app\outputs\flutter-apk
+    publish_folder_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\build\windows\x64\runner\Release
     hours_between_update_checks: 0
     automatic_background_task: true
     update_block_activation: true
