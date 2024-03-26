@@ -46,7 +46,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       }
     } else {
       if (old > 0) {
-        return '${old}';
+        return '${old}세';
       }
     }
     return '';

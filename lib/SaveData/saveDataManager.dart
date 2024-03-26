@@ -13,16 +13,18 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
   await LoadSavedPeople();
   await LoadRecentPeople();
   await LoadSavedDiary();
+  await LoadSavedGroup();
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001, 단체명식 g001
 int saveDataLimitCount = 3000; //단일,궁합 공용
 int recentDataLimitCount = 1000;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
+int groupDataLimitCount = 1000; //단체명식
 
 //int savedPersonDataCount = 0;
 List<Map> mapPerson = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
 List<Map> mapPersonSortedMark = []; //즐겨찾기로 정렬된 리스트
-List<Map> mapGroup = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
+List<List<dynamic>> listMapGroup = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
 List<Map> mapGroupSortedMark = []; //즐겨찾기로 정렬된 리스트
 
 List<Map> mapRecentPerson = [];
@@ -72,6 +74,27 @@ List<Map> mapDiary = [];  //일진일기
     }
   }
 }
+  LoadSavedGroup() async {
+  if(listMapGroup.length != 0)
+    return;
+
+  for(int i = 0; i <= groupDataLimitCount; i++){
+    if(i < 10){
+      try {
+        listMapGroup.add(
+            jsonDecode(await File('${fileDirPath}/g00${i}').readAsString()));
+      } catch(e){break;}
+    }
+    else if(i < 100){
+      try{listMapGroup.add(jsonDecode(await File('${fileDirPath}/g0${i}').readAsString()));}
+      catch(e){break;}
+    }
+    else{
+      try{listMapGroup.add(jsonDecode(await File('${fileDirPath}/g${i}').readAsString()));}
+      catch(e){break;}
+    }
+  }
+}
   LoadSavedDiary() async {
   if(mapDiary.length != 0)
     return;
@@ -99,7 +122,7 @@ List<Map> mapDiary = [];  //일진일기
 }
 
   //북마크 순으로 정렬
-SortPersonFromMark() {
+  SortPersonFromMark() {
   mapPersonSortedMark.clear();
 
   for(int i = 0; i < mapPerson.length; i++){
@@ -108,18 +131,34 @@ SortPersonFromMark() {
 
   mapPersonSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
 }
-SortGroupFromMark() {
-  mapGroupSortedMark.clear();
+  SortGroupFromMark(){
 
-  for(int i = 0; i < mapGroup.length; i++){
-    mapGroupSortedMark.add(mapGroup[i]);
   }
 
-  mapGroupSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
-}
   //저장할 때 내용을 저장할 빈 파일을 생성함
   Future<File> CreateSaveFile(String fileNum) async {
         return File('${fileDirPath}/${fileNum}');
+  }
+
+  //그룹을 최초 저장할 때 사용
+  Future<void> SaveGroupData(List<Map> groupData) async{
+    int count = listMapGroup.length;
+    String fileNum = '';
+    if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+      fileNum = 'g00${count}';
+    }
+    else if(count < 100){
+      fileNum = 'g0${count}';
+    }
+    else{
+      fileNum = 'g${count}';
+    }
+    final file = await CreateSaveFile(fileNum);
+    await file.writeAsString(jsonEncode(groupData));
+
+    listMapGroup.add(jsonDecode(await file.readAsString()));
+    SortGroupFromMark();
+    Fluttertoast.showToast(msg: '단체 명식이 저장되었습니다');
   }
 
   //명식을 최초 저장할 때 사용
@@ -359,181 +398,6 @@ SortGroupFromMark() {
         'birthMin':mapPerson[index]['birthMin'], 'saveDate':mapPerson[index]['saveDate'], 'memo':mapPerson[index]['memo'], 'mark':mapPerson[index]['mark']}));
     }catch(e){return {};} //내용을 덮어쓴다
   }
-
-  //궁합을 최초 저장할 때 사용
-  Future<void> SaveGroupData(String name0, String genderString0, int uemYang0, int birthYear0, int birthMonth0, int birthDay0, int birthHour0, int birthMin0,
-      String name1, String genderString1, int uemYang1, int birthYear1, int birthMonth1, int birthDay1, int birthHour1, int birthMin1) async {
-  bool gender0 = true, gender1 = true;
-  if(genderString0 == '여'){
-    gender0 = false;
-  }
-  if(genderString1 == '여'){
-    gender1 = false;
-  }
-
-  int count = mapGroup.length;
-  String fileNum = '';
-  if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-    fileNum = 'g00${count}';
-  }
-  else if(count < 100){
-    fileNum = 'g0${count}';
-  }
-  else{
-    fileNum = 'g${count}';
-  }
-  final file = await CreateSaveFile(fileNum);
-
-
-  await file.writeAsString(jsonEncode({'num':fileNum, 'name0': name0, 'gender0':gender0, 'uemYang0': uemYang0, 'birthYear0':birthYear0, 'birthMonth0':birthMonth0,
-    'birthDay0':birthDay0, 'birthHour0':birthHour0, 'birthMin0':birthMin0, 'name1': name1, 'gender1':gender1, 'uemYang1': uemYang1, 'birthYear1':birthYear1, 'birthMonth1':birthMonth1,
-    'birthDay1':birthDay1, 'birthHour1':birthHour1, 'birthMin1':birthMin1, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
-  mapGroup.add(jsonDecode(await file.readAsString()));
-  SortGroupFromMark();
-
-  Fluttertoast.showToast(msg: '궁합이 저장되었습니다');
-  }
-
-  //궁합을 삭제할 때 사용
-  DeleteGroupData(String num) async {
-  int index = int.parse(num.substring(1,4));
-
-  if(index == mapGroup.length-1){  //map의 마지막 파일이면
-    String fileNum = '';
-    if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-      fileNum = 'g00${index}';
-    }
-    else if(index < 100){
-      fileNum = 'g0${index}';
-    }
-    else{
-      fileNum = 'g${index}';
-    }
-    File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-    mapGroup.removeLast();
-  }
-  else{
-    for(int i = index; i < mapGroup.length-1; i++){
-      String fileNum = '';
-      if(i < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'g00${i}';
-      }
-      else if(i < 100){
-        fileNum = 'g0${i}';
-      }
-      else{
-        fileNum = 'g${i}';
-      }
-      mapGroup[i]['name0'] = mapGroup[i+1]['name0'];
-      mapGroup[i]['gender0'] = mapGroup[i+1]['gender0'];
-      mapGroup[i]['uemYang0'] = mapGroup[i+1]['uemYang0'];
-      mapGroup[i]['birthYear0'] = mapGroup[i+1]['birthYear0'];
-      mapGroup[i]['birthMonth0'] = mapGroup[i+1]['birthMonth0'];
-      mapGroup[i]['birthDay0'] = mapGroup[i+1]['birthDay0'];
-      mapGroup[i]['birthHour0'] = mapGroup[i+1]['birthHour0'];
-      mapGroup[i]['birthMin0'] = mapGroup[i+1]['birthMin0'];
-      mapGroup[i]['name1'] = mapGroup[i+1]['name1'];
-      mapGroup[i]['gender1'] = mapGroup[i+1]['gender1'];
-      mapGroup[i]['uemYang1'] = mapGroup[i+1]['uemYang1'];
-      mapGroup[i]['birthYear1'] = mapGroup[i+1]['birthYear1'];
-      mapGroup[i]['birthMonth1'] = mapGroup[i+1]['birthMonth1'];
-      mapGroup[i]['birthDay1'] = mapGroup[i+1]['birthDay1'];
-      mapGroup[i]['birthHour1'] = mapGroup[i+1]['birthHour1'];
-      mapGroup[i]['birthMin1'] = mapGroup[i+1]['birthMin1'];
-      mapGroup[i]['saveDate'] = mapGroup[i+1]['saveDate'];
-      mapGroup[i]['memo'] = mapGroup[i+1]['memo'];
-      mapGroup[i]['mark'] = mapGroup[i+1]['mark'];
-      try{
-        await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'name0': mapGroup[i+1]['name0'], 'gender0':mapGroup[i+1]['gender0'], 'uemYang0': mapGroup[i+1]['uemYang0'],
-          'birthYear0':mapGroup[i+1]['birthYear0'], 'birthMonth0':mapGroup[i+1]['birthMonth0'],'birthDay0':mapGroup[i+1]['birthDay0'], 'birthHour0':mapGroup[i+1]['birthHour0'],
-          'birthMin0':mapGroup[i+1]['birthMin0'],
-          'name1': mapGroup[i+1]['name1'], 'gender1':mapGroup[i+1]['gender1'], 'uemYang1': mapGroup[i+1]['uemYang1'],
-          'birthYear1':mapGroup[i+1]['birthYear1'], 'birthMonth1':mapGroup[i+1]['birthMonth1'],'birthDay1':mapGroup[i+1]['birthDay1'], 'birthHour1':mapGroup[i+1]['birthHour1'],
-          'birthMin1':mapGroup[i+1]['birthMin1'],
-          'saveDate':mapGroup[i+1]['saveDate'], 'memo':mapGroup[i+1]['memo'], 'mark':mapGroup[i+1]['mark']}));
-      }catch(e){return {};}
-    }
-    String fileNum = '';
-    if(mapGroup.length < 11){
-      fileNum = 'g00${mapGroup.length - 1}';
-    }
-    else if(mapGroup.length < 101){
-      fileNum = 'g0${mapGroup.length - 1}';
-    }
-    else{
-      fileNum = 'g${mapGroup.length - 1}';
-    }
-
-    File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-    mapGroup.removeLast();
-  }
-
-  Fluttertoast.showToast(msg: '궁합이 삭제되었습니다');
-}
-
-  //궁합의 메모를 최초, 또는 수정하여 저장할 때 사용
-  SaveGroupDataMemo(String saveDataNum, String memo) async {
-  int index;
-  if(saveDataNum == ''){
-    index = mapGroup.length - 1;
-  }
-  else{
-    index = int.parse(saveDataNum.substring(1,4));
-  }
-  mapGroup[index]['memo'] = memo;
-
-  UpdateGroupDataFromMap(index);
-
-  Fluttertoast.showToast(msg: '메모가 저장되었습니다');
-}
-
-  //궁합을 즐겨찾기 하거나 해제하여 저장할 때 사용
-  SaveGroupMark(String saveDataNum) async {
-  int index = 0;
-
-  if(saveDataNum != '') {
-    index = int.parse(saveDataNum.substring(1, 4));
-  }
-  else{
-    index = mapGroup.length - 1;
-  }
-
-  if(mapGroup[index]['mark'] == true){
-    mapGroup[index]['mark'] = false;
-  }
-  else{
-    mapGroup[index]['mark'] = true;
-    Fluttertoast.showToast(msg: '즐겨찾기 되었습니다');
-  }
-
-  UpdateGroupDataFromMap(index);
-}
-
-  //명식의 내용을 수정하여 저장한 후 map에 업데이트 함
-  UpdateGroupDataFromMap(int index) async{
-  SortGroupFromMark();
-
-  String fileNum = '';
-  if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-    fileNum = 'g00${index}';
-  }
-  else if(index < 100){
-    fileNum = 'g0${index}';
-  }
-  else{
-    fileNum = 'g${index}';
-  }
-  try{
-    final file = File('${fileDirPath}/${fileNum}');
-
-    await file.writeAsString(jsonEncode({'num':fileNum, 'name0': mapGroup[index]['name0'], 'gender0':mapGroup[index]['gender0'], 'uemYang0': mapGroup[index]['uemYang0'],
-      'birthYear0':mapGroup[index]['birthYear0'], 'birthMonth0':mapGroup[index]['birthMonth0'],'birthDay0':mapGroup[index]['birthDay0'], 'birthHour0':mapGroup[index]['birthHour0'],
-      'birthMin0':mapGroup[index]['birthMin0'],
-      'name1': mapGroup[index]['name1'], 'gender1':mapGroup[index]['gender1'], 'uemYang1': mapGroup[index]['uemYang1'],
-      'birthYear1':mapGroup[index]['birthYear1'], 'birthMonth1':mapGroup[index]['birthMonth1'],'birthDay1':mapGroup[index]['birthDay1'], 'birthHour1':mapGroup[index]['birthHour1'],
-      'birthMin1':mapGroup[index]['birthMin1'], 'saveDate':mapGroup[index]['saveDate'], 'memo':mapGroup[index]['memo'], 'mark':mapGroup[index]['mark']}));
-  }catch(e){return {};} //내용을 덮어쓴다
-}
 
   //최근 명식 저장
   Future<void> SaveRecentPersonData(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo) async {

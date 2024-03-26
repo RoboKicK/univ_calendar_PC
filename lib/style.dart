@@ -97,7 +97,7 @@ double UIOhengMarginTop = 7.2;
 double UIOhengFontSize = 24; //팔자 텍스트 사이즈
 double UIOhengDeunFontSize = 16;  //대운 팔자 텍스트 사이즈
 double UIOhengDiaryListSize = 20;
-FontWeight UIOhengFontWeight = FontWeight.w700;  //팔자 텍스트 두께
+FontWeight UIOhengFontWeight = FontWeight.w800;  //팔자 텍스트 두께
 FontWeight UIOhengDeunFontWeight = FontWeight.w600;  //팔자 텍스트 두께
 //double UIOhengBoxPadding0 = 6; //간지변환 팔자 버튼 텍스트 패딩
 //double UIOhengBoxPadding1 = 4; //팔자 텍스트 패딩
@@ -163,4 +163,4 @@ Color SetOhengColor(bool isCheongan, int num){  //오행 박스 컬러
   return Colors.white;
 }
 
-double appBarHeight = 40;
+double appBarHeight = 50;

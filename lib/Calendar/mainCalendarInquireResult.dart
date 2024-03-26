@@ -808,7 +808,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.widgetWidth > MediaQuery.of(context).size.width * 0.6){
+    if(widget.widgetWidth > 500){//MediaQuery.of(context).size.width * 0.6){
       isOneWidget = true;
       widgetWidth = widget.widgetWidth * 0.5;
       } else {

@@ -278,7 +278,7 @@ List<Widget> GetPersonalDataText(int num){
                 margin: EdgeInsets.only(top: style.UIMarginTop),
                 child: ScrollConfiguration(
                   behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-                  child: ListView.builder(
+                  child: ListView.separated(
                     scrollDirection: Axis.vertical,
                     itemCount:saveDataManager.mapPersonSortedMark.length,
                     itemBuilder: (context, i){
@@ -362,6 +362,7 @@ List<Widget> GetPersonalDataText(int num){
                         return SizedBox.shrink();
                       }
                     },
+                      separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, color: style.colorBlack,); }
                   ),
                 ),
               ),

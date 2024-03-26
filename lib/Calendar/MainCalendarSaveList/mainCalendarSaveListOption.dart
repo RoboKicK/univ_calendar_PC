@@ -979,6 +979,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                                     print(saveDataManager.fileDirPath);
                                                   });
                                                   widget.closeOption(false,0);
+                                                  Navigator.of(context).pop(true);
                                                 },
                                                 child: Text('네')),
                                             ElevatedButton(
