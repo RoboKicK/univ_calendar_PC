@@ -114,20 +114,27 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   }
 
   Widget GetBirthText(){
-    if(((personalDataManager.etcData % 10000) / 1000).floor() != 1){
-        if(isShowPersonalBirth == false){
-        return SizedBox.shrink();
-      }
-    }
+    String birthText = '';
+    if(((personalDataManager.etcData % 10000) / 1000).floor() != 1 && isShowPersonalBirth == false){
+      birthText = '생년월일 숨김';
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('${widget.birthYear}.${widget.birthMonth}.${widget.birthDay}', style: textStyle),
+          Text(birthText, style: textStyle),
+        ],
+      );
+    } else {
+      birthText = '${widget.birthYear}.${widget.birthMonth}.${widget.birthDay}';
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(birthText, style: textStyle),
           Text(GetUemYangText() + ' ', style: textStyle),
           GetBirthTimeText(),
           //Text(GetBirthTimeText(_hour,_min), style: Theme.of(context).textTheme.labelLarge),
         ],
       );
+    }
   }
 
   Widget GetManTextWidget(){

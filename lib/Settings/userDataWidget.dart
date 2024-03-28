@@ -46,7 +46,6 @@ class _UserDataState extends State<UserDataWidget> {
     showDialog<void>(
       context: context,
       barrierDismissible: true,
-      //barrierColor: Colors.transparent,
       builder: (BuildContext context) {
         return AlertDialog(
           content: Text(

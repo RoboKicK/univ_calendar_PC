@@ -55,11 +55,11 @@ class _CalendarMainState extends State<CalendarMain> {
 
   ShowSnackBar(String text){
     SnackBar snackBar = SnackBar(
-      content: Text(text, style: Theme.of(context).textTheme.displayLarge, textAlign: TextAlign.center),
-      backgroundColor: Colors.white,
+      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+      backgroundColor: style.colorMainBlue,//Colors.white,
       //style.colorMainBlue,
       shape: StadiumBorder(),
-      duration: Duration(milliseconds: 600),
+      duration: Duration(milliseconds: style.snackBarDuration),
       dismissDirection: DismissDirection.down,
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
@@ -68,12 +68,13 @@ class _CalendarMainState extends State<CalendarMain> {
           right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
     );
 
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   AddCalendarWidget(bool isLeft, dynamic listGroupMap){  //위젯 추가
     if(listKey.length == 8){
-      ShowSnackBar('만세력은 최대 8개까지만 동시에 사용할 수 있습니다');
+      ShowSnackBar('만세력은 최대 8개까지만\n동시에 사용할 수 있습니다');
       return;
     }
     setState(() {
@@ -614,6 +615,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   Widget closeButtonWidget = SizedBox(width: 50,height: 50,);
   Widget backButtonWidget = SizedBox.shrink();
   Widget saveButtonWidget = SizedBox(width: 100,height: 50,);
+  Widget markButtonWidget = SizedBox(width: 100,height: 50,);
   Widget calendarResultWidget = SizedBox.shrink();
   Widget calendarChangeWidget = SizedBox.shrink();
   Widget calendarSaveListWidget = SizedBox.shrink();
@@ -735,7 +737,7 @@ class _CalendarWidget extends State<CalendarWidget> {
             widget.closeWidget(widgetNum);
           },
           child: Icon(Icons.close, color: Colors.white),//Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
         ),
       );
     }
@@ -756,7 +758,7 @@ class _CalendarWidget extends State<CalendarWidget> {
             BackButtonAction();
           },
           child: Icon(Icons.arrow_back, color:Colors.white),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
         ),
       );
     }
@@ -778,15 +780,44 @@ class _CalendarWidget extends State<CalendarWidget> {
               saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
               setState(() {
                 isSaved = 0;
+                SetWidgetMarkButton();
               });
             }
           },
           child: Icon(Icons.save, color:Colors.white),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
         ),
       );
     } else {
       saveButtonWidget = SizedBox(width: 50,height: 50,);
+    }
+  }
+
+  //즐겨찾기 버튼 설정
+  SetWidgetMarkButton(){
+    if(nowState == 1){
+      if(isSaved == 0){
+        markButtonWidget = Container(
+          width: 40,
+          child: AnimatedOpacity(  //즐겨찾기 버튼
+            opacity: isSaved == 0? 1.0 : 0.0,
+            duration: Duration(milliseconds: 130),
+            child: ElevatedButton(
+              child: Icon(markIcon, color:Colors.white),
+              onPressed: (){
+                SetMarkIcon();
+                saveDataManager.SavePersonMark(personDataNum);
+              },
+              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+            ),
+          ),
+        );
+      } else {
+        markButtonWidget = SizedBox(width: 50,height: 50);
+      }
+    } else {
+      markButtonWidget = SizedBox(width: 50,height: 50);
     }
   }
 
@@ -800,6 +831,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           buttonPadding: EdgeInsets.only(left:20, right:20, top:0),
           actions: [
             ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
                   saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
                   setState(() {
@@ -809,6 +841,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 },
                 child: Text('저장')),
             ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
                   Navigator.pop(context);
                 },
@@ -827,6 +860,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         SetWidgetCalendarResultBirthText();
         SetWidgetSaveButton();
         SetWidgetBackButton();
+        SetWidgetMarkButton();
       });
     }
   }
@@ -868,7 +902,6 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   //만세력 조회 화면 생성
   SetCalendarResultWidget(){
-    print('SetCalendarResult');
     nowState = 1;
     setState(() {
       isEditSetting = !isEditSetting;
@@ -894,7 +927,6 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   //다른 위젯에서 조회 정보 입력
   SetInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo, String saveDataNum){
-    print('SetInquireInfo');
     targetName = name;
     genderVal = gender;
     uemYangType = uemYang;
@@ -921,6 +953,8 @@ class _CalendarWidget extends State<CalendarWidget> {
     listCalendarTexts.add(Text(calendarHeadLineTitle[1], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[1]), ));
     listCalendarTexts.add(Text(calendarHeadLineTitle[2], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[2]), ));
     listCalendarTexts.add(Text(calendarHeadLineTitle[3], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[3]), ));
+
+    SetWidgetMarkButton();
   }
 
   @override void didChangeDependencies() {  //initState 끝나고 실행됨
@@ -976,28 +1010,23 @@ class _CalendarWidget extends State<CalendarWidget> {
                       height: 50,
                       child: calendarBirthTextWidget,
                     ),
-                    AnimatedOpacity(  //즐겨찾기 버튼
-                      opacity: isSaved == 0? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 130),
-                      child: IconButton(
-                        icon: Icon(markIcon),
-                        onPressed: (){
-                          SetMarkIcon();
-                            saveDataManager.SavePersonMark(personDataNum);
-                          },
-                      ),
-                    ),
+                    markButtonWidget,
                     [
-                      AnimatedOpacity( //메모 아이콘
-                      opacity: isSaved == 0? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 130),
-                      child: IconButton(
-                        icon: Icon(Icons.chat),
-                        onPressed: (){
+                      Container(
+                        width: 40,
+                        child: AnimatedOpacity( //메모 아이콘
+                        opacity: isSaved == 0? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 130),
+                        child: ElevatedButton(
+                          child: Icon(Icons.chat, color:Colors.white),
+                          onPressed: (){
 
-                        },
+                          },
+                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        ),
+                                            ),
                       ),
-                    ),
                       saveButtonWidget,
                     ][isSaved], //저장버튼
                     closeButtonWidget,  //닫기버튼

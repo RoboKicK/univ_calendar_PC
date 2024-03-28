@@ -30,6 +30,8 @@ List<Map> mapGroupSortedMark = []; //즐겨찾기로 정렬된 리스트
 List<Map> mapRecentPerson = [];
 List<Map> mapDiary = [];  //일진일기
 
+late var snackBar;
+
   //최초 어플 켰을 때 저장되어 있는 명식들을 로드함
   LoadSavedPeople() async {
     if(mapPerson.length != 0)
@@ -158,7 +160,7 @@ List<Map> mapDiary = [];  //일진일기
 
     listMapGroup.add(jsonDecode(await file.readAsString()));
     SortGroupFromMark();
-    Fluttertoast.showToast(msg: '단체 명식이 저장되었습니다');
+    snackBar('단체 명식이 저장되었습니다');
   }
 
   //명식을 최초 저장할 때 사용
@@ -186,7 +188,7 @@ List<Map> mapDiary = [];  //일진일기
         'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
       mapPerson.add(jsonDecode(await file.readAsString()));
       SortPersonFromMark();
-      Fluttertoast.showToast(msg: '명식이 저장되었습니다');
+    snackBar('명식이 저장되었습니다');
   }
 
   //명식 최초 저장할 때 중복 명식 있는지 확인
@@ -314,7 +316,7 @@ List<Map> mapDiary = [];  //일진일기
 
     SortPersonFromMark();
 
-    Fluttertoast.showToast(msg: '명식이 삭제되었습니다');
+    snackBar('명식이 삭제되었습니다');
   }
 
   //명식의 메모를 최초, 또는 수정하여 저장할 때 사용
@@ -330,7 +332,7 @@ List<Map> mapDiary = [];  //일진일기
 
     UpdatePersonDataFromMap(index);
 
-    Fluttertoast.showToast(msg: '메모가 저장되었습니다');
+    snackBar('메모가 저장되었습니다');
   }
 
   //명식을 즐겨찾기 하거나 해제하여 저장할 때 사용
@@ -345,10 +347,11 @@ List<Map> mapDiary = [];  //일진일기
 
     if(mapPerson[index]['mark'] == true){
       mapPerson[index]['mark'] = false;
+      snackBar('즐겨찾기가 해제 되었습니다');
     }
     else{
       mapPerson[index]['mark'] = true;
-      Fluttertoast.showToast(msg: '즐겨찾기 되었습니다');
+      snackBar('즐겨찾기 되었습니다');
     }
 
     UpdatePersonDataFromMap(index);
@@ -369,7 +372,7 @@ List<Map> mapDiary = [];  //일진일기
 
   UpdatePersonDataFromMap(index);
 
-  Fluttertoast.showToast(msg: '명식이 수정되었습니다');
+  snackBar('명식이 수정되었습니다');
 }
 
   //명식의 내용을 수정하여 저장한 후 map에 업데이트 함
@@ -567,8 +570,6 @@ List<Map> mapDiary = [];  //일진일기
           'day':day, 'dayPaljaData':dayPaljaData, 'dayString':dayString, 'labelData':labelData, 'memo':memo}));
       }
     }
-
-
 }
 
   //일진일기 쓸 날자에 작성된 파일 있는지 조회
@@ -653,5 +654,5 @@ List<Map> mapDiary = [];  //일진일기
       mapDiary.removeLast();
     }
 
-    Fluttertoast.showToast(msg: '일기가 삭제되었습니다');
+    snackBar('일기가 삭제되었습니다');
   }

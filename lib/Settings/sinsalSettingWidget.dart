@@ -266,7 +266,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                             child: TextButton(
                                 style: ButtonStyle(
                                   //splashFactory: NoSplash.splashFactory,
-                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.3)),
+                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
                                 ),
                                 child: Text(
                                   '모두 켜기',
@@ -289,7 +289,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                             child: TextButton(
                                 style: ButtonStyle(
                                   //splashFactory: NoSplash.splashFactory,
-                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.3)),
+                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
                                 ),
                                 child: Text(
                                   '모두 끄기',
@@ -356,7 +356,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                             Text("공망", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetGongmang(); SaveGongmangData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),
@@ -494,7 +494,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                     Text("십이신살", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetSibisinsal();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),
@@ -551,7 +551,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                     Text("기타 신살", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetEtcSinsal();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),

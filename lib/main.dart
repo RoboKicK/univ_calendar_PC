@@ -166,18 +166,18 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         }
         nowPageCount++;
       } else {
-        ShowSnackBar('페이지는 9개를 넘을 수 없습니다');
+        ShowSnackBar('페이지는 9개까지 사용 가능합니다');
       }
     });
   }
 
   ShowSnackBar(String text){
     SnackBar snackBar = SnackBar(
-      content: Text(text, style: Theme.of(context).textTheme.displayLarge, textAlign: TextAlign.center),
-      backgroundColor: Colors.white,
+      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+      backgroundColor: style.colorMainBlue,//Colors.white,
       //style.colorMainBlue,
       shape: StadiumBorder(),
-      duration: Duration(milliseconds: 600),
+      duration: Duration(milliseconds: style.snackBarDuration),
       dismissDirection: DismissDirection.down,
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
@@ -186,6 +186,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
     );
 
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -292,7 +293,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   //그룹 불러오기
   GroupDataLoad(int groupIndex){
     if(nowPageCount == limitPageCount){ //최대 페이지
-
+      ShowSnackBar('페이지는 9개까지 사용 가능합니다\n페이지 하나를 비워주세요');
     } else {
       setState(() {
         AddPage(false);
@@ -350,9 +351,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     for(int i = 0; i < firstPageCount; i++) {
       listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
     }
-    for(int i = 0; i < listPageNameController.length; i++){
-      //listPageNameController[i].text = listPageName[i];
-    }
+
+    saveDataManager.snackBar = ShowSnackBar;
   }
 
   @override
@@ -383,7 +383,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                 rebuildAllChildren(context);
                               });
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Icon(Icons.save, size: 20, color:Colors.white),
                           ),
                         ),
@@ -397,7 +399,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                 SetGroupLoadWidget(true);
                               });
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Icon(Icons.save, size: 20, color:Colors.white),
                           ),
                         ),
@@ -409,7 +412,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             onPressed: (){
                               SetClearPageNum(nowPageNum);
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Icon(Icons.clear, size: 20, color:Colors.white),
                           ),
                         ),
@@ -421,7 +425,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             onPressed: (){
                               SetClearPageNum(-2);
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Icon(Icons.clear, size: 20, color:Colors.white),
                           ),
                         ),
@@ -464,7 +469,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             SetSettingWidget(_isShowSettingPage);
                           });
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                         child: Icon(Icons.settings, size: 20, color:Colors.white),
                       ),
                     ),
@@ -481,8 +487,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                         onPressed: (){
                           AddPage(true);
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
-                        child: Icon(Icons.add_circle, size: 20, color: Colors.white),
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        child: Icon(Icons.add_circle, size: 20, color: Colors.white ),
                       ),
                     ),
                     Wrap(
@@ -496,7 +503,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                               onPressed: (){
                                 SetNowCalendarNum(i);
                               },
-                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                               child: Icon(Icons.circle, size: listCalendarButtonSize[i], color:listCalendarButtonColor[i]),
                             ),
                           );
@@ -510,36 +518,30 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                         onPressed: (){
                           AddPage(false);
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent),
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                         child: Icon(Icons.add_circle, size: 20, color: Colors.white),
                       ),
                     ),
                   ],
-                  //[
-                  //  Container(),
-                  //  Row(
-                  //    children: listPageSelectButton
-                  //  ),
-                  //  Container(),
-                  //],
                 ),
               ],
             ),
           ),
           Stack(
             children:[
-              IndexedStack(
+              IndexedStack( //메인 페이지
                 index: nowPageNum,
                 children: listPageWidget,
               ),
-              Container(
+              Container(  //설정 위젯
                 //color:Colors.yellow,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - style.appBarHeight,
                 alignment: Alignment.center,
                 child: settingWidget,
               ),
-              Container(
+              Container(  //그룹 불러오기 위젯
                 //color:Colors.yellow,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - style.appBarHeight,

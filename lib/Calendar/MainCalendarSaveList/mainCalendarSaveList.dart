@@ -65,27 +65,9 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       return birthTimeText;
     }
   }
-  String GetFirstLineText(String text){
-    String firstLineText = '';
-    int textLengthLimit = 30;
-    for(int i = 0; i < text.length; i++){
-      if(text.substring(i, i+1) == '\n'){
-        break;
-      }
-      if(i+1 > text.length){
-        break;
-      }
-      if(i > textLengthLimit){
-        firstLineText = firstLineText+'..';
-        break;
-      }
-      firstLineText = firstLineText + text.substring(i, i+1);
-    }
-    return firstLineText;
-  }
   String GetNameText(String text){
     String nameText = '';
-    int textLengthLimit = 3;
+    int textLengthLimit = 9;
     for(int i = 0; i < text.length; i++){
       if(text.substring(i, i+1) == '\n'){
         break;
@@ -108,7 +90,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
         mainCalendarSaveListOptionWidget = SizedBox.shrink();
       } else {
         mainCalendarSaveListOptionWidget = Container(
-          width: style.UIButtonWidth,
+          width: style.UIButtonWidth + 30,
           height: MediaQuery.of(context).size.height - style.appBarHeight - style.headLineHeight - 4,
           color: style.colorBackGround,
           child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPersonSortedMark[i]['name'], gender0: saveDataManager.mapPersonSortedMark[i]['gender'], uemYang0: saveDataManager.mapPersonSortedMark[i]['uemYang'],
@@ -121,79 +103,49 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
     });
   }
 
-List<Widget> GetPersonalDataText(int num){
-  List<Widget> listPersonalTextData = [];
-  if(isShowPersonalDataAll == true){
-    listPersonalTextData.add(
-      Container(
-        height: style.saveDataNameTextLineHeight,
-        //color:Colors.green,
-        child:Text("${GetNameText(saveDataManager.mapPersonSortedMark[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
-      ),
-    );
-    listPersonalTextData.add(
-        Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.green,
-            //padding:EdgeInsets.only(top:7),
-            child:Text("(${saveDataManager.mapPersonSortedMark[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
-    listPersonalTextData.add(
-        Container(
-            height: style.saveDataNameTextLineHeight,
-            //alignment: Alignment.bottomCenter,
-            //color:Colors.grey,
-            //padding:EdgeInsets.only(top:2),
-            child:Text(" ${saveDataManager.mapPersonSortedMark[num]['birthYear']}.${saveDataManager.mapPersonSortedMark[num]['birthMonth']}.${saveDataManager.mapPersonSortedMark[num]['birthDay']}", style: Theme.of(context).textTheme.titleLarge)));
-    listPersonalTextData.add(Container(
-        height: style.saveDataNameTextLineHeight,
-        //color:Colors.red,
-        //padding:EdgeInsets.only(top:7),
-        child:Text("${GetUemYangText(saveDataManager.mapPersonSortedMark[num]['uemYang'])}", style: Theme.of(context).textTheme.titleLarge)));
-    listPersonalTextData.add(Container(
-        height: style.saveDataNameTextLineHeight,
-        //alignment: Alignment.bottomCenter,
-        //color:Colors.blue,
-        //padding:EdgeInsets.only(top:saveDataManager.mapPersonSortedMark[num]['birthHour']==-2?1:2),
-        child:Text(" ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[num]['birthHour'], saveDataManager.mapPersonSortedMark[num]['birthMin'], true)}", style: Theme.of(context).textTheme.titleLarge, )));
-  } else {
-    if(isShowPersonalName == true){
+  List<Widget> GetPersonNameText(int num){
+    List<Widget> listPersonalTextData = [];
+    if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              //color:Colors.green,
-              child:Text("${GetNameText(saveDataManager.mapPersonSortedMark[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
-          ));
-      listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
-          //color:Colors.green,
-          //padding:EdgeInsets.only(top:7),
-          child:Text("(${saveDataManager.mapPersonSortedMark[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.mapPersonSortedMark[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge)));
     }
-    if(isShowPersonalName == false){
-      listPersonalTextData.add(Text("${saveDataManager.mapPersonSortedMark[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
+    else {
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child:Text("${GetNameText(saveDataManager.mapPersonSortedMark[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child:Text("(${saveDataManager.mapPersonSortedMark[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
     }
-    if(isShowPersonalBirth == true){
-      listPersonalTextData.add( Container(
-          height: style.saveDataNameTextLineHeight,
-          //alignment: Alignment.bottomCenter,
-          //color:Colors.grey,
-          //padding:EdgeInsets.only(top:2),
-          child:Text(" ${saveDataManager.mapPersonSortedMark[num]['birthYear']}.${saveDataManager.mapPersonSortedMark[num]['birthMonth']}.${saveDataManager.mapPersonSortedMark[num]['birthDay']}", style: Theme.of(context).textTheme.titleLarge)));
-      listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
-          //color:Colors.red,
-          //padding:EdgeInsets.only(top:7),
-          child:Text("${GetUemYangText(saveDataManager.mapPersonSortedMark[num]['uemYang'])}", style: Theme.of(context).textTheme.titleLarge)));
-      listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
-          //alignment: Alignment.bottomCenter,
-          //color:Colors.blue,
-          //padding:EdgeInsets.only(top:saveDataManager.mapPersonSortedMark[num]['birthHour']==-2?1:2),
-          child:Text(" ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[num]['birthHour'], saveDataManager.mapPersonSortedMark[num]['birthMin'], true)}", style: Theme.of(context).textTheme.titleLarge)));
-    }
+
+    return listPersonalTextData;
   }
-  return listPersonalTextData;
-}
+  List<Widget> GetPersonBirthText(int num){
+    List<Widget> listPersonalTextData = [];
+    if(isShowPersonalDataAll == true || isShowPersonalBirth == true){
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataMemoLineHeight,
+              child:Text("${saveDataManager.mapPersonSortedMark[num]['birthYear']}.${saveDataManager.mapPersonSortedMark[num]['birthMonth']}.${saveDataManager.mapPersonSortedMark[num]['birthDay']}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+      listPersonalTextData.add(Container(
+          height: style.saveDataMemoLineHeight,
+          child:Text("${GetUemYangText(saveDataManager.mapPersonSortedMark[num]['uemYang'])}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+      listPersonalTextData.add(Container(
+          height: style.saveDataMemoLineHeight,
+          child:Text(" ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[num]['birthHour'], saveDataManager.mapPersonSortedMark[num]['birthMin'], true)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+    } else {
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataMemoLineHeight,
+              child:Text("****.**.** **:**",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+    }
+
+    return listPersonalTextData;
+  }
 
   String searchText = '';
 
@@ -308,8 +260,8 @@ List<Widget> GetPersonalDataText(int num){
                                         saveDataManager.mapPersonSortedMark[i]['num']);
                                     widget.SetCalendarResultWidget();
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    padding:EdgeInsets.only(left:0), backgroundColor: style.colorBackGround, elevation:0.0, foregroundColor: style.colorBackGround),
+                                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                    foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                                 child: Column(
                                   children: [
                                     Container(
@@ -319,7 +271,7 @@ List<Widget> GetPersonalDataText(int num){
                                       //color:Colors.green,
                                       child:
                                       Row(
-                                        children: GetPersonalDataText(i),
+                                        children: GetPersonNameText(i),
                                       ),
                                     ),
                                     Container(
@@ -327,7 +279,9 @@ List<Widget> GetPersonalDataText(int num){
                                         height: style.saveDataMemoLineHeight,
                                         padding: EdgeInsets.only(top:4),
                                         //color:Colors.yellow,
-                                        child: Text(GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                        child: Row(
+                                          children: GetPersonBirthText(i),
+                                        ),
                                     ),
                                   ],
                                 ),
@@ -335,23 +289,27 @@ List<Widget> GetPersonalDataText(int num){
                               Container(  //즐겨찾기 버튼
                                 width: style.UIButtonWidth * 0.1,
                                 height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                                child: IconButton(
+                                child: ElevatedButton(
                                   onPressed: () {
                                     setState(() {
                                       saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
                                     });
                                   },
-                                  icon: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                      foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                  child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
                                 ),
                               ),
                               Container(  //옵션 버튼
                                 width: style.UIButtonWidth * 0.1,
                                 height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                                child: IconButton(
+                                child: ElevatedButton(
                                   onPressed: () {
                                     SetSaveListOptionWidget(true, i);
                                   },
-                                  icon: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                      foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                  child: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
                                 ),
                               ),
                             ],

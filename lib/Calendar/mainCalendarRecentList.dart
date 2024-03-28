@@ -275,7 +275,8 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                 '');
                             widget.SetCalendarResultWidget();
                           },
-                          style: ElevatedButton.styleFrom(padding:EdgeInsets.only(left:0), backgroundColor: style.colorBackGround, elevation:0.0, foregroundColor: style.colorBackGround),
+                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                              foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                           child: Column(
                             children: [
                               Container(
@@ -290,6 +291,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                Container(
                                       width: style.UIButtonWidth,
                                       height: style.saveDataMemoLineHeight,
+                                      padding: EdgeInsets.only(top:4),
                                       child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
                                   ),
                             ],

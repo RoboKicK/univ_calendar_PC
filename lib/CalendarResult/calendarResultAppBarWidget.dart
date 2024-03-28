@@ -31,6 +31,7 @@ class _CalendarResultAppBarWidgetState extends State<CalendarResultAppBarWidget>
 
   IconData markIcon = Icons.check_circle_outline;
   String saveDataNum = '';
+
   ShowDialogMessage(String birth){
     showDialog(
         context: context,
@@ -41,6 +42,7 @@ class _CalendarResultAppBarWidgetState extends State<CalendarResultAppBarWidget>
           buttonPadding: EdgeInsets.only(left:20, right:20, top:0),
           actions: [
             ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
                   saveDataManager.SavePersonData(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
                   setState(() {
@@ -50,6 +52,7 @@ class _CalendarResultAppBarWidgetState extends State<CalendarResultAppBarWidget>
                 },
                 child: Text('저장')),
             ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
                   Navigator.pop(context);
                 },

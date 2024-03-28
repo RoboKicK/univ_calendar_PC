@@ -53,10 +53,15 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           child: Stack(
             children:[
               TextButton(
-              style: TextButton.styleFrom(
-                splashFactory: NoSplash.splashFactory,
-                padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
               ),
+              //TextButton.styleFrom(
+              //  splashFactory: NoSplash.splashFactory,
+              //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              //  surfaceTintColor: Colors.green,
+              //  foregroundColor: Colors.green,
+              //),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
@@ -82,10 +87,14 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           child: Stack(
             children:[
               TextButton(
-                style: TextButton.styleFrom(
-                  splashFactory: NoSplash.splashFactory,
-                  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
                 ),
+                //TextButton.styleFrom(
+                //  splashFactory: NoSplash.splashFactory,
+                //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+                //  surfaceTintColor: Colors.transparent
+                //),
                 child: Align(
                     alignment: Alignment.center,
                     child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
@@ -194,10 +203,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             TextButton(
-              style: TextButton.styleFrom(
-                splashFactory: NoSplash.splashFactory,
-                padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              style: ButtonStyle(
+                overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
               ),
+              //TextButton.styleFrom(
+              //  splashFactory: NoSplash.splashFactory,
+              //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              //),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[10]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[10]))),
@@ -224,10 +236,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             TextButton(
-              style: TextButton.styleFrom(
-                splashFactory: NoSplash.splashFactory,
-                padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              style:ButtonStyle(
+                overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
               ),
+              //TextButton.styleFrom(
+              //  splashFactory: NoSplash.splashFactory,
+              //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              //),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[8]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[8]))),
@@ -254,10 +269,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     child: Stack(
     children:[
     TextButton(
-    style: TextButton.styleFrom(
-    splashFactory: NoSplash.splashFactory,
-    padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    style: ButtonStyle(
+      overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
     ),
+    //TextButton.styleFrom(
+    //splashFactory: NoSplash.splashFactory,
+    //padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    //),
     child: Align(
     alignment: Alignment.center,
     child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[4]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[4]))),
@@ -281,10 +299,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     child: Stack(
     children:[
     TextButton(
-    style: TextButton.styleFrom(
-    splashFactory: NoSplash.splashFactory,
-    padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    style:ButtonStyle(
+      overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
     ),
+    //TextButton.styleFrom(
+    //splashFactory: NoSplash.splashFactory,
+    //padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    //),
     child: Align(
     alignment: Alignment.center,
     child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[2]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[2]))),
@@ -318,10 +339,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             TextButton(
-              style: TextButton.styleFrom(
-                splashFactory: NoSplash.splashFactory,
-                padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              style:ButtonStyle(
+                overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
               ),
+              //TextButton.styleFrom(
+              //  splashFactory: NoSplash.splashFactory,
+              //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              //),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[11]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[11]))),
@@ -348,10 +372,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             TextButton(
-              style: TextButton.styleFrom(
-                splashFactory: NoSplash.splashFactory,
-                padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              style:ButtonStyle(
+                overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
               ),
+              //TextButton.styleFrom(
+              //  splashFactory: NoSplash.splashFactory,
+              //  padding: EdgeInsets.only(bottom:buttonPaddingVal),
+              //),
               child: Align(
                   alignment: Alignment.center,
                   child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[9]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[9]))),
@@ -378,10 +405,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     child: Stack(
     children:[
     TextButton(
-    style: TextButton.styleFrom(
-    splashFactory: NoSplash.splashFactory,
-    padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    style:ButtonStyle(
+      overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
     ),
+    //TextButton.styleFrom(
+    //splashFactory: NoSplash.splashFactory,
+    //padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    //),
     child: Align(
     alignment: Alignment.center,
     child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[5]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[5]))),
@@ -405,10 +435,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     child: Stack(
     children: [
     TextButton(
-    style: TextButton.styleFrom(
-    splashFactory: NoSplash.splashFactory,
-    padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    style:ButtonStyle(
+      overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
     ),
+    //TextButton.styleFrom(
+    //splashFactory: NoSplash.splashFactory,
+    //padding: EdgeInsets.only(bottom:buttonPaddingVal),
+    //),
     child: Align(
     alignment: Alignment.center,
     child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[3]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[3]))),

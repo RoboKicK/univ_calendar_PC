@@ -301,8 +301,8 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                         widget.setGroupLoadWidget(false);
                                         widget.groupDataLoad(i);
                                       },
-                                      style: ElevatedButton.styleFrom(
-                                          padding:EdgeInsets.only(left:0), backgroundColor: style.colorBackGround, elevation:0.0, foregroundColor: style.colorBackGround),
+                                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                          foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                                       child: Column(
                                         children: [
                                           Container(

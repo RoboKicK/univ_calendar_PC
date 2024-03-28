@@ -270,7 +270,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             Text("만 나이로 표시", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetManOld();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),
@@ -333,7 +333,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             Text("간지 음양", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetUemyang();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),
@@ -396,7 +396,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             Text("간지 한글화", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetKoreanGanji();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),
@@ -459,7 +459,7 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             Text("인적사항 숨김", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetPersonalData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),

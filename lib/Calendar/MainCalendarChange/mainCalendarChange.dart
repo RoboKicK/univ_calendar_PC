@@ -230,14 +230,17 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                     buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
                     actions: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            widget.SetInquireInfo('이름 없음', true, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
-                                listGanjiChangeResult[i][4], '', '');
-                            widget.SetCalendarResultWidget();
-                          },
-                          child: Text('남자')),
+                        style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          widget.SetInquireInfo('이름 없음', true, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
+                              listGanjiChangeResult[i][4], '', '');
+                          widget.SetCalendarResultWidget();
+                        },
+                        child: Text('남자'),
+                      ),
                       ElevatedButton(
+                          style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                           onPressed: () {
                             Navigator.of(context).pop();
                             widget.SetInquireInfo('이름 없음', false, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],

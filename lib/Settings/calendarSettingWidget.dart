@@ -577,7 +577,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                             child: TextButton(
                                 style: ButtonStyle(
                                   //splashFactory: NoSplash.splashFactory,
-                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.3)),
+                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
                                 ),
                                 child: Text(
                                   '모두 켜기',
@@ -600,7 +600,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                             child: TextButton(
                                 style: ButtonStyle(
                                   //splashFactory: NoSplash.splashFactory,
-                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.3)),
+                                  overlayColor: MaterialStateProperty.all(style.colorGrey.withOpacity(0.0)),
                                 ),
                                 child: Text(
                                   '모두 끄기',
@@ -667,7 +667,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                             Text("천간 합, 충, 극", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetCheonganHabChung(); SaveCheonganHabChungData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
                       ),
@@ -805,7 +805,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     Text("방합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetBanguiHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),
@@ -869,7 +869,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     Text("삼합 또는 계절합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetSamHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),
@@ -933,7 +933,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     Text("육합", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetYucHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),
@@ -990,7 +990,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                     Text("형", style: style.settingText0),
                                     ElevatedButton( //천간 합충극 스위치 버튼
                                       onPressed: (){SetHyeong();SaveHyeongData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                   ],
                                 ),
                               ),
@@ -1129,7 +1129,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("충", style: style.settingText0),
                                             ElevatedButton( //천간 합충극 스위치 버튼
                                               onPressed: (){SetChung();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1186,7 +1186,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("파", style: style.settingText0),
                                             ElevatedButton( //천간 합충극 스위치 버튼
                                               onPressed: (){SetPa();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1243,7 +1243,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("원진", style: style.settingText0),
                                             ElevatedButton(
                                               onPressed: (){SetWonjin();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1300,7 +1300,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("귀문", style: style.settingText0),
                                             ElevatedButton(
                                               onPressed: (){SetGuimun();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1357,7 +1357,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("격각", style: style.settingText0),
                                             ElevatedButton(
                                               onPressed: (){SetGyeocgac();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1414,7 +1414,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                             Text("지장간", style: style.settingText0),
                                             ElevatedButton(
                                               onPressed: (){SetJijanggan();SaveJijangganData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                           ],
                                         ),
                                       ),
@@ -1542,7 +1542,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                     Text("십이운성", style: style.settingText0),
                                                     ElevatedButton(
                                                       onPressed: (){SetSibiunseong();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                                   ],
                                                 ),
                                               ),
@@ -1599,7 +1599,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                     Text(personalDataManager.GetYugchinText(), style: style.settingText0),
                                                     ElevatedButton(
                                                       onPressed: (){SetYugchin();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                                                      style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                                                   ],
                                                 ),
                                               ),

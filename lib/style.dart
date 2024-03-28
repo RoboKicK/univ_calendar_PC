@@ -24,6 +24,13 @@ var theme = ThemeData(
     side: BorderSide(color: Colors.white),
   ),
   iconTheme: IconThemeData(color : Color.fromARGB(255, 255, 255, 255)), //아이콘 색
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.transparent.withOpacity(0.0)), shadowColor: MaterialStateProperty.all(Colors.transparent)),
+  ),
+  buttonTheme: ButtonThemeData(
+    hoverColor: Colors.transparent,
+
+  ),
   dialogTheme: DialogTheme(
     titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: colorBlack),
     contentTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorBlack),
@@ -107,6 +114,8 @@ double SettingDisWithRadioButton = 20;
 double SettingMarginTop = 30;
 double SettingMarginTopWithInfo = 10;
 double SettingMarginTopWithInfo1 = 6;
+
+int snackBarDuration = 1000;
 
 var colorMainBlue = Color(0xff1E9EFF);
 var colorGrey = Color(0xffB4B4B4);

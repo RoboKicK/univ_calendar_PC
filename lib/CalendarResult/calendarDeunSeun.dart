@@ -343,7 +343,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               SetSeun();
               SetSeunButtonSelectColor(-1);
             },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: listCheonganBoxColor0[deunNum], elevation:0.0),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+              backgroundColor: listCheonganBoxColor0[deunNum], elevation:0.0, foregroundColor: listCheonganBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
           child:Align(
               alignment: Alignment.center,
               child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listDeunCheongan0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listCheonganTextColor0[deunNum]))),
@@ -378,7 +379,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
             SetSeun();
             SetSeunButtonSelectColor(-1);
           },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: listJijiBoxColor0[deunNum], elevation:0.0),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+              backgroundColor: listJijiBoxColor0[deunNum], elevation:0.0, foregroundColor: listJijiBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
           child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))),
         )
       );
@@ -654,7 +656,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
             });
             SetWolun();
           },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: listSeunCheonganBoxColor0[seunNum], elevation:0.0),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+              backgroundColor: listSeunCheonganBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunCheonganBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
           child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum]))),
         )
       );
@@ -694,7 +697,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
             });
             SetWolun();
           },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: listSeunJijiBoxColor0[seunNum], elevation:0.0),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+              backgroundColor: listSeunJijiBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunJijiBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
           child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]))),
         )
       );
@@ -922,7 +926,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           child: ElevatedButton(
             onPressed: () {
             },
-            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: listWolunCheonganBoxColor0[wolunNum], elevation:0.0),
+            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                backgroundColor: listWolunCheonganBoxColor0[wolunNum], elevation:0.0, foregroundColor: listWolunCheonganBoxColor0[wolunNum], surfaceTintColor: Colors.transparent),
             child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum]))),
           )
       );
@@ -946,7 +951,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           child: ElevatedButton(
             onPressed: () {
             },
-            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal), backgroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), elevation:0.0),
+            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                backgroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), elevation:0.0, foregroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), surfaceTintColor: Colors.transparent),
             child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),
           )
       );

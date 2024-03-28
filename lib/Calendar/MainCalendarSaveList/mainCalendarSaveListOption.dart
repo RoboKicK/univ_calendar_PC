@@ -73,7 +73,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   }
   String GetNameText(String text){
     String nameText = '';
-    int textLengthLimit = 5;
+    int textLengthLimit = 9;
     for(int i = 0; i < text.length; i++){
       if(text.substring(i, i+1) == '\n'){
         break;
@@ -113,8 +113,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     editingMemo = memo;
   }
 
-  //Gender? gender = Gender.None;
-  //BirthCalendar? birth = BirthCalendar.None;
   int genderState = 3;
 
   var popUpVal = ['간지 선택 ▼',  '23:30 ~ 01:30 子시', '01:30 ~ 03:30 丑시', '03:30 ~ 05:30 寅시', '05:30 ~ 07:30 卯시', '07:30 ~ 09:30 辰시', '09:30 ~ 11:30 巳시',
@@ -374,77 +372,47 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     });
   }
 
-  List<Widget> GetPersonalDataText(){
+  List<Widget> GetPersonNameText(){
     List<Widget> listPersonalTextData = [];
-    if(isShowPersonalDataAll == true){
-      listPersonalTextData.add(
-        Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.green,
-            child:Text("${GetNameText(widget.name0)}", style: Theme.of(context).textTheme.titleLarge)
-        ),
-      );
+    if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              //color:Colors.green,
-              //padding:EdgeInsets.only(top:7),
-              child:Text("(${widget.gender0 == true?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
-      listPersonalTextData.add(
-          Container(
-              height: style.saveDataNameTextLineHeight,
-              //alignment: Alignment.bottomCenter,
-              //  color:Colors.grey,
-              //padding:EdgeInsets.only(top:2),
-              child:Text(" ${widget.birthYear0}.${widget.birthMonth0}.${widget.birthDay0}", style: Theme.of(context).textTheme.titleLarge)));
-      listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
-          //color:Colors.red,
-          //padding:EdgeInsets.only(top:7),
-          child:Text("${uemYangText0}", style: Theme.of(context).textTheme.titleLarge)));
-      listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
-          //alignment: Alignment.bottomCenter,
-          //color:Colors.blue,
-          //padding:EdgeInsets.only(top:widget.birthHour0==-2?1:2),
-          child:Text(" ${GetBirthTimeText(widget.birthHour0, widget.birthMin0)}", style: Theme.of(context).textTheme.titleLarge)));
-    } else {
-      if(isShowPersonalName == true){
-        listPersonalTextData.add(
-            Container(
-                height: style.saveDataNameTextLineHeight,
-                //color:Colors.green,
-                child:Text("${GetNameText(widget.name0)}", style: Theme.of(context).textTheme.titleLarge)
-            ));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.green,
-            //padding:EdgeInsets.only(top:7),
-            child:Text("(${widget.gender0 == true?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
-      }
-      if(isShowPersonalName == false){
-        listPersonalTextData.add(Text("${widget.gender0 == true?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
-      }
-      if(isShowPersonalBirth == true){
-        listPersonalTextData.add( Container(
-            height: style.saveDataNameTextLineHeight,
-            //alignment: Alignment.bottomCenter,
-            //color:Colors.grey,
-            //padding:EdgeInsets.only(top:2),
-            child:Text(" ${widget.birthYear0}.${widget.birthMonth0}.${widget.birthDay0}", style: Theme.of(context).textTheme.titleLarge)));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.red,
-            //padding:EdgeInsets.only(top:7),
-            child:Text("${uemYangText0}", style: Theme.of(context).textTheme.titleLarge)));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //alignment: Alignment.bottomCenter,
-            //color:Colors.blue,
-            //padding:EdgeInsets.only(top:widget.birthHour0==-2?1:2),
-            child:Text(" ${GetBirthTimeText(widget.birthHour0, widget.birthMin0)}", style: Theme.of(context).textTheme.titleLarge)));
-      }
+              child:Text("${widget.gender0 == true ? '남성' : '여성'}", style: Theme.of(context).textTheme.titleLarge)));
     }
+    else {
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child:Text("${GetNameText(widget.name0)}", style: Theme.of(context).textTheme.titleLarge)));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child:Text("(${widget.gender0 == true ?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+    }
+
+    return listPersonalTextData;
+  }
+  List<Widget> GetPersonBirthText(){
+    List<Widget> listPersonalTextData = [];
+    if(isShowPersonalDataAll == true || isShowPersonalBirth == true){
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataMemoLineHeight,
+              child:Text("${widget.birthYear0}.${widget.birthMonth0}.${widget.birthDay0}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+      listPersonalTextData.add(Container(
+          height: style.saveDataMemoLineHeight,
+          child:Text("${uemYangText0}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+      listPersonalTextData.add(Container(
+          height: style.saveDataMemoLineHeight,
+          child:Text(" ${GetBirthTimeText(widget.birthHour0, widget.birthMin0)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+    } else {
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataMemoLineHeight,
+              child:Text("****.**.** **:**",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+    }
+
     return listPersonalTextData;
   }
 
@@ -527,602 +495,616 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-            children: [
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      Container(  //이름 생년월일
-                        width: style.UIButtonWidth * 0.8,
-                        height: style.saveDataNameLineHeight,
-                        margin: EdgeInsets.only(top: style.UIMarginTopTop),
-                        child:
-                        Container(
-                            width: style.UIButtonWidth * 0.8,
-                            height: style.saveDataNameLineHeight,
-                            padding: EdgeInsets.only(top:6),
-                            //color:Colors.green,
-                            child:Row(
-                                children:
-                                  GetPersonalDataText(),
-                            )
-                        ),
-                      ),
-                      Container(height:style.saveDataMemoLineHeight),
-                    ],
-                  ),
-                  Container(  //즐겨찾기 버튼
-                    width: style.UIButtonWidth * 0.1,
-                    height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                    alignment: Alignment.topCenter,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          SetMarkIcon();
-                          saveDataManager.SavePersonMark(widget.saveDataNum);
-                        });
-                      },
-                      icon: Icon(markIcon),
-                    ),
-                  ),
-                  Container(  //닫기 버튼
-                    width: style.UIButtonWidth * 0.1,
-                    height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                    alignment: Alignment.topCenter,
-                    child: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.closeOption(false,0);
-                        });
-                      },
-                      icon: Icon(Icons.close),
-                    ),
-                  ),
-                ],
-              ),
-              [
-                Expanded( //메모
-                child: Column(
-                  children:[
-                    Container(  //저장일자 제목
-                      width: style.UIButtonWidth,
-                      height: style.saveDataNameLineHeight,
-                      //margin: EdgeInsets.only(top: categoryMargin),
-                      //padding: EdgeInsets.only(top:6),
-                      child: Text("저장일자", style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    Container( //저장일자 정보
-                      width: style.UIButtonWidth,
-                      height: style.saveDataMemoLineHeight,
-                      //alignment: Alignment.topLeft,
-                      child:Text("${widget.saveDate.substring(0,4)}년 ${widget.saveDate.substring(5,7)}월 ${widget.saveDate.substring(8,10)}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
-                    ),
-                    Container(  //메모 제목
-                      width: style.UIButtonWidth,
-                      height: style.saveDataNameLineHeight,
-                      margin: EdgeInsets.only(top: categoryMargin, bottom: categoryMargin * 0.8),
-                      padding: EdgeInsets.only(top:6),
-                      child: Text("메모", style: Theme.of(context).textTheme.titleLarge),
-                    ),
-                    Expanded(
-                      child: ScrollConfiguration(
-                        behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: [
-                            Container( //메모 본문
-                              width: style.UIButtonWidth,
-                              alignment: Alignment.topLeft,
-                              child:Text(prefixMemo, style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
-                            ),
-                            Container( //메모 본문 수정
-                              width: style.UIButtonWidth,
-                              height:600,
-                              color: style.colorNavy,
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                child: TextField(
-                                  autofocus: true,
-                                  controller: memoController,
-                                  keyboardType: TextInputType.multiline,
-                                  maxLines: null,
-                                  focusNode: memoFocusNode,
-                                  onTapOutside: (event) {
-                                    memoFocusNode.requestFocus();
-                                  },
-                                  style: Theme.of(context).textTheme.displayMedium,
-                                  decoration:InputDecoration(
-                                    isDense: true,
-                                    contentPadding: EdgeInsets.symmetric(vertical: 0),
-                                    counterText:"",
-                                    border: InputBorder.none,),
-                                  onChanged: (text){
-                                    setState(() {
-                                      editingMemo = text;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ][isEditingMemo],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-                Expanded( //명식 정보 수정
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children:[
-                      Container( //이름
-                        width: style.UIButtonWidth,
-                        height: style.fullSizeButtonHeight,
-                        decoration: BoxDecoration(
-                          color: style.colorNavy,
-                          borderRadius: BorderRadius.circular(style.textFiledRadius),
-                        ),
-                        child:
-                        Row(
-                          children:[
-                            Container(  //텍스트필드
-                              width: style.UIButtonWidth*0.55,//MediaQuery.of(context).size.width * 0.4,
-                              height: 50,
-                              child: TextField(
-                                controller: nameController,
-                                keyboardType: TextInputType.text,
-                                cursorColor: Colors.white,
-                                maxLength: 10,
-                                onEditingComplete:() {
-                                  FocusScope.of(context).requestFocus(maleFocusNode);
-                                },
-                                style: Theme.of(context).textTheme.labelLarge,
-                                decoration:InputDecoration(
-                                    counterText:"",
-                                    border: InputBorder.none,
-                                    prefix: Text('    '),
-                                    hintText: '이름',
-                                    hintStyle: Theme.of(context).textTheme.labelSmall),
-                              ),
-                            ),
-                            Container(
-                              width: style.UIButtonWidth*0.45,
-                              height: 50,
-                              child:Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children:[
-                                  Radio<Gender>(
-                                      visualDensity: const VisualDensity(
-                                        horizontal: VisualDensity.minimumDensity,
-                                        vertical: VisualDensity.minimumDensity,
-                                      ),
-                                      value: Gender.Male,
-                                      focusNode: maleFocusNode,
-                                      groupValue: editingGender0,
-                                      fillColor: (genderState == 0) ? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey) ,
-                                      splashRadius: 16,
-                                      hoverColor: Colors.white.withOpacity(0.1),
-                                      focusColor: Colors.white.withOpacity(0.1),
-                                      onChanged: (Gender? value){
-                                        setState(() {
-                                          genderState = 0;
-                                          editingGender0 = value;
-                                        });
-                                      }
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                    margin: EdgeInsets.only(left: 4, right: 4),
-                                    child:Text("남자 ", style: Theme.of(context).textTheme.labelMedium),),
-                                  Radio<Gender>(
-                                      visualDensity: const VisualDensity(
-                                        horizontal: VisualDensity.minimumDensity,
-                                        vertical: VisualDensity.minimumDensity,
-                                      ),
-                                      value: Gender.Female,
-                                      groupValue: editingGender0,
-                                      fillColor: (genderState == 1) ? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey) ,splashRadius: 16,
-                                      hoverColor: Colors.white.withOpacity(0.1),
-                                      focusColor: Colors.white.withOpacity(0.1),
-                                      onChanged: (Gender? value){
-                                        setState(() {
-                                          genderState = 1;
-                                          editingGender0 = value;
-                                          SeasonDayMessage();
-                                        });
-                                      }
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                    margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
-                                    child:Text("여자 ", style: Theme.of(context).textTheme.labelMedium),),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-
-                      ),
-                      Container( //생년월일
-                        width: style.UIButtonWidth,
-                        height: style.fullSizeButtonHeight,
-                        margin: EdgeInsets.only(top: style.UIMarginTop),
-                        decoration: BoxDecoration(
-                          color: style.colorNavy,
-                          borderRadius: BorderRadius.circular(style.textFiledRadius),
-                        ),
-                        child:
-                        Row(
-                          children:[
-                            Container(
-                              width: style.UIButtonWidth*0.55,//MediaQuery.of(context).size.width * 0.4,
-                              height: 50,
-                              child: TextField(
-                                controller: birthController,
-                                focusNode: birthTextFocusNode,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                                  BirthSpacer(),
-                                ],
-                                cursorColor: Colors.white,
-                                maxLength: 10,
-                                style: Theme.of(context).textTheme.labelLarge,onEditingComplete: () {
-                                FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                              },
-                                decoration:InputDecoration(
-                                    counterText:"",
-                                    border: InputBorder.none,
-                                    prefix: Text('    '),
-                                    hintText: '생년월일',// (${DateFormat('yyyy MM dd').format(DateTime.now())})',
-                                    hintStyle: Theme.of(context).textTheme.labelSmall),
-                                onChanged: (text){
-                                  setState(() {
-                                    SeasonDayMessage();
-                                  });
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: style.UIButtonWidth*0.45,
-                              height: 50,
-                              child:Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children:[
-                                  SizedBox(
-                                    width: 32,
-                                    height: 50,
-                                    child: Checkbox(
-                                      value: isUemryoc,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          SetYangrocUemryoc(true, value!);
-                                          SeasonDayMessage();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                    //margin: EdgeInsets.only(right: marginVal),
-                                    child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
-                                  ),
-                                  SizedBox(
-                                    width: 32,
-                                    height: 50,
-                                    child: Checkbox(
-                                      value: isYundal,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          SetYangrocUemryoc(false, value!);
-                                          SeasonDayMessage();
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                    margin: EdgeInsets.only(right: style.UIMarginLeft),
-                                    child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container( //시간
-                        width: style.UIButtonWidth,
-                        height: style.fullSizeButtonHeight,
-                        margin: EdgeInsets.only(top: style.UIMarginTop),
-                        decoration: BoxDecoration(
-                          color: style.colorNavy,
-                          borderRadius: BorderRadius.circular(style.textFiledRadius),
-                        ),
-                        child:Row(
-                          children:[
-                            Container(
-                              width: style.UIButtonWidth*0.5,//MediaQuery.of(context).size.width * 0.4,
-                              height: 50,
-                              child: TextField(
-                                focusNode: birthHourTextFocusNode,
-                                controller: hourController,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                                  HourSpacer(),],
-                                cursorColor: Colors.white,
-                                maxLength: 5,
-                                style: Theme.of(context).textTheme.labelMedium,
-                                decoration:InputDecoration(
-                                    counterText:"",
-                                    border: InputBorder.none,
-                                    prefix: Text('    '),
-                                    hintText: '태어난 시간',
-                                    hintStyle: Theme.of(context).textTheme.labelSmall),
-                                onChanged: (text){setState(() {
-                                  if(popUpSelect != popUpVal[0]){
-                                    popUpSelect = popUpVal[0];
-                                  }
-                                  SeasonDayMessage();
-                                });
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: style.UIButtonWidth*0.5,
-                              height: 50,
-                              child:Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children:[
-                                  Container(
-                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                      margin: EdgeInsets.only(right: style.UIMarginLeft-6),
-                                      child:
-                                      DropdownButton<String>(
-                                          value: popUpSelect,
-                                          style: Theme.of(context).textTheme.labelMedium,
-                                          menuMaxHeight: MediaQuery.of(context).size.height,
-                                          //elevation: 10,
-                                          iconSize: 0.0,
-                                          underline: SizedBox.shrink(),
-                                          dropdownColor: Colors.black,//style.colorMainBlue,//colorBackGround,
-                                          items: popUpVal.map((value) => DropdownMenuItem(
-                                            value: value,
-                                            child:Container(
-                                              child: Text(value),
-                                              width: style.UIButtonWidth * 0.4,//135,
-                                              alignment: Alignment.center,
-                                            ),
-                                          )).toList(),
-                                          onChanged: (value){
-                                            setState(() {
-                                              popUpSelect = value as String;
-                                              hourController.clear();
-                                              SeasonDayMessage();
-                                            });
-                                          }
-                                      )
-                                  ),
-                                ] ,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child:Container(),
-                      ),
-                    ],
-                  ),
-                ),
-              ][isEditingPersonData],
-              Column( //옵션 버튼들
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  [
+    return Container(
+      width: style.UIButtonWidth + 30,
+      margin: EdgeInsets.only(top:style.UIMarginTopTop, bottom: style.UIMarginTop),
+      decoration: BoxDecoration(
+        color:style.colorRealBlack,//Colors.black,
+        borderRadius: BorderRadius.circular(style.textFiledRadius),
+      ),
+      child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Column(
                       children: [
-                        Row(  //수정 삭제 버튼
-                          children: [
-                            Container(  //수정 버튼
-                              width: style.UIButtonWidth * 0.32,
-                              height: style.fullSizeButtonHeight,
-                              margin: EdgeInsets.only(top:style.UIMarginTop),
-                              child:ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      SetEditingPersonData();
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, foregroundColor: style.colorBlack, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                                  child: Text('수정', style: Theme.of(context).textTheme.headlineSmall)
-                              ),
-                            ),
-                            Container(  //띄우기
-                              width: style.UIButtonWidth * 0.02,
-                            ),
-                            Container(  //메모 버튼
-                              width: style.UIButtonWidth * 0.32,
-                              height: style.fullSizeButtonHeight,
-                              margin: EdgeInsets.only(top:style.UIMarginTop),
-                              child:ElevatedButton(
-                                  onPressed: (){
-                                    setState(() {
-                                      SetEditingMemo();
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                                  child: Text('메모', style: Theme.of(context).textTheme.headlineSmall)
-                              ),
-                            ),
-                            Container(  //여백
-                              width: style.UIButtonWidth * 0.02,
-                            ),
-                            Container(  //삭제 버튼
-                              width: style.UIButtonWidth * 0.32,
-                              height: style.fullSizeButtonHeight,
-                              margin: EdgeInsets.only(top:style.UIMarginTop),
-                              child:ElevatedButton(
-                                  onPressed: (){
-                                    showDialog<void>(
-                                      context: context,
-                                      barrierDismissible: false,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          content: Text("명식을 삭제합니다", textAlign: TextAlign.center),
-                                          actionsAlignment: MainAxisAlignment.center,
-                                          actions:[
-                                            ElevatedButton(
-                                                onPressed: () async {
-                                                  await saveDataManager.DeletePersonData(widget.saveDataNum);
-                                                  setState(() {
-                                                    print(saveDataManager.fileDirPath);
-                                                  });
-                                                  widget.closeOption(false,0);
-                                                  Navigator.of(context).pop(true);
-                                                },
-                                                child: Text('네')),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(true);
-                                                },
-                                                child: Text('취소')),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                                  child: Text('삭제', style: Theme.of(context).textTheme.headlineSmall)
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(  //조회 버튼
-                          width: style.UIButtonWidth,
-                          height: style.fullSizeButtonHeight,
-                          margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
-                          child:ElevatedButton(
-                              onPressed: (){
-                                widget.SetInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
-                                    saveDataManager.mapPersonSortedMark[widget.listIndex]['birthYear'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMonth'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthDay'],
-                                    saveDataManager.mapPersonSortedMark[widget.listIndex]['birthHour'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMin'], saveDataManager.mapPersonSortedMark[widget.listIndex]['memo'], saveDataManager.mapPersonSortedMark[widget.listIndex]['num']);
-                                widget.SetCalendarResultWidget();
-                              },
-                              style: ElevatedButton.styleFrom(foregroundColor: Colors.white, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                              child: Text('조회', style: Theme.of(context).textTheme.headlineSmall)
+                        Container(  //이름
+                          width: style.UIButtonWidth * 0.8,
+                          height: style.saveDataNameLineHeight,
+                          padding: EdgeInsets.only(top:6),
+                          margin: EdgeInsets.only(top: style.UIMarginTop),
+                          child:Row(
+                            children: GetPersonNameText(),
+                          ),
+                        ),Container(  //생년월일
+                          width: style.UIButtonWidth * 0.8,
+                          height: style.saveDataMemoLineHeight,
+                          padding: EdgeInsets.only(top:4),
+                          child:Row(
+                            children: GetPersonBirthText(),
                           ),
                         ),
                       ],
                     ),
-                    Container(  //메모 저장 버튼
-                      width: style.UIButtonWidth,
-                      height: style.fullSizeButtonHeight,
-                      margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
-                      child:ElevatedButton(
-                          onPressed: (){
-                            setState(() {
-                              SetEditingMemo();
-                            });
-                          },
-                          style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                          child: Text('메모 저장', style: Theme.of(context).textTheme.headlineSmall)
-                      ),
-                    ),
-                    Container(  //수정 완료 버튼
-                      width: style.UIButtonWidth,
-                      height: style.fullSizeButtonHeight,
-                      margin: EdgeInsets.only(top:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02,bottom: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02),
-                      decoration: BoxDecoration(
-                        color: style.colorMainBlue,
-                        borderRadius: BorderRadius.circular(style.textFiledRadius),
-                      ),
-                      child: TextButton(
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all(Colors.white), overlayColor: MaterialStateProperty.all(Colors.transparent),
-                        ),
-                        child: Text('수정 완료', style:Theme.of(context).textTheme.headlineSmall,),
+                    Container(  //즐겨찾기 버튼
+                      width: style.UIButtonWidth * 0.1,
+                      height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                      alignment: Alignment.topCenter,
+                      child: ElevatedButton(
                         onPressed: () {
-
-                          if(editingGender0 == Gender.None){
-                            ShowDialogMessage('성별을 선택해 주세요');
-                            return;
-                          }
-                          if(birthController.text.length != 10){
-                            ShowDialogMessage('생년월일을 모두 입력해 주세요\n형식 : 1987 01 31');
-                            return;
-                          }
-
-                          targetBirthYear = int.parse(birthController.text.substring(0, 4));
-                          targetBirthMonth = int.parse(birthController.text.substring(5, 7));
-                          targetBirthDay = int.parse(birthController.text.substring(8, 10));
-
-                          if(BirthDayErrorChecker(targetBirthYear, targetBirthMonth, targetBirthDay) == false){
-                            return;
-                          }
-
-                          if(hourController.text.length == 0){  //시간모름일 때
-                            if(popUpSelect == popUpVal[0]){
-                              targetBirthHour = -2; //시간 모름일 때는 -2로 정함
-                              targetBirthMin = -2;  //분도 -2로 정함
-                            }
-                            else{
-                              targetBirthHour = GanjiSelect();
-                              targetBirthMin = 30;
-                            }
-                          }
-                          else if(hourController.text.length == 5) {
-                            targetBirthHour = int.parse(hourController.text.substring(0, 2));
-                            targetBirthMin = int.parse(hourController.text.substring(3, 5));
-                            if(BirthHourErrorChecker(targetBirthHour, targetBirthMin) == false){
-                              return;
-                            }
-                          }
-                          else{
-                            ShowDialogMessage('태어난 시간을 정확히 입력해주세요\n형식 : 07 05');
-                            return;
-                          }
-
-                          int uemYangType = 0;
-                          if(isUemryoc == true){
-                            if(isYundal == false){
-                              uemYangType = 1;
-                            }
-                            else{
-                              uemYangType = 2;
-                            }
-                          }
-
-                          bool genderVal = true;
-                          if(editingGender0 == Gender.Male){
-                            genderVal = true;}
-                          else
-                            genderVal = false;
-
-                          if(nameController.text == ''){
-                            editingName0 = '이름 없음';
-                          }
-                          else{
-                            editingName0 = nameController.text;
-                          }
-
-                          saveDataManager.SaveEditedPersonData(widget.saveDataNum, editingName0, editingGender0 == Gender.Male? true:false, uemYangType, targetBirthYear, targetBirthMonth,
-                              targetBirthDay, targetBirthHour, targetBirthMin);
                           setState(() {
-                            editingBirthDay0 = birthController.text;
-                            editingBirthHour0 = targetBirthHour;
-                            editingBirthMin0 = targetBirthMin;
-                            GetBirthTimeText(targetBirthHour, targetBirthMin);
-                            SetEditingPersonData();
+                            SetMarkIcon();
+                            saveDataManager.SavePersonMark(widget.saveDataNum);
                           });
                         },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        child: Icon(markIcon, color:Colors.white, size: style.UIButtonWidth * 0.06),
                       ),
                     ),
-                    ][buttonMode]
-                ],
-              ),
-            ],
-          );
+                    Container(  //닫기 버튼
+                      width: style.UIButtonWidth * 0.1,
+                      height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                      alignment: Alignment.topCenter,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.closeOption(false,0);
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        child: Icon(Icons.close, color:Colors.white, size: style.UIButtonWidth * 0.06),
+                      ),
+                    ),
+                  ],
+                ),
+                [
+                  Expanded( //메모
+                  child: Column(
+                    children:[
+                      Container(  //저장일자 제목
+                        width: style.UIButtonWidth,
+                        height: style.saveDataNameLineHeight,
+                        margin: EdgeInsets.only(top: categoryMargin),
+                        padding: EdgeInsets.only(top:6),
+                        child: Text("저장일자", style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                      Container( //저장일자 정보
+                        width: style.UIButtonWidth,
+                        height: style.saveDataMemoLineHeight,
+                        child:Text("${widget.saveDate.substring(0,4)}년 ${widget.saveDate.substring(5,7)}월 ${widget.saveDate.substring(8,10)}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                      ),
+                      Container(  //메모 제목
+                        width: style.UIButtonWidth,
+                        height: style.saveDataNameLineHeight,
+                        margin: EdgeInsets.only(top: categoryMargin),
+                        padding: EdgeInsets.only(top:6),
+                        child: Text("메모", style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                      Expanded(
+                        child: ScrollConfiguration(
+                          behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: [
+                              Container( //메모 본문
+                                width: style.UIButtonWidth,
+                                alignment: Alignment.topLeft,
+                                child:Text(prefixMemo, style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                              ),
+                              Container( //메모 본문 수정
+                                width: style.UIButtonWidth,
+                                height: 600,
+                                color: style.colorNavy,
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  child: TextField(
+                                    autofocus: true,
+                                    controller: memoController,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    focusNode: memoFocusNode,
+                                    onTapOutside: (event) {
+                                      memoFocusNode.requestFocus();
+                                    },
+                                    style: Theme.of(context).textTheme.displayMedium,
+                                    decoration:InputDecoration(
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.only(top: 5),
+                                      counterText:"",
+                                      border: InputBorder.none,),
+                                    onChanged: (text){
+                                      setState(() {
+                                        editingMemo = text;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ][isEditingMemo],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                  Expanded( //명식 정보 수정
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children:[
+                        Container( //이름
+                          width: style.UIButtonWidth,
+                          height: style.fullSizeButtonHeight,
+                          decoration: BoxDecoration(
+                            color: style.colorNavy,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
+                          child:
+                          Row(
+                            children:[
+                              Container(  //텍스트필드
+                                width: style.UIButtonWidth*0.55,//MediaQuery.of(context).size.width * 0.4,
+                                height: 50,
+                                child: TextField(
+                                  controller: nameController,
+                                  keyboardType: TextInputType.text,
+                                  cursorColor: Colors.white,
+                                  maxLength: 10,
+                                  onEditingComplete:() {
+                                    FocusScope.of(context).requestFocus(maleFocusNode);
+                                  },
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                  decoration:InputDecoration(
+                                      counterText:"",
+                                      border: InputBorder.none,
+                                      prefix: Text('    '),
+                                      hintText: '이름',
+                                      hintStyle: Theme.of(context).textTheme.labelSmall),
+                                ),
+                              ),
+                              Container(
+                                width: style.UIButtonWidth*0.45,
+                                height: 50,
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children:[
+                                    Radio<Gender>(
+                                        visualDensity: const VisualDensity(
+                                          horizontal: VisualDensity.minimumDensity,
+                                          vertical: VisualDensity.minimumDensity,
+                                        ),
+                                        value: Gender.Male,
+                                        focusNode: maleFocusNode,
+                                        groupValue: editingGender0,
+                                        fillColor: (genderState == 0) ? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey) ,
+                                        splashRadius: 16,
+                                        hoverColor: Colors.white.withOpacity(0.1),
+                                        focusColor: Colors.white.withOpacity(0.1),
+                                        onChanged: (Gender? value){
+                                          setState(() {
+                                            genderState = 0;
+                                            editingGender0 = value;
+                                          });
+                                        }
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      margin: EdgeInsets.only(left: 4, right: 4),
+                                      child:Text("남자 ", style: Theme.of(context).textTheme.labelMedium),),
+                                    Radio<Gender>(
+                                        visualDensity: const VisualDensity(
+                                          horizontal: VisualDensity.minimumDensity,
+                                          vertical: VisualDensity.minimumDensity,
+                                        ),
+                                        value: Gender.Female,
+                                        groupValue: editingGender0,
+                                        fillColor: (genderState == 1) ? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey) ,splashRadius: 16,
+                                        hoverColor: Colors.white.withOpacity(0.1),
+                                        focusColor: Colors.white.withOpacity(0.1),
+                                        onChanged: (Gender? value){
+                                          setState(() {
+                                            genderState = 1;
+                                            editingGender0 = value;
+                                            SeasonDayMessage();
+                                          });
+                                        }
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
+                                      child:Text("여자 ", style: Theme.of(context).textTheme.labelMedium),),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+
+                        ),
+                        Container( //생년월일
+                          width: style.UIButtonWidth,
+                          height: style.fullSizeButtonHeight,
+                          margin: EdgeInsets.only(top: style.UIMarginTop),
+                          decoration: BoxDecoration(
+                            color: style.colorNavy,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
+                          child:
+                          Row(
+                            children:[
+                              Container(
+                                width: style.UIButtonWidth*0.55,//MediaQuery.of(context).size.width * 0.4,
+                                height: 50,
+                                child: TextField(
+                                  controller: birthController,
+                                  focusNode: birthTextFocusNode,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                                    BirthSpacer(),
+                                  ],
+                                  cursorColor: Colors.white,
+                                  maxLength: 10,
+                                  style: Theme.of(context).textTheme.labelLarge,onEditingComplete: () {
+                                  FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                },
+                                  decoration:InputDecoration(
+                                      counterText:"",
+                                      border: InputBorder.none,
+                                      prefix: Text('    '),
+                                      hintText: '생년월일',// (${DateFormat('yyyy MM dd').format(DateTime.now())})',
+                                      hintStyle: Theme.of(context).textTheme.labelSmall),
+                                  onChanged: (text){
+                                    setState(() {
+                                      SeasonDayMessage();
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                width: style.UIButtonWidth*0.45,
+                                height: 50,
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children:[
+                                    SizedBox(
+                                      width: 32,
+                                      height: 50,
+                                      child: Checkbox(
+                                        value: isUemryoc,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            SetYangrocUemryoc(true, value!);
+                                            SeasonDayMessage();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      //margin: EdgeInsets.only(right: marginVal),
+                                      child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
+                                    ),
+                                    SizedBox(
+                                      width: 32,
+                                      height: 50,
+                                      child: Checkbox(
+                                        value: isYundal,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            SetYangrocUemryoc(false, value!);
+                                            SeasonDayMessage();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      margin: EdgeInsets.only(right: style.UIMarginLeft),
+                                      child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container( //시간
+                          width: style.UIButtonWidth,
+                          height: style.fullSizeButtonHeight,
+                          margin: EdgeInsets.only(top: style.UIMarginTop),
+                          decoration: BoxDecoration(
+                            color: style.colorNavy,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
+                          child:Row(
+                            children:[
+                              Container(
+                                width: style.UIButtonWidth*0.5,//MediaQuery.of(context).size.width * 0.4,
+                                height: 50,
+                                child: TextField(
+                                  focusNode: birthHourTextFocusNode,
+                                  controller: hourController,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                                    HourSpacer(),],
+                                  cursorColor: Colors.white,
+                                  maxLength: 5,
+                                  style: Theme.of(context).textTheme.labelMedium,
+                                  decoration:InputDecoration(
+                                      counterText:"",
+                                      border: InputBorder.none,
+                                      prefix: Text('    '),
+                                      hintText: '태어난 시간',
+                                      hintStyle: Theme.of(context).textTheme.labelSmall),
+                                  onChanged: (text){setState(() {
+                                    if(popUpSelect != popUpVal[0]){
+                                      popUpSelect = popUpVal[0];
+                                    }
+                                    SeasonDayMessage();
+                                  });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                width: style.UIButtonWidth*0.5,
+                                height: 50,
+                                child:Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children:[
+                                    Container(
+                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                        margin: EdgeInsets.only(right: style.UIMarginLeft-6),
+                                        child:
+                                        DropdownButton<String>(
+                                            value: popUpSelect,
+                                            style: Theme.of(context).textTheme.labelMedium,
+                                            menuMaxHeight: MediaQuery.of(context).size.height,
+                                            //elevation: 10,
+                                            iconSize: 0.0,
+                                            underline: SizedBox.shrink(),
+                                            dropdownColor: Colors.black,//style.colorMainBlue,//colorBackGround,
+                                            items: popUpVal.map((value) => DropdownMenuItem(
+                                              value: value,
+                                              child:Container(
+                                                child: Text(value),
+                                                width: style.UIButtonWidth * 0.4,//135,
+                                                alignment: Alignment.center,
+                                              ),
+                                            )).toList(),
+                                            onChanged: (value){
+                                              setState(() {
+                                                popUpSelect = value as String;
+                                                hourController.clear();
+                                                SeasonDayMessage();
+                                              });
+                                            }
+                                        )
+                                    ),
+                                  ] ,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child:Container(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ][isEditingPersonData],
+                Column( //옵션 버튼들
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    [
+                      Column(
+                        children: [
+                          Row(  //수정 삭제 버튼
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(  //수정 버튼
+                                width: style.UIButtonWidth * 0.32,
+                                height: style.fullSizeButtonHeight,
+                                margin: EdgeInsets.only(top:style.UIMarginTop),
+                                child:ElevatedButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        SetEditingPersonData();
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, foregroundColor: style.colorBlack, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                    child: Text('수정', style: Theme.of(context).textTheme.headlineSmall)
+                                ),
+                              ),
+                              Container(  //띄우기
+                                width: style.UIButtonWidth * 0.02,
+                              ),
+                              Container(  //메모 버튼
+                                width: style.UIButtonWidth * 0.32,
+                                height: style.fullSizeButtonHeight,
+                                margin: EdgeInsets.only(top:style.UIMarginTop),
+                                child:ElevatedButton(
+                                    onPressed: (){
+                                      setState(() {
+                                        SetEditingMemo();
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                    child: Text('메모', style: Theme.of(context).textTheme.headlineSmall)
+                                ),
+                              ),
+                              Container(  //여백
+                                width: style.UIButtonWidth * 0.02,
+                              ),
+                              Container(  //삭제 버튼
+                                width: style.UIButtonWidth * 0.32,
+                                height: style.fullSizeButtonHeight,
+                                margin: EdgeInsets.only(top:style.UIMarginTop),
+                                child:ElevatedButton(
+                                    onPressed: (){
+                                      showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            content: Text("명식을 삭제합니다", textAlign: TextAlign.center),
+                                            actionsAlignment: MainAxisAlignment.center,
+                                            actions:[
+                                              ElevatedButton(
+                                                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                                                  onPressed: () async {
+                                                    await saveDataManager.DeletePersonData(widget.saveDataNum);
+                                                    setState(() {
+                                                      print(saveDataManager.fileDirPath);
+                                                    });
+                                                    widget.closeOption(false,0);
+                                                    Navigator.of(context).pop(true);
+                                                  },
+                                                  child: Text('네')),
+                                              ElevatedButton(
+                                                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(true);
+                                                  },
+                                                  child: Text('취소')),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                    child: Text('삭제', style: Theme.of(context).textTheme.headlineSmall)
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(  //조회 버튼
+                            width: style.UIButtonWidth,
+                            height: style.fullSizeButtonHeight,
+                            margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
+                            child:ElevatedButton(
+                                onPressed: (){
+                                  widget.SetInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
+                                      saveDataManager.mapPersonSortedMark[widget.listIndex]['birthYear'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMonth'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthDay'],
+                                      saveDataManager.mapPersonSortedMark[widget.listIndex]['birthHour'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMin'], saveDataManager.mapPersonSortedMark[widget.listIndex]['memo'], saveDataManager.mapPersonSortedMark[widget.listIndex]['num']);
+                                  widget.SetCalendarResultWidget();
+                                },
+                                style: ElevatedButton.styleFrom(foregroundColor: Colors.white, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                child: Text('조회', style: Theme.of(context).textTheme.headlineSmall)
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(  //메모 저장 버튼
+                        width: style.UIButtonWidth,
+                        height: style.fullSizeButtonHeight,
+                        margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
+                        child:ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                SetEditingMemo();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                            child: Text('메모 저장', style: Theme.of(context).textTheme.headlineSmall)
+                        ),
+                      ),
+                      Container(  //수정 완료 버튼
+                        width: style.UIButtonWidth,
+                        height: style.fullSizeButtonHeight,
+                        margin: EdgeInsets.only(top:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02,bottom: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02),
+                        decoration: BoxDecoration(
+                          color: style.colorMainBlue,
+                          borderRadius: BorderRadius.circular(style.textFiledRadius),
+                        ),
+                        child: TextButton(
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all(Colors.white), overlayColor: MaterialStateProperty.all(Colors.transparent),
+                          ),
+                          child: Text('수정 완료', style:Theme.of(context).textTheme.headlineSmall,),
+                          onPressed: () {
+
+                            if(editingGender0 == Gender.None){
+                              ShowDialogMessage('성별을 선택해 주세요');
+                              return;
+                            }
+                            if(birthController.text.length != 10){
+                              ShowDialogMessage('생년월일을 모두 입력해 주세요\n형식 : 1987 01 31');
+                              return;
+                            }
+
+                            targetBirthYear = int.parse(birthController.text.substring(0, 4));
+                            targetBirthMonth = int.parse(birthController.text.substring(5, 7));
+                            targetBirthDay = int.parse(birthController.text.substring(8, 10));
+
+                            if(BirthDayErrorChecker(targetBirthYear, targetBirthMonth, targetBirthDay) == false){
+                              return;
+                            }
+
+                            if(hourController.text.length == 0){  //시간모름일 때
+                              if(popUpSelect == popUpVal[0]){
+                                targetBirthHour = -2; //시간 모름일 때는 -2로 정함
+                                targetBirthMin = -2;  //분도 -2로 정함
+                              }
+                              else{
+                                targetBirthHour = GanjiSelect();
+                                targetBirthMin = 30;
+                              }
+                            }
+                            else if(hourController.text.length == 5) {
+                              targetBirthHour = int.parse(hourController.text.substring(0, 2));
+                              targetBirthMin = int.parse(hourController.text.substring(3, 5));
+                              if(BirthHourErrorChecker(targetBirthHour, targetBirthMin) == false){
+                                return;
+                              }
+                            }
+                            else{
+                              ShowDialogMessage('태어난 시간을 정확히 입력해주세요\n형식 : 07 05');
+                              return;
+                            }
+
+                            int uemYangType = 0;
+                            if(isUemryoc == true){
+                              if(isYundal == false){
+                                uemYangType = 1;
+                              }
+                              else{
+                                uemYangType = 2;
+                              }
+                            }
+
+                            bool genderVal = true;
+                            if(editingGender0 == Gender.Male){
+                              genderVal = true;}
+                            else
+                              genderVal = false;
+
+                            if(nameController.text == ''){
+                              editingName0 = '이름 없음';
+                            }
+                            else{
+                              editingName0 = nameController.text;
+                            }
+
+                            saveDataManager.SaveEditedPersonData(widget.saveDataNum, editingName0, editingGender0 == Gender.Male? true:false, uemYangType, targetBirthYear, targetBirthMonth,
+                                targetBirthDay, targetBirthHour, targetBirthMin);
+                            setState(() {
+                              editingBirthDay0 = birthController.text;
+                              editingBirthHour0 = targetBirthHour;
+                              editingBirthMin0 = targetBirthMin;
+                              GetBirthTimeText(targetBirthHour, targetBirthMin);
+                              SetEditingPersonData();
+                            });
+                          },
+                        ),
+                      ),
+                      ][buttonMode]
+                  ],
+                ),
+              ],
+            ),
+    );
   }
 }
 
