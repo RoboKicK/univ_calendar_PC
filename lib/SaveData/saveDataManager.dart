@@ -186,6 +186,7 @@ late var snackBar;
 
       await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
         'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
+
       mapPerson.add(jsonDecode(await file.readAsString()));
       SortPersonFromMark();
     snackBar('명식이 저장되었습니다');
@@ -427,7 +428,7 @@ late var snackBar;
   String fileNum = '';
   if(count > 0){
     for(int i = count; i > -1; i--){
-      if(i < 9){ //최근 목록은 r로 시작
+      if(i < 9){ //최근 목록은 l로 시작
         fileNum = 'l00${i+1}';
       }
       else if(i < 30){
@@ -435,9 +436,10 @@ late var snackBar;
       }
       final file = await CreateSaveFile(fileNum);
 
+      print(fileNum);
       await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapRecentPerson[i]['name'], 'gender':mapRecentPerson[i]['gender'], 'uemYang': mapRecentPerson[i]['uemYang'],
         'birthYear':mapRecentPerson[i]['birthYear'], 'birthMonth':mapRecentPerson[i]['birthMonth'], 'birthDay':mapRecentPerson[i]['birthDay'], 'birthHour':mapRecentPerson[i]['birthHour'],
-        'birthMin':mapRecentPerson[i]['birthMin'], 'saveDate':DateTime.now().toString(), 'memo':mapRecentPerson[i]['memo'], 'mark':false}));
+        'birthMin':mapRecentPerson[i]['birthMin'], 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
     }
   }
 

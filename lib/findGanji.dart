@@ -2,6 +2,7 @@
 
   List<List<int>> listSeasonData = [];  //절기 절입시간 데이터
   List<List<int>> listLunNday = []; //음력 월별 일수 데이터
+  List<int> listSummerTime = [];  //썸머타임 일광시간절약제 데이터
   List<int> listSolNday = [31,28,31,30,31,30,31,31,30,31,30,31];
 
 
@@ -101,6 +102,26 @@
       targetHour = 12;
      targetMin = 12;
     }
+
+    //썸머타임 적용
+    for(int i = 0; i < listSummerTime.length; i=i+2){
+      if(targetYear == (listSummerTime[i]/100000000).floor()){  //해
+        if(((targetMonth * 1000000)+(targetDay * 10000) + (targetHour * 100) + targetMin) >= (listSummerTime[i] % 100000000) && ((targetMonth * 1000000)+(targetDay * 10000) + (targetHour * 100) + targetMin) <= (listSummerTime[i+1] % 100000000)){ //월일
+          if(targetHour >= 1){ //1시부터는 그냥 1시간 뺀다
+            targetHour--;
+          } else {  //0시 태어난 사람
+            targetHour = 23;
+            if(targetDay != 1){ //1일이 아니면 그냥 하루 뺀다
+              targetDay--;
+            } else {  //1일이면 이전 달 마지막 날로 바꾼다
+              targetMonth--;
+              targetDay = listSolNday[targetMonth];
+            }
+          }
+        }
+      }
+    }
+
 
     bool isSeasonBefore = false;  //절입시간 전인지 표시
 
@@ -207,6 +228,33 @@
       ganji = [yeonGan, yeonJi, wolGan, wolJi, ilGan, ilJi, -2, -2];
     }
     return ganji;
+  }
+
+  bool CheckSummerTime(int _targetYear, int _targetMonth, int _targetDay, int _targetHour, int _targetMin){
+    bool isSummerTime = false;
+
+    int targetYear = _targetYear;
+    int targetMonth = _targetMonth;
+    int targetDay = _targetDay;
+    int targetHour, targetMin;
+    if(_targetHour != -2){  //시간 모름이 아니면
+      targetHour = _targetHour;
+      targetMin = _targetMin;
+    }
+    else{ //시간 모름이면
+      targetHour = 12;
+      targetMin = 12;
+    }
+    //썸머타임 조회
+    for(int i = 0; i < listSummerTime.length; i=i+2){
+      if(targetYear == (listSummerTime[i]/100000000).floor()){  //해
+        if(((targetMonth * 1000000)+(targetDay * 10000) + (targetHour * 100) + targetMin) >= (listSummerTime[i] % 100000000) && ((targetMonth * 1000000)+(targetDay * 10000) + (targetHour * 100) + targetMin) <= (listSummerTime[i+1] % 100000000)){ //월일
+          isSummerTime = true;
+        }
+      }
+    }
+
+    return isSummerTime;
   }
 
   FindGanjiData(){
@@ -510,5 +558,30 @@
     listLunNday.add([30, 0, 29, 0, 30, 0, 30, 0, 29, 30, 29, 0, 30, 0, 29, 0, 29, 0, 30, 0, 29, 0, 30, 0]);
     listLunNday.add([29, 0, 30, 0, 30, 0, 29, 0, 30, 0, 30, 0, 29, 0, 30, 0, 29, 0, 30, 0, 29, 0, 29, 0]);
     listLunNday.add([30, 0, 29, 0, 30, 0, 29, 0, 30, 0, 30, 0, 29, 0, 30, 0, 30, 0, 29, 0, 30, 0, 29, 0]);
+
+    listSummerTime.add(194806010000);
+    listSummerTime.add(194809130000);
+    listSummerTime.add(194904030000);
+    listSummerTime.add(194909110000);
+    listSummerTime.add(195004010000);
+    listSummerTime.add(195009100000);
+    listSummerTime.add(195105060000);
+    listSummerTime.add(195109090000);
+    listSummerTime.add(195505050000);
+    listSummerTime.add(195509090000);
+    listSummerTime.add(195605200000);
+    listSummerTime.add(195609300000);
+    listSummerTime.add(195705050000);
+    listSummerTime.add(195709220000);
+    listSummerTime.add(195805040000);
+    listSummerTime.add(195809210000);
+    listSummerTime.add(195905030000);
+    listSummerTime.add(195909200000);
+    listSummerTime.add(196005010000);
+    listSummerTime.add(196009180000);
+    listSummerTime.add(198705100200);
+    listSummerTime.add(198710110300);
+    listSummerTime.add(198805080200);
+    listSummerTime.add(198810090300);
   }
 //}

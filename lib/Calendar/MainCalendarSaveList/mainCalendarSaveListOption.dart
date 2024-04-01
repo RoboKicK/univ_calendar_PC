@@ -2,15 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:univ_calendar_pc/main.dart';
 import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import '../../findGanji.dart' as findGanji;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
+import 'package:provider/provider.dart';
 
 class MainCalendarSaveListOption extends StatefulWidget {
   const MainCalendarSaveListOption({super.key, required this.name0, required this.gender0, required this.uemYang0, required this.birthYear0, required this.birthMonth0,
     required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo, required this.isMark, required this.saveDataNum,
-  required this.SetInquireInfo, required this.SetCalendarResultWidget, required this.closeOption, required this.listIndex});
+  required this.closeOption, required this.listIndex});
 
   final String name0;
   final bool gender0;
@@ -22,8 +24,6 @@ class MainCalendarSaveListOption extends StatefulWidget {
   final String saveDataNum;
 
   final listIndex;
-  final SetInquireInfo;
-  final SetCalendarResultWidget;
   final closeOption;
 
   @override
@@ -494,14 +494,16 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   }
 
   @override
+  void didChangeDependencies(){
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: style.UIButtonWidth + 30,
-      margin: EdgeInsets.only(top:style.UIMarginTopTop, bottom: style.UIMarginTop),
-      decoration: BoxDecoration(
-        color:style.colorRealBlack,//Colors.black,
-        borderRadius: BorderRadius.circular(style.textFiledRadius),
-      ),
+      margin: EdgeInsets.only(top:style.UIMarginTop, bottom: style.UIMarginTop),
       child: Column(
               children: [
                 Row(
@@ -512,8 +514,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                         Container(  //이름
                           width: style.UIButtonWidth * 0.8,
                           height: style.saveDataNameLineHeight,
-                          padding: EdgeInsets.only(top:6),
-                          margin: EdgeInsets.only(top: style.UIMarginTop),
                           child:Row(
                             children: GetPersonNameText(),
                           ),
@@ -550,7 +550,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                       child: ElevatedButton(
                         onPressed: () {
                           setState(() {
-                            widget.closeOption(false,0);
+                            widget.closeOption(false);
                           });
                         },
                         style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
@@ -596,7 +596,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                               ),
                               Container( //메모 본문 수정
                                 width: style.UIButtonWidth,
-                                height: 600,
+                                height: 1000,
                                 color: style.colorNavy,
                                 alignment: Alignment.topLeft,
                                 child: Container(
@@ -982,13 +982,12 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                           Container(  //조회 버튼
                             width: style.UIButtonWidth,
                             height: style.fullSizeButtonHeight,
-                            margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
+                            margin: EdgeInsets.only(top:style.UIButtonWidth*0.02),
                             child:ElevatedButton(
                                 onPressed: (){
-                                  widget.SetInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
+                                  context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
                                       saveDataManager.mapPersonSortedMark[widget.listIndex]['birthYear'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMonth'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthDay'],
                                       saveDataManager.mapPersonSortedMark[widget.listIndex]['birthHour'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMin'], saveDataManager.mapPersonSortedMark[widget.listIndex]['memo'], saveDataManager.mapPersonSortedMark[widget.listIndex]['num']);
-                                  widget.SetCalendarResultWidget();
                                 },
                                 style: ElevatedButton.styleFrom(foregroundColor: Colors.white, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
                                 child: Text('조회', style: Theme.of(context).textTheme.headlineSmall)
@@ -999,7 +998,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                       Container(  //메모 저장 버튼
                         width: style.UIButtonWidth,
                         height: style.fullSizeButtonHeight,
-                        margin: EdgeInsets.only(top:style.UIButtonWidth*0.02,bottom: style.UIButtonPaddingTop),
+                        margin: EdgeInsets.only(top:style.UIButtonWidth*0.02),
                         child:ElevatedButton(
                             onPressed: (){
                               setState(() {
@@ -1013,7 +1012,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                       Container(  //수정 완료 버튼
                         width: style.UIButtonWidth,
                         height: style.fullSizeButtonHeight,
-                        margin: EdgeInsets.only(top:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02,bottom: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2))*0.02),
+                        margin: EdgeInsets.only(top:style.UIButtonWidth*0.02),
                         decoration: BoxDecoration(
                           color: style.colorMainBlue,
                           borderRadius: BorderRadius.circular(style.textFiledRadius),

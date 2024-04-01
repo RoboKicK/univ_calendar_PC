@@ -16,11 +16,12 @@ import 'mainCalendarRecentList.dart' as mainCalendarRecentList;
 import 'package:provider/provider.dart';
 
 class CalendarMain extends StatefulWidget {
-  const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess});
+  const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum});
 
-  final isEditSetting;
+  final bool isEditSetting;
   final int pageNum;
   final saveSuccess, loadSuccess;
+  final getNowPageNum;
 
   @override
   State<CalendarMain> createState() => _CalendarMainState();
@@ -75,13 +76,14 @@ class _CalendarMainState extends State<CalendarMain> {
   AddCalendarWidget(bool isLeft, dynamic listGroupMap){  //위젯 추가
     if(listKey.length == 8){
       ShowSnackBar('만세력은 최대 8개까지만\n동시에 사용할 수 있습니다');
+      context.watch<Store>().ResetPersonInquireInfo();
       return;
     }
     setState(() {
       Map mapNumAndKey = {'widgetNum':unlimitedCalendarNum, 'globalKey':GlobalKey<_CalendarWidget>()};
       if(isLeft == true){
         listKey.add(mapNumAndKey);
-        listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap,));
+        listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
       } else {
         listKey.add(mapNumAndKey);
         listCalendarWidget.add(CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
@@ -166,6 +168,11 @@ class _CalendarMainState extends State<CalendarMain> {
       if(listKey.length == 0) {
         AddCalendarWidget(false, {});
       }
+    }
+
+    //단일 명식 불러오기 감시 함수
+    if(context.watch<Store>().personInquireInfo['targetName'] != '-1234' && widget.pageNum == widget.getNowPageNum()){
+      AddCalendarWidget(false, {});
     }
 
     super.didChangeDependencies();
@@ -697,7 +704,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     }
     setState(() {
       if (nowWidgetCount == 0) {
-        widgetWidth = 960;//MediaQuery.of(context).size.width - 60 - 8; //1200;
+        widgetWidth = 450;//960;//MediaQuery.of(context).size.width - 60 - 8; //1200;
       } else {
           widgetWidth = 450;
       }
@@ -781,6 +788,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               setState(() {
                 isSaved = 0;
                 SetWidgetMarkButton();
+
               });
             }
           },
@@ -961,6 +969,7 @@ class _CalendarWidget extends State<CalendarWidget> {
 
     SetWidgetWidth(widget.nowWidgetCount);
 
+    //그룹 명식 불러오기 처리
     if(widget.loadPersonData.length != 0){
       SetInquireInfo(widget.loadPersonData['name'],   widget.loadPersonData['gender'], widget.loadPersonData['uemYang'],
                widget.loadPersonData['birthYear'], widget.loadPersonData['birthMonth'], widget.loadPersonData['birthDay'],
@@ -968,6 +977,25 @@ class _CalendarWidget extends State<CalendarWidget> {
                '');
            SetCalendarResultWidget();
     } else {
+    }
+
+    //단일 명식 불러오기 처리
+    if(context.watch<Store>().personInquireInfo['targetName'] != '-1234'){
+      Map personInquireInfo = context.watch<Store>().personInquireInfo;
+
+      targetName = personInquireInfo['targetName'];
+      genderVal = personInquireInfo['genderVal'];
+      uemYangType = personInquireInfo['uemYangType'];
+      targetBirthYear = personInquireInfo['targetBirthYear'];
+      targetBirthMonth = personInquireInfo['targetBirthMonth'];
+      targetBirthDay = personInquireInfo['targetBirthDay'];
+      targetBirthHour = personInquireInfo['targetBirthHour'];
+      targetBirthMin = personInquireInfo['targetBirthMin'];
+      personMemo = personInquireInfo['personMemo'];
+      personDataNum = personInquireInfo['personDataNum'];
+
+      SetCalendarResultWidget();
+      context.watch<Store>().ResetPersonInquireInfo();
     }
     super.didChangeDependencies();
   }
@@ -1038,7 +1066,393 @@ class _CalendarWidget extends State<CalendarWidget> {
           Stack(
             children:[
               Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Container(
+                    //이름
+                    width: style.UIButtonWidth,
+                    height: style.fullSizeButtonHeight,
+                    margin: EdgeInsets.only(top: style.UIMarginTopTop),
+                    decoration: BoxDecoration(
+                      //border: Border.all(color: focusBoxColorNum == 0? style.colorMainBlue:Colors.transparent, width: 2, strokeAlign: BorderSide.strokeAlignInside),
+                      color: style.colorNavy,
+                      borderRadius: BorderRadius.circular(style.textFiledRadius),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          //이름 텍스트필드
+                          width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
+                          height: 50,
+                          child: TextField(
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            controller: nameController,
+                            keyboardType: TextInputType.text,
+                            cursorColor: Colors.white,
+                            maxLength: 10,
+                            onEditingComplete:() {
+                              FocusScope.of(context).requestFocus(maleFocusNode);
+                            },
+                            style: Theme.of(context).textTheme.labelLarge,
+                            decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '이름', hintStyle: Theme.of(context).textTheme.labelSmall,),
+                          ),
+                        ),
+                        Container(
+                          width: style.UIButtonWidth * 0.45,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Radio<Gender>(//남자 버튼
+                                  visualDensity: const VisualDensity(
+                                    horizontal: VisualDensity.minimumDensity,
+                                    vertical: VisualDensity.minimumDensity,
+                                  ),
+                                  value: Gender.Male,
+                                  focusNode: maleFocusNode,
+                                  groupValue: gender,
+                                  fillColor: genderColorMale,
+                                  splashRadius: 16,
+                                  hoverColor: Colors.white.withOpacity(0.1),
+                                  focusColor: Colors.white.withOpacity(0.1),
+                                  onChanged: (Gender? value) {
+                                    setState(() {
+                                      genderState = 0;
+                                      gender = value;
+                                      SetGenderRadioButtonColor(value);
+                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                    });
+                                  }),
+                              Container(
+                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                margin: EdgeInsets.only(left: 4, right: 4),
+                                child: Text("남자 ", style: Theme.of(context).textTheme.labelMedium),
+                              ),
+                              Radio<Gender>(
+                                //여자 버튼
+                                  visualDensity: const VisualDensity(
+                                    horizontal: VisualDensity.minimumDensity,
+                                    vertical: VisualDensity.minimumDensity,
+                                  ),
+                                  value: Gender.Female,
+                                  groupValue: gender,
+                                  fillColor: genderColorFemale,
+                                  focusNode: femaleFocusNode,
+                                  splashRadius: 16,
+                                  hoverColor: Colors.white.withOpacity(0.1),
+                                  focusColor: Colors.white.withOpacity(0.1),
+                                  onChanged: (Gender? value) {
+                                    setState(() {
+                                      genderState = 1;
+                                      gender = value;
+                                      SetGenderRadioButtonColor(value);
+                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                    });
+                                  }),
+                              Container(
+                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
+                                child: Text("여자 ", style: Theme.of(context).textTheme.labelMedium),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ), //이름
+                  Container(
+                    //생년월일
+                    width: style.UIButtonWidth,
+                    height: style.fullSizeButtonHeight,
+                    margin: EdgeInsets.only(top: style.UIMarginTop),
+                    decoration: BoxDecoration(
+                      color: style.colorNavy,
+                      borderRadius: BorderRadius.circular(style.textFiledRadius),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
+                          height: 50,
+                          child: TextField(
+                            obscureText: isShowPersonalBirth == false? true : false,
+                            focusNode: birthTextFocusNode,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            controller: birthController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                              BirthSpacer(),
+                            ],
+                            cursorColor: Colors.white,
+                            maxLength: 10,
+                            style: Theme.of(context).textTheme.labelLarge,
+                            onEditingComplete: () {
+                              FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                            },
+                            decoration: InputDecoration(
+                              counterText: "",
+                              border: InputBorder.none,
+                              prefix: Text('    '),
+                              hintText: '생년월일', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
+                              hintStyle: Theme.of(context).textTheme.labelSmall,),
+                            onChanged: (text) {
+                              setState(() {
+                                SeasonDayMessage();
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: style.UIButtonWidth * 0.45,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(
+                                width: 32,
+                                height: 50,
+                                child: Checkbox(
+                                  value: isUemryoc,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      SetYangrocUemryoc(true, value!);
+                                      SeasonDayMessage();
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                //margin: EdgeInsets.only(right: marginVal),
+                                child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
+                              ),
+                              SizedBox(
+                                width: 32,
+                                height: 50,
+                                child: Checkbox(
+                                  value: isYundal,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      SetYangrocUemryoc(false, value!);
+                                      SeasonDayMessage();
+                                    });
+                                  },
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                margin: EdgeInsets.only(right: style.UIMarginLeft),
+                                child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ), //생년월일
+                  Container(
+                    //시간
+                    width: style.UIButtonWidth,
+                    height: style.fullSizeButtonHeight,
+                    margin: EdgeInsets.only(top: style.UIMarginTop),
+                    decoration: BoxDecoration(
+                      color: style.colorNavy,
+                      borderRadius: BorderRadius.circular(style.textFiledRadius),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: style.UIButtonWidth * 0.5,
+                          height: 50,
+                          child: TextField(
+                            focusNode: birthHourTextFocusNode,
+                            obscureText: isShowPersonalBirth == false? true : false,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            controller: hourController,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                              HourSpacer(),
+                            ],
+                            cursorColor: Colors.white,
+                            maxLength: 5,
+                            style: Theme.of(context).textTheme.labelLarge,
+                            decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '태어난 시간', hintStyle: Theme.of(context).textTheme.labelSmall,),
+                            onEditingComplete: () {
+                              if (InqureChecker(true) == true) {
+                                SetCalendarResultWidget();
+                              }
+                            },
+                            onChanged: (text) {
+                              setState(() {
+                                if (popUpSelect != popUpVal[0]) {
+                                  popUpSelect = popUpVal[0];
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          //간지 선택 버튼
+                          width: style.UIButtonWidth * 0.5,
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                  padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                  margin: EdgeInsets.only(right: style.UIMarginLeft - 6),
+                                  child: DropdownButton<String>(
+                                      value: popUpSelect,
+                                      style: Theme.of(context).textTheme.labelMedium,
+                                      menuMaxHeight: MediaQuery.of(context).size.height,
+                                      iconSize: 0.0,
+                                      underline: SizedBox.shrink(),
+                                      dropdownColor: Colors.black, //style.colorMainBlue,//colorBackGround,
+                                      items: popUpVal
+                                          .map((value) => DropdownMenuItem(
+                                        value: value,
+                                        child: Container(
+                                          child: Text(value),
+                                          width: style.UIButtonWidth * 0.4, //135,
+                                          alignment: Alignment.center,
+                                        ),
+                                      ))
+                                          .toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          popUpSelect = value as String;
+                                          hourController.clear();
+                                        });
+                                      })),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ), //시간
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        //조회버튼
+                        width: style.UIButtonWidth - style.fullSizeButtonHeight - style.UIMarginTop,
+                        height: style.fullSizeButtonHeight,
+                        margin: EdgeInsets.only(top: style.UIButtonPaddingTop),
+                        decoration: BoxDecoration(
+                          color: style.colorMainBlue,
+                          borderRadius: BorderRadius.circular(style.textFiledRadius),
+                        ),
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Text(
+                            '조회',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          onPressed: () {
+                            if (InqureChecker(true) == true) {
+                              SetCalendarResultWidget();
+                            }
+
+                            return;
+                          },
+                        ),
+                      ),
+                      Container(
+                        //리셋 버튼
+                        width: style.fullSizeButtonHeight,
+                        height: style.fullSizeButtonHeight,
+                        margin: EdgeInsets.only(left: style.UIMarginLeft, top: style.UIButtonPaddingTop),
+                        decoration: BoxDecoration(
+                          color: style.colorMainBlue,
+                          borderRadius: BorderRadius.circular(style.textFiledRadius),
+                        ),
+                        child:  ElevatedButton(
+                          style:  ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(style.colorMainBlue),
+                            padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
+                            //overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+                            elevation: MaterialStatePropertyAll(0),
+                          ),
+                          child:Icon(Icons.recycling,),
+                          onPressed: () {
+                            setState(() {
+                              ResetAll();
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ), //조회 버튼
+                  Container(
+                    //단일 조회 안내문
+                    width: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
+                    margin: EdgeInsets.only(top: 30),
+                    padding: EdgeInsets.all(style.UIMarginLeft),
+                    //height: style.fullSizeButtonHeight * 5,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(style.textFiledRadius),
+                      //border: Border.all(color: Colors.white, width: 1),
+                    ),
+                    child: Text(
+                      '',//infoText,
+                      style: Theme.of(context).textTheme.displayMedium,
+                    ),
+                  ),
+                ],
+              ),
+              calendarResultWidget
+            ]
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BirthSpacer extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = '';
+
+    if (newValue.selection.baseOffset == 4 || newValue.selection.baseOffset == 7) {
+      if (newValue.text.length > oldValue.text.length)
+        newText = newValue.text + ' ';
+      else
+        newText = newValue.text.substring(0, newValue.text.length - 1);
+
+      return newValue.copyWith(text: newText, selection: new TextSelection.collapsed(offset: newText.length));
+    }
+
+    return newValue;
+  }
+}
+
+class HourSpacer extends TextInputFormatter {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    String newText = '';
+
+    if (newValue.selection.baseOffset == 2) {
+      if (newValue.text.length > oldValue.text.length)
+        newText = newValue.text + ' ';
+      else
+        newText = newValue.text.substring(0, newValue.text.length - 1);
+
+      return newValue.copyWith(text: newText, selection: new TextSelection.collapsed(offset: newText.length));
+    }
+
+    return newValue;
+  }
+}
+
+
+/*
+
                   Container(
                     width: style.UIButtonWidth,
                     height: style.headLineHeight,
@@ -1087,419 +1501,4 @@ class _CalendarWidget extends State<CalendarWidget> {
                         )],
                     ),
                   ),
-                  Stack(
-                    children: [
-                      [
-                        Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            //이름
-                            width: style.UIButtonWidth,
-                            height: style.fullSizeButtonHeight,
-                            margin: EdgeInsets.only(top: style.UIMarginTopTop),
-                            decoration: BoxDecoration(
-                              //border: Border.all(color: focusBoxColorNum == 0? style.colorMainBlue:Colors.transparent, width: 2, strokeAlign: BorderSide.strokeAlignInside),
-                              color: style.colorNavy,
-                              borderRadius: BorderRadius.circular(style.textFiledRadius),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  //이름 텍스트필드
-                                  width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
-                                  height: 50,
-                                  child: TextField(
-                                    enableSuggestions: false,
-                                    autocorrect: false,
-                                    controller: nameController,
-                                    keyboardType: TextInputType.text,
-                                    cursorColor: Colors.white,
-                                    maxLength: 10,
-                                    onEditingComplete:() {
-                                      FocusScope.of(context).requestFocus(maleFocusNode);
-                                    },
-                                    style: Theme.of(context).textTheme.labelLarge,
-                                    decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '이름', hintStyle: Theme.of(context).textTheme.labelSmall,),
-                                  ),
-                                ),
-                                Container(
-                                  width: style.UIButtonWidth * 0.45,
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Radio<Gender>(//남자 버튼
-                                          visualDensity: const VisualDensity(
-                                            horizontal: VisualDensity.minimumDensity,
-                                            vertical: VisualDensity.minimumDensity,
-                                          ),
-                                          value: Gender.Male,
-                                          focusNode: maleFocusNode,
-                                          groupValue: gender,
-                                          fillColor: genderColorMale,
-                                          splashRadius: 16,
-                                          hoverColor: Colors.white.withOpacity(0.1),
-                                          focusColor: Colors.white.withOpacity(0.1),
-                                          onChanged: (Gender? value) {
-                                            setState(() {
-                                              genderState = 0;
-                                              gender = value;
-                                              SetGenderRadioButtonColor(value);
-                                              FocusScope.of(context).requestFocus(birthTextFocusNode);
-                                            });
-                                          }),
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                        margin: EdgeInsets.only(left: 4, right: 4),
-                                        child: Text("남자 ", style: Theme.of(context).textTheme.labelMedium),
-                                      ),
-                                      Radio<Gender>(
-                                        //여자 버튼
-                                          visualDensity: const VisualDensity(
-                                            horizontal: VisualDensity.minimumDensity,
-                                            vertical: VisualDensity.minimumDensity,
-                                          ),
-                                          value: Gender.Female,
-                                          groupValue: gender,
-                                          fillColor: genderColorFemale,
-                                          focusNode: femaleFocusNode,
-                                          splashRadius: 16,
-                                          hoverColor: Colors.white.withOpacity(0.1),
-                                          focusColor: Colors.white.withOpacity(0.1),
-                                          onChanged: (Gender? value) {
-                                            setState(() {
-                                              genderState = 1;
-                                              gender = value;
-                                              SetGenderRadioButtonColor(value);
-                                              FocusScope.of(context).requestFocus(birthTextFocusNode);
-                                            });
-                                          }),
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                        margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
-                                        child: Text("여자 ", style: Theme.of(context).textTheme.labelMedium),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ), //이름
-                          Container(
-                            //생년월일
-                            width: style.UIButtonWidth,
-                            height: style.fullSizeButtonHeight,
-                            margin: EdgeInsets.only(top: style.UIMarginTop),
-                            decoration: BoxDecoration(
-                              color: style.colorNavy,
-                              borderRadius: BorderRadius.circular(style.textFiledRadius),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
-                                  height: 50,
-                                  child: TextField(
-                                    obscureText: isShowPersonalBirth == false? true : false,
-                                    focusNode: birthTextFocusNode,
-                                    enableSuggestions: false,
-                                    autocorrect: false,
-                                    controller: birthController,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                                      BirthSpacer(),
-                                    ],
-                                    cursorColor: Colors.white,
-                                    maxLength: 10,
-                                    style: Theme.of(context).textTheme.labelLarge,
-                                    onEditingComplete: () {
-                                      FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                                    },
-                                    decoration: InputDecoration(
-                                      counterText: "",
-                                      border: InputBorder.none,
-                                      prefix: Text('    '),
-                                      hintText: '생년월일', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
-                                      hintStyle: Theme.of(context).textTheme.labelSmall,),
-                                    onChanged: (text) {
-                                      setState(() {
-                                        SeasonDayMessage();
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  width: style.UIButtonWidth * 0.45,
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      SizedBox(
-                                        width: 32,
-                                        height: 50,
-                                        child: Checkbox(
-                                          value: isUemryoc,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              SetYangrocUemryoc(true, value!);
-                                              SeasonDayMessage();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                        //margin: EdgeInsets.only(right: marginVal),
-                                        child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
-                                      ),
-                                      SizedBox(
-                                        width: 32,
-                                        height: 50,
-                                        child: Checkbox(
-                                          value: isYundal,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              SetYangrocUemryoc(false, value!);
-                                              SeasonDayMessage();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                        margin: EdgeInsets.only(right: style.UIMarginLeft),
-                                        child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ), //생년월일
-                          Container(
-                            //시간
-                            width: style.UIButtonWidth,
-                            height: style.fullSizeButtonHeight,
-                            margin: EdgeInsets.only(top: style.UIMarginTop),
-                            decoration: BoxDecoration(
-                              color: style.colorNavy,
-                              borderRadius: BorderRadius.circular(style.textFiledRadius),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: style.UIButtonWidth * 0.5,
-                                  height: 50,
-                                  child: TextField(
-                                    focusNode: birthHourTextFocusNode,
-                                    obscureText: isShowPersonalBirth == false? true : false,
-                                    enableSuggestions: false,
-                                    autocorrect: false,
-                                    controller: hourController,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                                      HourSpacer(),
-                                    ],
-                                    cursorColor: Colors.white,
-                                    maxLength: 5,
-                                    style: Theme.of(context).textTheme.labelLarge,
-                                    decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '태어난 시간', hintStyle: Theme.of(context).textTheme.labelSmall,),
-                                    onEditingComplete: () {
-                                      if (InqureChecker(true) == true) {
-                                        SetCalendarResultWidget();
-                                      }
-                                    },
-                                    onChanged: (text) {
-                                      setState(() {
-                                        if (popUpSelect != popUpVal[0]) {
-                                          popUpSelect = popUpVal[0];
-                                        }
-                                      });
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  //간지 선택 버튼
-                                  width: style.UIButtonWidth * 0.5,
-                                  height: 50,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Container(
-                                          padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
-                                          margin: EdgeInsets.only(right: style.UIMarginLeft - 6),
-                                          child: DropdownButton<String>(
-                                              value: popUpSelect,
-                                              style: Theme.of(context).textTheme.labelMedium,
-                                              menuMaxHeight: MediaQuery.of(context).size.height,
-                                              iconSize: 0.0,
-                                              underline: SizedBox.shrink(),
-                                              dropdownColor: Colors.black, //style.colorMainBlue,//colorBackGround,
-                                              items: popUpVal
-                                                  .map((value) => DropdownMenuItem(
-                                                value: value,
-                                                child: Container(
-                                                  child: Text(value),
-                                                  width: style.UIButtonWidth * 0.4, //135,
-                                                  alignment: Alignment.center,
-                                                ),
-                                              ))
-                                                  .toList(),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  popUpSelect = value as String;
-                                                  hourController.clear();
-                                                });
-                                              })),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ), //시간
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                //조회버튼
-                                width: style.UIButtonWidth - style.fullSizeButtonHeight - style.UIMarginTop,
-                                height: style.fullSizeButtonHeight,
-                                margin: EdgeInsets.only(top: style.UIButtonPaddingTop),
-                                decoration: BoxDecoration(
-                                  color: style.colorMainBlue,
-                                  borderRadius: BorderRadius.circular(style.textFiledRadius),
-                                ),
-                                child: TextButton(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: Text(
-                                    '조회',
-                                    style: Theme.of(context).textTheme.headlineSmall,
-                                  ),
-                                  onPressed: () {
-                                    if (InqureChecker(true) == true) {
-                                      SetCalendarResultWidget();
-                                    }
-
-                                    return;
-                                  },
-                                ),
-                              ),
-                              Container(
-                                //리셋 버튼
-                                width: style.fullSizeButtonHeight,
-                                height: style.fullSizeButtonHeight,
-                                margin: EdgeInsets.only(left: style.UIMarginLeft, top: style.UIButtonPaddingTop),
-                                decoration: BoxDecoration(
-                                  color: style.colorMainBlue,
-                                  borderRadius: BorderRadius.circular(style.textFiledRadius),
-                                ),
-                                child:  ElevatedButton(
-                                  style:  ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(style.colorMainBlue),
-                                    padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
-                                    //overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
-                                    elevation: MaterialStatePropertyAll(0),
-                                  ),
-                                  child:Icon(Icons.recycling,),
-                                  onPressed: () {
-                                    setState(() {
-                                      ResetAll();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ],
-                          ), //조회 버튼
-                          Container(
-                            //단일 조회 안내문
-                            width: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
-                            margin: EdgeInsets.only(top: 30),
-                            padding: EdgeInsets.all(style.UIMarginLeft),
-                            //height: style.fullSizeButtonHeight * 5,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(style.textFiledRadius),
-                              //border: Border.all(color: Colors.white, width: 1),
-                            ),
-                            child: Text(
-                              '',//infoText,
-                              style: Theme.of(context).textTheme.displayMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                        Container(
-                            width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-                            child:
-                            mainCalendarChange.MainCalendarChange(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
-                        ),
-                        Container(
-                            width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-                            child: Column(
-                              children: [
-                                mainCalendarSaveList.MainCalendarSaveList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
-                              ],
-                            ),
-                        ),
-                        Container(
-                            width: widgetWidth,
-                            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-                            child: Column(
-                              children: [
-                                mainCalendarRecentList.MainCalendarRecentList(SetInquireInfo: SetInquireInfo, SetCalendarResultWidget: SetCalendarResultWidget)
-                              ]
-                            ),
-                        ),
-                      ][nowCalendarHeadLine],
-                    ],
-                  ),
-                ],
-              ),
-              calendarResultWidget
-            ]
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BirthSpacer extends TextInputFormatter {
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String newText = '';
-
-    if (newValue.selection.baseOffset == 4 || newValue.selection.baseOffset == 7) {
-      if (newValue.text.length > oldValue.text.length)
-        newText = newValue.text + ' ';
-      else
-        newText = newValue.text.substring(0, newValue.text.length - 1);
-
-      return newValue.copyWith(text: newText, selection: new TextSelection.collapsed(offset: newText.length));
-    }
-
-    return newValue;
-  }
-}
-
-class HourSpacer extends TextInputFormatter {
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String newText = '';
-
-    if (newValue.selection.baseOffset == 2) {
-      if (newValue.text.length > oldValue.text.length)
-        newText = newValue.text + ' ';
-      else
-        newText = newValue.text.substring(0, newValue.text.length - 1);
-
-      return newValue.copyWith(text: newText, selection: new TextSelection.collapsed(offset: newText.length));
-    }
-
-    return newValue;
-  }
-}
+ */

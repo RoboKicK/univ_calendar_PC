@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:univ_calendar_pc/main.dart';
 import 'mainCalendarFindGanjiChange.dart' as mainCalendarFindGanjiChange;
 import '../../style.dart' as style;
+import 'package:provider/provider.dart';
 
 class MainCalendarChange extends StatefulWidget {
-  const MainCalendarChange({super.key, required this.SetInquireInfo, required this.SetCalendarResultWidget});
+  const MainCalendarChange({super.key});
 
-  final SetInquireInfo;
-  final SetCalendarResultWidget;
   @override
   State<MainCalendarChange> createState() => _MainCalendarChangeState();
 }
@@ -233,9 +233,8 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                         style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                         onPressed: () {
                           Navigator.of(context).pop();
-                          widget.SetInquireInfo('이름 없음', true, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
+                          context.read<Store>().SetPersonInquireInfo('이름 없음', true, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
                               listGanjiChangeResult[i][4], '', '');
-                          widget.SetCalendarResultWidget();
                         },
                         child: Text('남자'),
                       ),
@@ -243,9 +242,8 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                           onPressed: () {
                             Navigator.of(context).pop();
-                            widget.SetInquireInfo('이름 없음', false, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
+                            context.read<Store>().SetPersonInquireInfo('이름 없음', false, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
                                 listGanjiChangeResult[i][4], '', '');
-                            widget.SetCalendarResultWidget();
                           },
                           child: Text('여자')),
                     ],

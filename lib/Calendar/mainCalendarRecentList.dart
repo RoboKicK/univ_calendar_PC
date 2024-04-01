@@ -1,15 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:univ_calendar_pc/main.dart';
 import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
+import 'package:provider/provider.dart';
 
 class MainCalendarRecentList extends StatefulWidget {
-  const MainCalendarRecentList({super.key, required this.SetInquireInfo, required this.SetCalendarResultWidget});
+  const MainCalendarRecentList({super.key});
 
-  final SetInquireInfo;
-  final SetCalendarResultWidget;
   @override
   State<MainCalendarRecentList> createState() => _MainCalendarRecentListState();
 }
@@ -269,11 +269,10 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                         height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
                         child:ElevatedButton(
                           onPressed: (){
-                            widget.SetInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
+                            context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
                                 saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
                                 saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
                                 '');
-                            widget.SetCalendarResultWidget();
                           },
                           style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                               foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),

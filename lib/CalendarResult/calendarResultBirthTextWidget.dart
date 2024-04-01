@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:univ_calendar_pc/main.dart';
 import '../../style.dart' as style;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
+import '../../findGanji.dart' as findGanji;
 import 'package:provider/provider.dart';
 
 class CalendarResultBirthTextWidget extends StatefulWidget {
@@ -83,6 +84,12 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       } else {
         birthTimeText = birthTimeText + ':${widget.birthMin}';
       }
+
+      //썸머타임 조회
+      if(findGanji.CheckSummerTime(widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin) == true){
+        birthTimeText = birthTimeText + ' (써머타임 -60분)';
+      }
+
       return Text(birthTimeText, style: textStyle);
     }
   }

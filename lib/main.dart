@@ -11,6 +11,9 @@ import 'SaveData/saveDataManager.dart' as saveDataManager;
 import 'Settings/personalDataManager.dart' as personalDataManager;
 import 'Settings/settingManagerWidget.dart' as settingManagerWidget;
 import 'Calendar/MainCalendarSaveList/mainCalendarGroupSaveList.dart' as mainCalendarGroupSaveList;
+import 'Calendar/MainCalendarChange/mainCalendarChange.dart' as mainCalendarChange;
+import 'Calendar/MainCalendarSaveList/mainCalendarSaveList.dart' as mainCalendarSaveList;
+import 'Calendar/mainCalendarRecentList.dart' as mainCalendarRecentList;
 
 import 'package:provider/provider.dart';
 import 'bodyWidgetManager.dart' as bodyWidgetManager;
@@ -43,6 +46,25 @@ class Store extends ChangeNotifier {
   String nowPageName = '';
   SetNowPageName(String text){
     nowPageName = text;
+  }
+
+  Map personInquireInfo = {'targetName':'-1234'};
+  SetPersonInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo, String saveDataNum){
+    personInquireInfo['targetName'] = name;
+    personInquireInfo['genderVal'] = gender;
+    personInquireInfo['uemYangType'] = uemYang;
+    personInquireInfo['targetBirthYear'] = birthYear;
+    personInquireInfo['targetBirthMonth'] = birthMonth;
+    personInquireInfo['targetBirthDay'] = birthDay;
+    personInquireInfo['targetBirthHour'] = birthHour;
+    personInquireInfo['targetBirthMin'] = birthMin;
+    personInquireInfo['personMemo'] = memo;
+    personInquireInfo['personDataNum'] = saveDataNum;
+
+    notifyListeners();
+  }
+  ResetPersonInquireInfo(){
+    personInquireInfo['targetName'] = '-1234';
   }
 }
 
@@ -100,6 +122,21 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   Widget settingWidget = SizedBox.shrink();
   Widget groupLoadWidget = SizedBox.shrink();
 
+  bool isShowSideLayer = false;
+  bool isShowSideOptionLayer = false;
+
+  int nowUnderLine = 0;
+  var nowCalendarHeadLine = 0;
+  List<Text> listCalendarTexts = [];
+  var underLineOpacity = [1.0,0.0,0.0,0.0];
+  List<String> calendarHeadLineTitle = ['저장목록', '최근목록', '그룹목록', '간지변환'];
+  List<Color> listCalendarTextColor = [Colors.white, style.colorGrey, style.colorGrey, style.colorGrey];
+
+  List<Widget> listSideLayerWidget = [];
+  Widget sideOptionLayerWidget = SizedBox.shrink();
+
+  bool isLoadPersonData = false;
+
   //설정 페이지 온오프
   ShowSettingPage(){
     setState(() {
@@ -149,7 +186,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.insert(0,Colors.white);
           listCalendarButtonSize.insert(0,16);
           listUniquePageNum.insert(0, uniquePageNum);
-          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
+          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
             if(listPageNameController[i - 1].text != ''){
@@ -162,7 +199,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.add(Colors.white);
           listCalendarButtonSize.add(16);
           listUniquePageNum.add(uniquePageNum);
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, ));
         }
         nowPageCount++;
       } else {
@@ -202,7 +239,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         listCalendarButtonSize = [20,16,16];
         listUniquePageNum = [0,1,2];
         for(int i = 0; i < firstPageCount; i++){
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
@@ -222,7 +259,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         if(nowPageCount == 3){  //페이지 3개뿐일 때
           uniquePageNum++;
           listUniquePageNum.insert(num, uniquePageNum);
-          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
+          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
           for(int i = 0; i < 3; i++){
             listPageNameController[i].text = '';
           }
@@ -333,6 +370,55 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     }
   }
 
+  //사이드 레이어 온오프
+  SetSideLayerWidget(){
+    isShowSideLayer = !isShowSideLayer;
+  }
+  //현재 보고있는 페이지 번호 전송
+  int SendNowPageNum(){
+    return listUniquePageNum[nowPageNum];
+  }
+
+  //사이드 옵션 레이어 온오프
+  SetSideOptionLayerWidget(bool onOff){
+    setState(() {
+      if(onOff == true){
+        isShowSideOptionLayer = true;
+      } else {
+        isShowSideOptionLayer = false;
+        sideOptionLayerWidget = SizedBox.shrink();
+      }
+    });
+  }
+  //사이드 옵션 위젯 설정
+  SetSideOptionWidget(Widget _widget){
+    setState(() {
+      sideOptionLayerWidget = _widget;
+      rebuildAllChildren(context);
+    });
+  }
+
+  //헤드라인 눌렀을 때
+  HeadLineButtonAction(int buttonNum) {
+    setState(() {
+      if(buttonNum == nowCalendarHeadLine){
+        return;
+      }
+
+      listCalendarTexts[nowCalendarHeadLine] = Text(calendarHeadLineTitle[nowCalendarHeadLine], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey));
+      listCalendarTexts[buttonNum] = Text(calendarHeadLineTitle[buttonNum], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white));
+
+      underLineOpacity[nowCalendarHeadLine] = 0.0;
+      underLineOpacity[buttonNum] = 1.0;
+
+      nowCalendarHeadLine = buttonNum;
+
+      if(buttonNum == 1 || buttonNum == 3){
+        SetSideOptionLayerWidget(false);
+      }
+    });
+  }
+
   //위젯 다시 그리기
   void rebuildAllChildren(BuildContext context) {
     void rebuild(Element el) {
@@ -349,25 +435,55 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     personalDataManager.SetFileDirectoryPath();
 
     for(int i = 0; i < firstPageCount; i++) {
-      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess));
+      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
+
+    listCalendarTexts.add(Text(calendarHeadLineTitle[0], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[0]), ));
+    listCalendarTexts.add(Text(calendarHeadLineTitle[1], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[1]), ));
+    listCalendarTexts.add(Text(calendarHeadLineTitle[2], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[2]), ));
+    listCalendarTexts.add(Text(calendarHeadLineTitle[3], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[3]), ));
+
   }
 
   @override
   Widget build(BuildContext context) {
+
+    listSideLayerWidget = [
+      Container(
+        width: style.UIButtonWidth+2,
+        height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
+        child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget),
+      ),
+      Container(
+        width: style.UIButtonWidth+2,
+        height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
+        child: mainCalendarRecentList.MainCalendarRecentList(),
+      ),
+      Container(
+        width: style.UIButtonWidth+2,
+        height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
+        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget),
+      ),
+      Container(
+        width: style.UIButtonWidth+2,
+        height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
+        child: mainCalendarChange.MainCalendarChange(),
+      ),
+    ];
+
     return Scaffold(
       body: Column(
         children: [
-          Container(
+          Container(  //각종 버튼 줄 - 앱바
             width: MediaQuery.of(context).size.width,
             height: style.appBarHeight,
             padding: EdgeInsets.only(left: 20, right: 20),
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Row(  //루시아원만세력, 설정 버튼
+                Row(  //페이지버튼들, 설정 버튼
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(  //페이지 버튼
@@ -458,25 +574,59 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    Container(  //설정 버튼
-                      width: 40,
-                      height: style.appBarHeight,
-                      margin: EdgeInsets.only(right: 00),
-                      child: ElevatedButton(
-                        onPressed: (){
-                          _isShowSettingPage = !_isShowSettingPage;
-                          setState(() {
-                            SetSettingWidget(_isShowSettingPage);
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        child: Icon(Icons.settings, size: 20, color:Colors.white),
-                      ),
+                    Row(
+                      children: [
+                        Container(  //저장목록들, 간지변환 버튼
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(right: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                rebuildAllChildren(context);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.settings, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //저장목록들, 간지변환 버튼
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(right: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                SetSideLayerWidget();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.settings, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //설정 버튼
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(right: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              _isShowSettingPage = !_isShowSettingPage;
+                              setState(() {
+                                SetSettingWidget(_isShowSettingPage);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.settings, size: 20, color:Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                Row(  //페이지
+                Row(  //페이지 관리 버튼들
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
@@ -530,19 +680,115 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           ),
           Stack(
             children:[
-              IndexedStack( //메인 페이지
-                index: nowPageNum,
-                children: listPageWidget,
+              Row(
+                children: [
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: IndexedStack( //메인 페이지
+                      index: nowPageNum,
+                      children: listPageWidget,
+                    ),
+                  ),
+                  AnimatedContainer(  //사이드 메모, 정보 위젯
+                    duration: Duration(milliseconds: 300),
+                    width: isShowSideOptionLayer? style.UIButtonWidth + 40 : 0,
+                    height: MediaQuery.of(context).size.height - style.appBarHeight,
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255,28,28,28),
+                      border: isShowSideOptionLayer? Border(top:BorderSide(color: style.colorBlack, width: 2), left:BorderSide(color: style.colorBlack, width: 2)) : Border.all(color: Colors.transparent, width:0),
+                    ),
+                    alignment: Alignment.center,
+                    curve: Curves.easeOut,
+                    child: sideOptionLayerWidget,
+                  ),
+                  AnimatedContainer(  //사이드 명식 불러오기 위젯
+                    duration: Duration(milliseconds: 300),
+                      width: isShowSideLayer? style.UIButtonWidth + 40 : 0,
+                      height: MediaQuery.of(context).size.height - style.appBarHeight,
+                      decoration: BoxDecoration(
+                        color: style.colorBackGround,
+                        border: isShowSideLayer? Border(top:BorderSide(color: style.colorBlack, width: 2), left:BorderSide(color: style.colorBlack, width: 2)) : Border.all(width:0),
+                      ),
+                    alignment: Alignment.center,
+                    curve: Curves.easeOut,
+                    child: AnimatedCrossFade(  //사이드 명식 차일드
+                      duration: Duration(milliseconds: 300),
+                      firstChild: Column(
+                        children: [
+                          Container(
+                            width: style.UIButtonWidth,
+                            alignment: Alignment.topCenter,
+                            padding: EdgeInsets.only(top: style.UIMarginTop),
+                            child: Row(  //헤드라인 글자
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children:[
+                                Container(
+                                    height: style.headLineHeight,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[0])))),
+                                    child: TextButton(
+                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                            padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                        child:listCalendarTexts[0]
+                                        , onPressed:(){HeadLineButtonAction(0);})
+                                ),
+                                Container(
+                                    height: style.headLineHeight,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[1])))),
+                                    child:TextButton(
+                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                            padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                        child:listCalendarTexts[1]
+                                        , onPressed:(){HeadLineButtonAction(1);})
+                                ),
+                                Container(
+                                    height: style.headLineHeight,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[2])))),
+                                    child:TextButton(
+                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                            padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                        child:listCalendarTexts[2]
+                                        , onPressed:(){HeadLineButtonAction(2);})
+                                ),
+                                Container(
+                                    height: style.headLineHeight,
+                                    alignment: Alignment.topCenter,
+                                    decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[3])))),
+                                    child:TextButton(
+                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
+                                            padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
+                                        child:listCalendarTexts[3]
+                                        , onPressed:(){HeadLineButtonAction(3);})
+                                )],
+                            ),
+                          ),
+                          IndexedStack(
+                            index: nowCalendarHeadLine,
+                            children: listSideLayerWidget,
+                          )
+                        ],
+                      ),
+                      secondChild:Container(
+                        width:0,
+                        height: MediaQuery.of(context).size.height - style.appBarHeight,
+                      ),
+                      crossFadeState: isShowSideLayer? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                      alignment: Alignment.topCenter,
+                      firstCurve: Curves.easeOut,
+                      secondCurve: Curves.easeOut,
+                    )
+                    ),
+                ],
               ),
               Container(  //설정 위젯
-                //color:Colors.yellow,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - style.appBarHeight,
                 alignment: Alignment.center,
                 child: settingWidget,
               ),
               Container(  //그룹 불러오기 위젯
-                //color:Colors.yellow,
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - style.appBarHeight,
                 alignment: Alignment.center,
