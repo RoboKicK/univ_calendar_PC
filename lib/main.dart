@@ -576,21 +576,21 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                     ),
                     Row(
                       children: [
-                        Container(  //저장목록들, 간지변환 버튼
-                          width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(right: 00),
-                          child: ElevatedButton(
-                            onPressed: (){
-                              setState(() {
-                                rebuildAllChildren(context);
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.settings, size: 20, color:Colors.white),
-                          ),
-                        ),
+                        //Container(  //화면 새로고침
+                        //  width: 40,
+                        //  height: style.appBarHeight,
+                        //  margin: EdgeInsets.only(right: 00),
+                        //  child: ElevatedButton(
+                        //    onPressed: (){
+                        //      setState(() {
+                        //        rebuildAllChildren(context);
+                        //      });
+                        //    },
+                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        //    child: Icon(Icons.settings, size: 20, color:Colors.white),
+                        //  ),
+                        //),
                         Container(  //저장목록들, 간지변환 버튼
                           width: 40,
                           height: style.appBarHeight,
