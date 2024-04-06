@@ -16,12 +16,13 @@ import 'mainCalendarRecentList.dart' as mainCalendarRecentList;
 import 'package:provider/provider.dart';
 
 class CalendarMain extends StatefulWidget {
-  const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum});
+  const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum, required this.setNowPageName});
 
   final bool isEditSetting;
   final int pageNum;
   final saveSuccess, loadSuccess;
   final getNowPageNum;
+  final setNowPageName;
 
   @override
   State<CalendarMain> createState() => _CalendarMainState();
@@ -30,13 +31,17 @@ class CalendarMain extends StatefulWidget {
 class _CalendarMainState extends State<CalendarMain> {
   List<Map> listKey = [];
 
-  int unlimitedCalendarNum = 0; //달력 번호 무제한으로 매기는 변수
+  int unlimitedCalendarNum = 1; //달력 번호 무제한으로 매기는 변수
 
   List<Widget> listCalendarWidget = [];
 
-  ScrollController controller = ScrollController();
+  ScrollController pageRowController = ScrollController();
 
   bool isEditSetting = false;
+
+  Offset? newCalendarOffset;
+
+  TextEditingController pageNameController = TextEditingController();
 
   ShowDialogMessage(String message) {
     showDialog<void>(
@@ -76,24 +81,29 @@ class _CalendarMainState extends State<CalendarMain> {
   AddCalendarWidget(bool isLeft, dynamic listGroupMap){  //위젯 추가
     if(listKey.length == 8){
       ShowSnackBar('만세력은 최대 8개까지만\n동시에 사용할 수 있습니다');
-      context.watch<Store>().ResetPersonInquireInfo();
-      return;
+    } else {
+      setState(() {
+        Map mapNumAndKey = {'widgetNum': unlimitedCalendarNum, 'globalKey': GlobalKey<_CalendarWidget>()};
+        if (isLeft == true) {
+          //왼쪽 추가
+          listKey.add(mapNumAndKey);
+          listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1,
+                  isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
+        } else {
+          //오른쪽 추가
+          listKey.add(mapNumAndKey);
+          listCalendarWidget.add(CalendarWidget( key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1,
+              isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
+          WidgetsBinding.instance!.addPostFrameCallback((_) {
+            PageScrollToEdge(false);
+          });
+        }
+        unlimitedCalendarNum++;
+        for (int i = 0; i < listKey.length; i++) {
+          listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1, fromMain: true);
+        }
+      });
     }
-    setState(() {
-      Map mapNumAndKey = {'widgetNum':unlimitedCalendarNum, 'globalKey':GlobalKey<_CalendarWidget>()};
-      if(isLeft == true){
-        listKey.add(mapNumAndKey);
-        listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
-      } else {
-        listKey.add(mapNumAndKey);
-        listCalendarWidget.add(CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1, isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap));
-      }
-      unlimitedCalendarNum++;
-      for(int i = 0; i < listKey.length; i++){
-        listKey[i]['globalKey'].currentState?.SetWidgetWidth(listCalendarWidget.length - 1, fromMain : true);
-      }
-    }
-    );
   }
 
   int GetCalendarWidgetCount(){
@@ -125,6 +135,23 @@ class _CalendarMainState extends State<CalendarMain> {
     });
   }
 
+  PageScrollToEdge(bool isLeft){
+    if(isLeft == true) {
+      pageRowController.animateTo(
+        pageRowController.position.minScrollExtent,
+        duration: Duration(milliseconds: 700),
+        curve: Curves.fastOutSlowIn,
+      );
+    } else {
+
+      pageRowController.animateTo(
+        pageRowController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 700),
+        curve: Curves.fastOutSlowIn,
+      );
+    }
+  }
+
   //그룹 저장
   SaveGroupData(){
     List<Map> listGroupMap = [];
@@ -133,13 +160,69 @@ class _CalendarMainState extends State<CalendarMain> {
         listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
       }
     }
-    if(listGroupMap.length == 0){
-
-    } else {
-      listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
-      saveDataManager.SaveGroupData(listGroupMap);
-    }
-
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      if(listGroupMap.length > 0){
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            actionsAlignment: MainAxisAlignment.center,
+            //title: Text('성별을 선택해 주세요'),
+            content: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
+                    maxLength: 10,
+                    cursorColor: style.colorBlack,
+                    autofocus: true,
+                    controller: pageNameController,
+                    onEditingComplete: () {
+                      Navigator.of(context).pop();
+                      widget.setNowPageName(pageNameController.text);
+                      setState(() {
+                        listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
+                        saveDataManager.SaveGroupData(listGroupMap);
+                      });
+                    },
+                    decoration: InputDecoration(
+                      labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                      hintText: context.watch<Store>().nowPageName, hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                      counterText:'',
+                      focusedBorder:UnderlineInputBorder(
+                        borderSide: BorderSide(width:2, color:style.colorDarkGrey),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+            actions: [
+              ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  widget.setNowPageName(pageNameController.text);
+                  setState(() {
+                    listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
+                    saveDataManager.SaveGroupData(listGroupMap);
+                  });
+                },
+                child: Text('저장'),
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('취소')),
+            ],
+          ),
+        );
+      } else {
+        ShowSnackBar('저장할 명식이 없습니다');
+      }
+    });
     //저장 후 정리
     widget.saveSuccess();
   }
@@ -152,19 +235,21 @@ class _CalendarMainState extends State<CalendarMain> {
 
   @override
   void didChangeDependencies(){
-    //init 후 각 달력 위젯에 로드할 명식을 넣어줌
+    //init 후
+    // 그룹 로드라면
     if(context.watch<Store>().targetGroupLoadPageNum == widget.pageNum) {
       List<dynamic> listGroupMap = [];
       listGroupMap = saveDataManager.listMapGroup[context.watch<Store>().targetGroupLoadIndex];
 
-      for (int i = 0; i < listGroupMap.length - 1; i++) {
-        if (listKey.length - 1 < i) {
-          AddCalendarWidget(false, listGroupMap[i]);
-        }
-      }
+     for (int i = 0; i < listGroupMap.length - 1; i++) {
+       if (listKey.length - 1 < i) {
+         AddCalendarWidget(false, listGroupMap[i]);
+       }
+     }
       //로드 후 정리
       widget.loadSuccess();
-    } else {
+    }
+    else {  //초기화라면
       if(listKey.length == 0) {
         AddCalendarWidget(false, {});
       }
@@ -172,7 +257,14 @@ class _CalendarMainState extends State<CalendarMain> {
 
     //단일 명식 불러오기 감시 함수
     if(context.watch<Store>().personInquireInfo['targetName'] != '-1234' && widget.pageNum == widget.getNowPageNum()){
-      AddCalendarWidget(false, {});
+      if(listKey.length >= 8){
+        context.watch<Store>().ResetPersonInquireInfo();
+        WidgetsBinding.instance!.addPostFrameCallback((_){
+          ShowSnackBar('만세력은 최대 8개까지만\n동시에 사용할 수 있습니다');
+        });
+      } else {
+        AddCalendarWidget(false, {});
+      }
     }
 
     super.didChangeDependencies();
@@ -208,13 +300,14 @@ class _CalendarMainState extends State<CalendarMain> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 physics: ClampingScrollPhysics(),
+                controller: pageRowController,
                 child: Row(
                   children: [
-                    Container(width:style.marginContainerWidth),
+                    Container(width:style.marginContainerWidth),  //왼쪽 마진
                     Container(
-                      child: Row(children: listCalendarWidget),
+                      child: Row(children: listCalendarWidget),   //만세력들
                     ),
-                    Container(width:style.marginContainerWidth),
+                    Container(width:style.marginContainerWidth),  //오른쪽 마진
                   ],//GetWidget(),
                 ),
               ),
@@ -232,6 +325,7 @@ class _CalendarMainState extends State<CalendarMain> {
                     child: ElevatedButton(
                       onPressed: (){
                         AddCalendarWidget(true, {});
+                        PageScrollToEdge(true);
                       },
                       child: Text('+', style: TextStyle(color:Colors.white)),
                       style: ElevatedButton.styleFrom(
@@ -275,7 +369,8 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 
 //여기부터는 달력 위젯
 class CalendarWidget extends StatefulWidget {
-  const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount, required this.isEditSetting, required this.getCalendarWidgetCount, required this.loadPersonData});
+  const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount, required this.isEditSetting, required this.getCalendarWidgetCount, required this.loadPersonData,
+});
 
   final int widgetNum, nowWidgetCount;
   final closeWidget;
@@ -891,6 +986,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         widgetWidth: widgetWidth,
         isOneWidget: (widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false,
         isEditSetting: isEditSetting,
+        setTargetName: SetTargetName
       );//isShowDrawerManOld);
     }
   }
@@ -916,7 +1012,7 @@ class _CalendarWidget extends State<CalendarWidget> {
       double _widgetWidth = widgetWidth;
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: _widgetWidth, isEditSetting: isEditSetting);
+        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: _widgetWidth, isEditSetting: isEditSetting,);
       SetWidgetBackButton();
       SetWidgetSaveButton();
       SetWidgetCalendarResultBirthText();
@@ -947,6 +1043,31 @@ class _CalendarWidget extends State<CalendarWidget> {
     personDataNum = saveDataNum;
   }
 
+  //명식 이름 변경
+  SetTargetName(String name){
+    targetName = name;
+    if(isSaved == 0){
+      saveDataManager.SaveEditedPersonData(personDataNum, targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+
+      SnackBar snackBar = SnackBar(
+        content: Text('이름이 수정되었습니다', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+        backgroundColor: style.colorMainBlue,//Colors.white,
+        //style.colorMainBlue,
+        shape: StadiumBorder(),
+        duration: Duration(milliseconds: style.snackBarDuration),
+        dismissDirection: DismissDirection.down,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+            bottom: 20,
+            left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+            right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+      );
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -969,34 +1090,42 @@ class _CalendarWidget extends State<CalendarWidget> {
 
     SetWidgetWidth(widget.nowWidgetCount);
 
-    //그룹 명식 불러오기 처리
-    if(widget.loadPersonData.length != 0){
-      SetInquireInfo(widget.loadPersonData['name'],   widget.loadPersonData['gender'], widget.loadPersonData['uemYang'],
-               widget.loadPersonData['birthYear'], widget.loadPersonData['birthMonth'], widget.loadPersonData['birthDay'],
-               widget.loadPersonData['birthHour'], widget.loadPersonData['birthMin'], widget.loadPersonData['memo'],
-               '');
-           SetCalendarResultWidget();
-    } else {
-    }
+      //그룹 명식 불러오기 처리
+      if (widget.loadPersonData.length != 0) {
+        SetInquireInfo(
+            widget.loadPersonData['name'],
+            widget.loadPersonData['gender'],
+            widget.loadPersonData['uemYang'],
+            widget.loadPersonData['birthYear'],
+            widget.loadPersonData['birthMonth'],
+            widget.loadPersonData['birthDay'],
+            widget.loadPersonData['birthHour'],
+            widget.loadPersonData['birthMin'],
+            widget.loadPersonData['memo'],
+            '');
+        SetCalendarResultWidget();
+      } else {}
 
-    //단일 명식 불러오기 처리
-    if(context.watch<Store>().personInquireInfo['targetName'] != '-1234'){
-      Map personInquireInfo = context.watch<Store>().personInquireInfo;
+      //단일 명식 불러오기 처리
+      if (context.watch<Store>().personInquireInfo['targetName'] != '-1234') {
+        Map personInquireInfo = context.watch<Store>().personInquireInfo;
 
-      targetName = personInquireInfo['targetName'];
-      genderVal = personInquireInfo['genderVal'];
-      uemYangType = personInquireInfo['uemYangType'];
-      targetBirthYear = personInquireInfo['targetBirthYear'];
-      targetBirthMonth = personInquireInfo['targetBirthMonth'];
-      targetBirthDay = personInquireInfo['targetBirthDay'];
-      targetBirthHour = personInquireInfo['targetBirthHour'];
-      targetBirthMin = personInquireInfo['targetBirthMin'];
-      personMemo = personInquireInfo['personMemo'];
-      personDataNum = personInquireInfo['personDataNum'];
+        targetName = personInquireInfo['targetName'];
+        genderVal = personInquireInfo['genderVal'];
+        uemYangType = personInquireInfo['uemYangType'];
+        targetBirthYear = personInquireInfo['targetBirthYear'];
+        targetBirthMonth = personInquireInfo['targetBirthMonth'];
+        targetBirthDay = personInquireInfo['targetBirthDay'];
+        targetBirthHour = personInquireInfo['targetBirthHour'];
+        targetBirthMin = personInquireInfo['targetBirthMin'];
+        personMemo = personInquireInfo['personMemo'];
+        personDataNum = personInquireInfo['personDataNum'];
 
-      SetCalendarResultWidget();
-      context.watch<Store>().ResetPersonInquireInfo();
-    }
+        SetCalendarResultWidget();
+
+        context.watch<Store>().ResetPersonInquireInfo();
+      }
+
     super.didChangeDependencies();
   }
 

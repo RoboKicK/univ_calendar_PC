@@ -3,10 +3,12 @@ import 'package:univ_calendar_pc/main.dart';
 import '../../style.dart' as style;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
 import '../../findGanji.dart' as findGanji;
+import '../../SaveData/saveDataManager.dart' as saveDataManager;
 import 'package:provider/provider.dart';
 
 class CalendarResultBirthTextWidget extends StatefulWidget {
-  const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth, required this.isEditSetting});
+  const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth, required this.isEditSetting,
+  required this.setTargetName});
 
   final String name;
   final String gender;
@@ -16,6 +18,7 @@ class CalendarResultBirthTextWidget extends StatefulWidget {
   final double widgetWidth;
   final bool isOneWidget;
   final bool isEditSetting;
+  final setTargetName;
 
   @override
   State<CalendarResultBirthTextWidget> createState() => _CalendarResultBirthTextWidgetState();
@@ -27,6 +30,9 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   bool isEditSetting = false;
   int isShowPersonalData = 0;
   int personalDataNum = 0;
+
+  TextEditingController nameTextController = new TextEditingController();
+  String nameText = '';
 
   TextStyle textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
 
@@ -102,7 +108,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
         return '';
       }
     }
-    return widget.name;
+    return nameText;
   }
 
   Text GetGenderTextWidget(){
@@ -186,7 +192,8 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
           ),
         ),
       );
-    } else {
+    }
+    else {
       textStyle = TextStyle(color : Colors.white, fontSize: 14, fontWeight: FontWeight.w500);
       return Container(
         width: widget.widgetWidth,
@@ -201,7 +208,75 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(GetName(), style: textStyle),
+                  //Text(GetName(), style: textStyle),
+                  Container(
+                    height: 20,
+                    child: TextButton(
+                        onPressed: (){
+                          if(nameText == '이름 없음'){
+                            nameTextController.text = '';
+                          } else {
+                            nameTextController.text = nameText;
+                          }
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              actionsAlignment: MainAxisAlignment.center,
+                              //title: Text('성별을 선택해 주세요'),
+                              content: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: nameTextController,
+                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
+                                      maxLength: 10,
+                                      cursorColor: style.colorBlack,
+                                      autofocus: true,
+                                      onEditingComplete: () {
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          nameText = nameTextController.text;
+                                          widget.setTargetName(nameText);
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        labelText: '이름을 수정합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                                        hintText: '이름 없음', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                                        counterText:'',
+                                        focusedBorder:UnderlineInputBorder(
+                                          borderSide: BorderSide(width:2, color:style.colorDarkGrey),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+                              actions: [
+                                ElevatedButton(
+                                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    setState(() {
+                                      nameText = nameTextController.text;
+                                      widget.setTargetName(nameText);
+                                    });
+                                  },
+                                  child: Text('저장'),
+                                ),
+                                ElevatedButton(
+                                    style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('취소')),
+                              ],
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(padding: EdgeInsets.all(0), minimumSize: Size(0, 20)),
+                        child: Text(GetName(), style: textStyle)),
+                  ),
                   GetGenderTextWidget(),
                   Text('${GetOld()} ', style: textStyle),
                 ],
@@ -244,15 +319,17 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       SetPersonalDataNum();
     }
 
+    nameText = widget.name;
+
     isEditSetting = widget.isEditSetting;
   }
 
   @override
   Widget build(BuildContext context) {
     if(isEditSetting != widget.isEditSetting){
-  setState(() {
-    SetPersonalDataNum();
-  });
+      setState(() {
+        SetPersonalDataNum();
+      });
       isEditSetting = widget.isEditSetting;
     }
 

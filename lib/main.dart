@@ -115,7 +115,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   List<Widget> listPageSelectButton = [];
   List<int> listUniquePageNum = [0,1,2];
   List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];
-  List<TextEditingController> listPageNameController = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+  List<String> listPageNameController = ['','','','','','','','',''];
+  TextEditingController pageNameController = TextEditingController();
   String nowPageName = '페이지 1';
   int uniquePageNum = 2;
 
@@ -151,11 +152,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   SetNowPageName(String text){
     nowPageName = listPageName[nowPageNum];
     String storeNowPageName = '';
-    if(listPageNameController[nowPageNum].text == '') {
+    if(listPageNameController[nowPageNum] == '') {
       storeNowPageName = nowPageName;
     } else {
-      storeNowPageName = listPageNameController[nowPageNum].text;
+      storeNowPageName = listPageNameController[nowPageNum];
     }
+    pageNameController.text = storeNowPageName;
     context.read<Store>().SetNowPageName(storeNowPageName);
   }
 
@@ -186,12 +188,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.insert(0,Colors.white);
           listCalendarButtonSize.insert(0,16);
           listUniquePageNum.insert(0, uniquePageNum);
-          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
+          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
-            if(listPageNameController[i - 1].text != ''){
-              listPageNameController[i].text = listPageNameController[i - 1].text;
-              listPageNameController[i - 1].text = '';
+            if(listPageNameController[i - 1] != ''){
+              listPageNameController[i] = listPageNameController[i - 1];
+              listPageNameController[i - 1] = '';
             }
           }
           SetNowPageName(listPageName[nowPageNum]);
@@ -199,7 +201,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.add(Colors.white);
           listCalendarButtonSize.add(16);
           listUniquePageNum.add(uniquePageNum);
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, ));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName ));
         }
         nowPageCount++;
       } else {
@@ -239,13 +241,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         listCalendarButtonSize = [20,16,16];
         listUniquePageNum = [0,1,2];
         for(int i = 0; i < firstPageCount; i++){
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
 
         for(int i = 0; i < listPageNameController.length; i++){
-          listPageNameController[i].text = '';
+          listPageNameController[i] = '';
         }
 
         SetNowCalendarNum(0);
@@ -259,9 +261,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         if(nowPageCount == 3){  //페이지 3개뿐일 때
           uniquePageNum++;
           listUniquePageNum.insert(num, uniquePageNum);
-          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
+          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
           for(int i = 0; i < 3; i++){
-            listPageNameController[i].text = '';
+            listPageNameController[i] = '';
           }
           SetNowPageName(listPageName[num]);
         } else {
@@ -275,9 +277,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonSize.removeLast();
 
           for(int i = num; i < listPageNameController.length - 1; i++){
-            listPageNameController[i].text = listPageNameController[i+1].text;
+            listPageNameController[i] = listPageNameController[i+1];
           }
-          listPageNameController.last.text = '';
+          listPageNameController.last = '';
           SetNowPageName(listPageName[num]);
           nowPageCount--;
         }
@@ -317,7 +319,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     });
   }
 
-  //그룹 저장 신고 주기
+  //그룹 저장 신호 주기
   GroupDataSave(){
     setState(() {
       context.read<Store>().SetTargetGroupSavePageNum(listUniquePageNum[nowPageNum]);
@@ -335,7 +337,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       setState(() {
         AddPage(false);
         SetNowCalendarNum(nowPageCount - 1);
-        listPageNameController[nowPageNum].text = saveDataManager.listMapGroup[groupIndex].last['groupName'];
+        listPageNameController[nowPageNum] = saveDataManager.listMapGroup[groupIndex].last['groupName'];
         SetNowPageName(saveDataManager.listMapGroup[groupIndex].last['groupName']);
         context.read<Store>().SetTargetGroupLoadIndex(groupIndex);
         context.read<Store>().SetTargetGroupLoadPageNum(uniquePageNum);
@@ -435,7 +437,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     personalDataManager.SetFileDirectoryPath();
 
     for(int i = 0; i < firstPageCount; i++) {
-      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum));
+      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
@@ -555,7 +557,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                           child: TextField(
                             cursorColor: Colors.white,
                             maxLength: 10,
-                            controller: listPageNameController[nowPageNum],
+                            controller: pageNameController,
                             style: Theme.of(context).textTheme.headlineSmall,
                             decoration:InputDecoration(
                               contentPadding: EdgeInsets.only(bottom:12),
@@ -566,7 +568,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                 hintStyle: Theme.of(context).textTheme.headlineSmall),
                             onChanged: (value){
                               setState(() {
-                                listPageNameController[nowPageNum].text = value;
+                                listPageNameController[nowPageNum] = value;
                                 SetNowPageName(value);
                               });
                             },

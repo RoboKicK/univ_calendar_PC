@@ -8,11 +8,12 @@ import 'package:provider/provider.dart';
 
 
 class BodyWidgetManager extends StatefulWidget {
-  const BodyWidgetManager({super.key, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum, });
+  const BodyWidgetManager({super.key, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum, required this.setNowPageName});
 
   final int pageNum;
   final saveSuccess, loadSuccess;
   final getNowPageNum;
+  final setNowPageName;
 
   @override
   State<BodyWidgetManager> createState() => _BodyWidgetManagerState();
@@ -41,6 +42,6 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
   @override
   Widget build(BuildContext context) {
 
-    return  calendarMain.CalendarMain(isEditSetting: isEditSetting, pageNum: widget.pageNum, saveSuccess: widget.saveSuccess, loadSuccess: widget.loadSuccess, getNowPageNum: widget.getNowPageNum, );
+    return  calendarMain.CalendarMain(isEditSetting: isEditSetting, pageNum: widget.pageNum, saveSuccess: widget.saveSuccess, loadSuccess: widget.loadSuccess, getNowPageNum: widget.getNowPageNum, setNowPageName: widget.setNowPageName,);
   }
 }
