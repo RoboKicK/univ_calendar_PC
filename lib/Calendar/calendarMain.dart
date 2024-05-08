@@ -160,6 +160,7 @@ class _CalendarMainState extends State<CalendarMain> {
         listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
       }
     }
+    pageNameController.text = context.watch<Store>().nowPageName;
     WidgetsBinding.instance!.addPostFrameCallback((_){
       if(listGroupMap.length > 0){
         showDialog(
@@ -186,7 +187,7 @@ class _CalendarMainState extends State<CalendarMain> {
                     },
                     decoration: InputDecoration(
                       labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
-                      hintText: context.watch<Store>().nowPageName, hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                      hintText: '묶음 이름', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
                       counterText:'',
                       focusedBorder:UnderlineInputBorder(
                         borderSide: BorderSide(width:2, color:style.colorDarkGrey),
@@ -202,9 +203,13 @@ class _CalendarMainState extends State<CalendarMain> {
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  widget.setNowPageName(pageNameController.text);
+                  String groupName = pageNameController.text;
+                  if(groupName == ''){
+                    groupName = '이름 없음';
+                  }
+                  widget.setNowPageName(groupName);
                   setState(() {
-                    listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
+                    listGroupMap.add({'groupName':groupName});
                     saveDataManager.SaveGroupData(listGroupMap);
                   });
                 },
@@ -425,6 +430,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   TextEditingController nameController = TextEditingController();
   TextEditingController birthController = TextEditingController();
   TextEditingController hourController = TextEditingController();
+  TextEditingController memoController = TextEditingController();
 
   String seasonMessageDate = ''; //절입시간 안내할 때 중복 방지용 변수
 
@@ -475,6 +481,10 @@ class _CalendarWidget extends State<CalendarWidget> {
     //연도
     if (year > 2050) {
       ShowDialogMessage('2050년 이후는 조회할 수 없습니다');
+      return false;
+    }
+    if(year == 2050 && month == 12 && day > 6){
+      ShowDialogMessage('2050년 12월 6일 이후는 조회할 수 없습니다');
       return false;
     }
     if (year < 0) {
@@ -716,8 +726,9 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   Widget closeButtonWidget = SizedBox(width: 50,height: 50,);
   Widget backButtonWidget = SizedBox.shrink();
-  Widget saveButtonWidget = SizedBox(width: 100,height: 50,);
-  Widget markButtonWidget = SizedBox(width: 100,height: 50,);
+  Widget saveButtonWidget = SizedBox(width: 50,height: 50,);
+  Widget markButtonWidget = SizedBox(width: 50,height: 50,);
+  Widget chooseDayButtonWidget = SizedBox(width: 50,height: 50,);
   Widget calendarResultWidget = SizedBox.shrink();
   Widget calendarChangeWidget = SizedBox.shrink();
   Widget calendarSaveListWidget = SizedBox.shrink();
@@ -745,6 +756,9 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   int isSaved = 1; //저장되어 있는 명식인가? 0:네, 1:아니오
   IconData markIcon = Icons.check_circle_outline;
+
+  bool isShowChooseDayButtons = false;
+  Color chooseDayButtonColor = Colors.white;
 
   //그룹 저장할 때 명식 정보 보냄
   Map ReportPersonData(){
@@ -924,6 +938,55 @@ class _CalendarWidget extends State<CalendarWidget> {
     }
   }
 
+  //택일모드 버튼 설정
+  SetWidgetChooseDayButton(){
+    if(nowState == 1){
+      if(isShowChooseDayButtons == false){
+        chooseDayButtonWidget = Container(
+          width: 40,
+          child: ElevatedButton(
+            child: Icon(Icons.calendar_month, color:Colors.white),
+            onPressed: (){
+              if(uemYangType != 0){
+                ShowDialogMessage('택일 모드는 양력 명식만 가능합니다');
+              } else {
+              setState(() {
+                isShowChooseDayButtons = !isShowChooseDayButtons;
+                SetWidgetChooseDayButton();
+                calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
+                    name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
+                    birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons, setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode);
+                });
+              }
+            },
+            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+          ),
+        );
+      } else {
+        chooseDayButtonWidget = Container(
+          width: 40,
+          child: ElevatedButton(
+            child: Icon(Icons.calendar_month, color:style.colorMainBlue),
+            onPressed: (){
+              setState(() {
+                isShowChooseDayButtons = !isShowChooseDayButtons;
+                SetWidgetChooseDayButton();
+                calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
+                    name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
+                    birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons, setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode);
+              });
+            },
+            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+          ),
+        );
+      }
+    } else {
+      chooseDayButtonWidget = SizedBox(width: 50,height: 50);
+    }
+  }
+
   ShowSameCheckerMessage(String birth){
     showDialog(
         context: context,
@@ -960,15 +1023,21 @@ class _CalendarWidget extends State<CalendarWidget> {
         nowState = 0;
         isSaved = 1;
         calendarResultWidget = SizedBox.shrink();
+
+        personDataNum = '';
+        personMemo = '';
+        isShowChooseDayButtons = false;
+
         SetWidgetCalendarResultBirthText();
         SetWidgetSaveButton();
         SetWidgetBackButton();
         SetWidgetMarkButton();
+        SetWidgetChooseDayButton();
       });
     }
   }
 
-  //만세력 이름 위젯 설정
+  //만세력 명식의 이름 위젯 설정
   SetWidgetCalendarResultBirthText(){
     if(nowState == 0){
       calendarBirthTextWidget = SizedBox.shrink();
@@ -991,6 +1060,34 @@ class _CalendarWidget extends State<CalendarWidget> {
     }
   }
 
+  //택일모드에서 명식 생년월일 수정
+  SetWidgetCalendarResultBirthTextFromChooseDayMode(int year, int month, int day, int hour, int min){
+
+    targetBirthYear = year;
+    targetBirthMonth = month;
+    targetBirthDay = day;
+    targetBirthHour = hour;
+    targetBirthMin = min;
+
+    setState(() {
+      calendarBirthTextWidget = calendarResultBirthTextWidget.CalendarResultBirthTextWidget(
+          name: targetName,
+          gender: genderVal ? '남' : '여',
+          uemYang: uemYangType,
+          birthYear: targetBirthYear,
+          birthMonth: targetBirthMonth,
+          birthDay: targetBirthDay,
+          birthHour: targetBirthHour,
+          birthMin: targetBirthMin,
+          isShowDrawerManOld: 0,
+          widgetWidth: widgetWidth,
+          isOneWidget: (widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false,
+          isEditSetting: isEditSetting,
+          setTargetName: SetTargetName
+      );
+    });
+  }
+
   SetGenderRadioButtonColor(Gender? button) {
     if (button == Gender.Male) {
       genderColorMale = MaterialStateColor.resolveWith((states) => style.colorMainBlue);
@@ -1005,17 +1102,23 @@ class _CalendarWidget extends State<CalendarWidget> {
   }
 
   //만세력 조회 화면 생성
-  SetCalendarResultWidget(){
+  SetCalendarResultWidget({bool isWithSave = false}){
     nowState = 1;
     setState(() {
       isEditSetting = !isEditSetting;
       double _widgetWidth = widgetWidth;
+
+      if(isWithSave == true){
+        personDataNum = saveDataManager.mapPerson.last['num'];
+      }
+
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: _widgetWidth, isEditSetting: isEditSetting,);
+        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: _widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons, setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode);
       SetWidgetBackButton();
       SetWidgetSaveButton();
       SetWidgetCalendarResultBirthText();
+      SetWidgetChooseDayButton();
 
       if (personDataNum != '') {
         isSaved = 0;
@@ -1163,10 +1266,11 @@ class _CalendarWidget extends State<CalendarWidget> {
                     backButtonWidget, //뒤로가기
                     Container(  //생년월일
                       //color:Colors.green,
-                      width: widgetWidth - 200,
+                      width: widgetWidth - 250,
                       height: 50,
                       child: calendarBirthTextWidget,
                     ),
+                    chooseDayButtonWidget,
                     markButtonWidget,
                     [
                       Container(
@@ -1201,7 +1305,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                     //이름
                     width: style.UIButtonWidth,
                     height: style.fullSizeButtonHeight,
-                    margin: EdgeInsets.only(top: style.UIMarginTopTop),
+                    margin: EdgeInsets.only(top: 8),//style.UIMarginTopTop),
                     decoration: BoxDecoration(
                       //border: Border.all(color: focusBoxColorNum == 0? style.colorMainBlue:Colors.transparent, width: 2, strokeAlign: BorderSide.strokeAlignInside),
                       color: style.colorNavy,
@@ -1464,6 +1568,42 @@ class _CalendarWidget extends State<CalendarWidget> {
                       ],
                     ),
                   ), //시간
+                  ScrollConfiguration(
+                    behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Container(
+                        width: style.UIButtonWidth,
+                        height: style.fullSizeButtonHeight * 5,
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        decoration: BoxDecoration(
+                          color: style.colorBlack,
+                          borderRadius: BorderRadius.circular(style.textFiledRadius),
+                        ),
+                        child: TextField(
+                          //focusNode: birthHourTextFocusNode,
+                          obscureText: isShowPersonalBirth == false? true : false,
+                          controller: memoController,
+                          keyboardType: TextInputType.multiline,
+                          cursorColor: Colors.white,
+                          maxLines: null,
+                          style: Theme.of(context).textTheme.labelLarge,
+                          decoration:InputDecoration(
+                            isDense: true,
+                            contentPadding: EdgeInsets.only(top: 18, left: 18, bottom:18),
+                            counterText:"",
+                            hintText: '메모를 입력하시면\n조회 시 명식이 자동으로 저장됩니다',
+                            hintStyle: Theme.of(context).textTheme.labelSmall,
+                            border: InputBorder.none,),
+                          onChanged: (text) {
+                            setState(() {
+
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ), //메모
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -1486,8 +1626,17 @@ class _CalendarWidget extends State<CalendarWidget> {
                           ),
                           onPressed: () {
                             if (InqureChecker(true) == true) {
+                              if(memoController.text != ''){
+                                bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
+
+                                if(isSamePerson == true){
+                                  saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                                  SetCalendarResultWidget(isWithSave: true);
+                                }
+                              } else {
                               SetCalendarResultWidget();
                             }
+                          }
 
                             return;
                           },
@@ -1522,7 +1671,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                   Container(
                     //단일 조회 안내문
                     width: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
-                    margin: EdgeInsets.only(top: 30),
+                    //margin: EdgeInsets.only(top: 30),
                     padding: EdgeInsets.all(style.UIMarginLeft),
                     //height: style.fullSizeButtonHeight * 5,
                     decoration: BoxDecoration(

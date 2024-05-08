@@ -23,6 +23,8 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
 
   Widget mainCalendarSaveListOptionWidget = SizedBox.shrink();
 
+  ScrollController scrollController = ScrollController();
+
   String GetUemYangText(int uemYang){
     String uemYangText = '';
     if(uemYang == 0){
@@ -222,112 +224,119 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       ),
       Expanded(
         child: Container(  //저장목록
-          width: style.UIButtonWidth,
-          alignment: Alignment.topCenter,
+          width: style.UIButtonWidth + 38,
+          //alignment: Alignment.topCenter,
           height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-          margin: EdgeInsets.only(top: style.UIMarginTop),
+          margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
           child: ScrollConfiguration(
             behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-            child: ListView.separated(
-              scrollDirection: Axis.vertical,
-              itemCount:saveDataManager.mapPersonSortedMark.length,
-              itemBuilder: (context, i){
-                bool passVal = false;
-                //검색 조회
-                if(searchText.isEmpty){
-                  passVal = true;
-                }
-                else{
-                  String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}.${saveDataManager.mapPersonSortedMark[i]['birthMonth']}.${saveDataManager.mapPersonSortedMark[i]['birthDay']} ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
-                  if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPersonSortedMark[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+            child: RawScrollbar(
+              controller: scrollController,
+              thumbColor: style.colorDarkGrey,
+              thickness: 8,
+              radius: Radius.circular(10),
+              child: ListView.separated(
+                scrollDirection: Axis.vertical,
+                controller: scrollController,
+                itemCount:saveDataManager.mapPersonSortedMark.length,
+                itemBuilder: (context, i){
+                  bool passVal = false;
+                  //검색 조회
+                  if(searchText.isEmpty){
                     passVal = true;
                   }
-                }
-                //리스트뷰
-                if(passVal == true){
-                  return Container(
-                    width: style.UIButtonWidth,
-                    height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: (){
-                              context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPersonSortedMark[i]['name'], saveDataManager.mapPersonSortedMark[i]['gender'], saveDataManager.mapPersonSortedMark[i]['uemYang'],
-                                  saveDataManager.mapPersonSortedMark[i]['birthYear'], saveDataManager.mapPersonSortedMark[i]['birthMonth'], saveDataManager.mapPersonSortedMark[i]['birthDay'],
-                                  saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], saveDataManager.mapPersonSortedMark[i]['memo'],
-                                  saveDataManager.mapPersonSortedMark[i]['num']);
-                          },
-                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                              foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: style.UIButtonWidth * 0.8,
-                                height: style.saveDataNameLineHeight,
-                                padding: EdgeInsets.only(top:6),
-                                //color:Colors.green,
-                                child:
-                                Row(
-                                  children: GetPersonNameText(i),
-                                ),
-                              ),
-                              Container(
+                  else{
+                    String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}.${saveDataManager.mapPersonSortedMark[i]['birthMonth']}.${saveDataManager.mapPersonSortedMark[i]['birthDay']} ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
+                    if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPersonSortedMark[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+                      passVal = true;
+                    }
+                  }
+                  //리스트뷰
+                  if(passVal == true){
+                    return Container(
+                      width: style.UIButtonWidth,
+                      height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                      child: Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: (){
+                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPersonSortedMark[i]['name'], saveDataManager.mapPersonSortedMark[i]['gender'], saveDataManager.mapPersonSortedMark[i]['uemYang'],
+                                    saveDataManager.mapPersonSortedMark[i]['birthYear'], saveDataManager.mapPersonSortedMark[i]['birthMonth'], saveDataManager.mapPersonSortedMark[i]['birthDay'],
+                                    saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], saveDataManager.mapPersonSortedMark[i]['memo'],
+                                    saveDataManager.mapPersonSortedMark[i]['num']);
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Column(
+                              children: [
+                                Container(
                                   width: style.UIButtonWidth * 0.8,
-                                  height: style.saveDataMemoLineHeight,
-                                  padding: EdgeInsets.only(top:4),
-                                  //color:Colors.yellow,
-                                  child: Row(
-                                    children: GetPersonBirthText(i),
+                                  height: style.saveDataNameLineHeight,
+                                  padding: EdgeInsets.only(top:6),
+                                  //color:Colors.green,
+                                  child:
+                                  Row(
+                                    children: GetPersonNameText(i),
                                   ),
-                              ),
-                            ],
+                                ),
+                                Container(
+                                    width: style.UIButtonWidth * 0.8,
+                                    height: style.saveDataMemoLineHeight,
+                                    padding: EdgeInsets.only(top:4),
+                                    //color:Colors.yellow,
+                                    child: Row(
+                                      children: GetPersonBirthText(i),
+                                    ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Container(  //즐겨찾기 버튼
-                          width: style.UIButtonWidth * 0.1,
-                          height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                          Container(  //즐겨찾기 버튼
+                            width: style.UIButtonWidth * 0.1,
+                            height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                              child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                            ),
                           ),
-                        ),
-                        Container(  //옵션 버튼
-                          width: style.UIButtonWidth * 0.1,
-                          height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              widget.setSideOptionLayerWidget(true);
-                              //widget.setSideOptionWidget(SetSaveListOptionWidget(true, i));
-                              widget.setSideOptionWidget(Container(
-                                width: style.UIButtonWidth + 30,
-                                height: MediaQuery.of(context).size.height - style.appBarHeight,
-                                child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPersonSortedMark[i]['name'], gender0: saveDataManager.mapPersonSortedMark[i]['gender'], uemYang0: saveDataManager.mapPersonSortedMark[i]['uemYang'],
-                                    birthYear0: saveDataManager.mapPersonSortedMark[i]['birthYear'], birthMonth0: saveDataManager.mapPersonSortedMark[i]['birthMonth'],
-                                    birthDay0: saveDataManager.mapPersonSortedMark[i]['birthDay'], birthHour0: saveDataManager.mapPersonSortedMark[i]['birthHour'], birthMin0: saveDataManager.mapPersonSortedMark[i]['birthMin'],
-                                    memo:saveDataManager.mapPersonSortedMark[i]['memo']??'', saveDate: saveDataManager.mapPersonSortedMark[i]['saveDate']??'', isMark: saveDataManager.mapPersonSortedMark[i]['mark']??false,
-                                    saveDataNum: saveDataManager.mapPersonSortedMark[i]['num'], listIndex: i, closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
-                              ));
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                          Container(  //옵션 버튼
+                            width: style.UIButtonWidth * 0.1,
+                            height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                widget.setSideOptionLayerWidget(true);
+                                //widget.setSideOptionWidget(SetSaveListOptionWidget(true, i));
+                                widget.setSideOptionWidget(Container(
+                                  width: style.UIButtonWidth + 30,
+                                  height: MediaQuery.of(context).size.height - style.appBarHeight,
+                                  child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPersonSortedMark[i]['name'], gender0: saveDataManager.mapPersonSortedMark[i]['gender'], uemYang0: saveDataManager.mapPersonSortedMark[i]['uemYang'],
+                                      birthYear0: saveDataManager.mapPersonSortedMark[i]['birthYear'], birthMonth0: saveDataManager.mapPersonSortedMark[i]['birthMonth'],
+                                      birthDay0: saveDataManager.mapPersonSortedMark[i]['birthDay'], birthHour0: saveDataManager.mapPersonSortedMark[i]['birthHour'], birthMin0: saveDataManager.mapPersonSortedMark[i]['birthMin'],
+                                      memo:saveDataManager.mapPersonSortedMark[i]['memo']??'', saveDate: saveDataManager.mapPersonSortedMark[i]['saveDate']??'', isMark: saveDataManager.mapPersonSortedMark[i]['mark']??false,
+                                      saveDataNum: saveDataManager.mapPersonSortedMark[i]['num'], listIndex: i, closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
+                                ));
+                              },
+                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                              child: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                else{
-                  return SizedBox.shrink();
-                }
-              },
-                separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, color: style.colorBlack,); }
+                        ],
+                      ),
+                    );
+                  }
+                  else{
+                    return SizedBox.shrink();
+                  }
+                },
+                  separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent:20, color: style.colorBlack,); }
+              ),
             ),
           ),
         ),

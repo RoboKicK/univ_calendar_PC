@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
-    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting});
+    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode});
 
   final String name;
   final bool gender;
@@ -31,6 +31,8 @@ class MainCalendarInquireResult extends StatefulWidget {
   final String saveDataNum;
   final double widgetWidth;
   final bool isEditSetting;
+  final bool isShowChooseDayButtons;
+  final setWidgetCalendarResultBirthTextFromChooseDayMode;
 
   @override
   State<MainCalendarInquireResult> createState() => _MainCalendarInquireResultState();
@@ -70,18 +72,58 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   double widgetWidth = 0;
 
   bool isEditSetting = false;
+  //bool isShowChooseDayButton = false;
 
   int calendarData = 0, sinsalData = 0, deunSeunData = 0, etcData = 0;
 
-  SetPersonPaljaData(int personNum, bool isDeun, List<int> listGanji){
+  ShowDialogMessage(String message) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      //barrierColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+        );
+      },
+    );
+  }
+
+  ShowSnackBar(String text){
+    SnackBar snackBar = SnackBar(
+      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+      backgroundColor: style.colorMainBlue,//Colors.white,
+      //style.colorMainBlue,
+      shape: StadiumBorder(),
+      duration: Duration(milliseconds: style.snackBarDuration),
+      dismissDirection: DismissDirection.down,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          bottom: 20,
+          left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+          right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+    );
+
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  SetPersonPaljaData(int personNum, bool isDeun, List<int> listGanji, {int AddDeunCheongan = 0, int AddDeunJiji = 0}){
+    if(widget.isShowChooseDayButtons == true){
+      ShowSnackBar('택일 모드 중에는 간지가 추가되지 않습니다');
+      return;
+    }
     setState(() {
         if(isDeun == true){ //대운을 눌렀을 때
-          if(listGanji[0] == -2){ //간지 번호가 -2면 삭제 신호
-            while(listPaljaData.length > 8){
-              listPaljaData.removeLast();
-            }
-          }
-          else {  //아니면 추가
+          if(listPaljaData.length > 8 && listGanji[0] == listPaljaData[8]) {
+            //if (listGanji[0] == -2) { //간지 번호가 -2면 삭제 신호
+              while (listPaljaData.length > 8) {
+                listPaljaData.removeLast();
+              }
+        } else {  //아니면 추가
             while(listPaljaData.length > 10){  //세운을 지운다
               listPaljaData.removeLast();
             }
@@ -94,12 +136,17 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
             }
           }
         } else {  //세운을 눌렀을 때
-          if(listGanji[0] == -2){ //간지 번호가 -2면 삭제 신호
+          if(listPaljaData.length > 10 && listGanji[0] == listPaljaData[10]) {
+          //if(listGanji[0] == -2){ //간지 번호가 -2면 삭제 신호
             while(listPaljaData.length > 10){
               listPaljaData.removeLast();
             }
           }
           else {  //아니면 추가
+            if(listPaljaData.length == 8){  //간지 8개면 대운 2개 추가
+              listPaljaData.add(AddDeunCheongan);
+              listPaljaData.add(AddDeunJiji);
+            }
             if(listPaljaData.length == 10){ //간지 10개면 세운 2개 추가
               listPaljaData.add(listGanji[0]);
               listPaljaData.add(listGanji[1]);
@@ -315,8 +362,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
         birthYear0: listBirth[0],
         birthMonth0: listBirth[1],
         birthDay0: listBirth[2],
-        birthHour0: widget.birthHour,
-        birthMin0: widget.birthMin,
+        birthHour0: listBirth[3],
+        birthMin0: listBirth[4],
         listPaljaData0: listPaljaData,
         yearGongmangNum: yearGongmangNum,
         dayGongmangNum: dayGongmangNum,
@@ -334,6 +381,136 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
         setPersonPaljaData: SetPersonPaljaData,
         widgetWidth: widgetWidth,
         isOneWidget: isOneWidget);
+  }
+
+  Widget GetChooseDayWidget(){
+    if(widget.isShowChooseDayButtons == true) {
+
+        return Column(
+          children: [
+            Container(
+              width: (widget.widgetWidth - (style.UIMarginLeft * 2)),
+              height: style.UIBoxLineHeight,
+              //alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(0, true);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(1, true);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(2, true);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(3, true);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 146,
+            ),
+            Container(
+              width: (widget.widgetWidth - (style.UIMarginLeft * 2)),
+              height: style.UIBoxLineHeight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(0, false);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(1, false);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(2, false);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                  Container(
+                    width: 40,
+                    height: 40,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        EditBirthData(3, false);
+                      },
+                      style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
+                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      } else {
+      return SizedBox.shrink();
+    }
+  }
+
+  SetChooseDayMode(){
+    if(listPaljaData.length > 8) {
+      while (listPaljaData.length > 8) {
+        listPaljaData.removeLast();
+      }
+    }
   }
 
   Widget GetPaljaResult(){
@@ -360,13 +537,20 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                   GetSajuTitle(), //연주 월주 일주 시주
                   GetHabChungHyeongPaWidget(true, listPaljaData), //천간 합충형파
                   GetYugchinWidget(true, listPaljaData),
-                  calendarResultPaljaWidget.CalendarResultPaljaWidget(
-                      containerColor: listContainerColor[1],
-                      listPaljaData: listPaljaData,
-                      isShowDrawerUemyangSign: isShowDrawerUemyang,
-                      isShowDrawerKoreanGanji: isShowDrawerKoreanGanji,
-                      isLastWidget: lastWidgetNum == 0 ? true : false,
-                      widgetWidth: widgetWidth), //팔자 오행
+                  Stack(
+                    children: [
+                      calendarResultPaljaWidget.CalendarResultPaljaWidget(
+                          containerColor: listContainerColor[1],
+                          listPaljaData: listPaljaData,
+                          isShowDrawerUemyangSign: isShowDrawerUemyang,
+                          isShowDrawerKoreanGanji: isShowDrawerKoreanGanji,
+                          isLastWidget: lastWidgetNum == 0 ? true : false,
+                          widgetWidth: widgetWidth,
+                        isShowChooseDayButtons: widget.isShowChooseDayButtons,
+                      ), //팔자 오행
+                      GetChooseDayWidget(), //택일 버튼
+                    ],
+                  ),
                   GetYugchinWidget(false, listPaljaData),
                   GetJijangganWidget(listPaljaData),
                   Get12UnseongWidget(listPaljaData),
@@ -430,7 +614,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                             isShowDrawerUemyangSign: isShowDrawerUemyang,
                             isShowDrawerKoreanGanji: isShowDrawerKoreanGanji,
                             isLastWidget: lastWidgetNum == 0 ? true : false,
-                            widgetWidth: widgetWidth), //팔자 오행
+                            widgetWidth: widgetWidth,
+                          isShowChooseDayButtons: widget.isShowChooseDayButtons,), //팔자 오행
                         GetYugchinWidget(false, listPaljaData),
                         GetJijangganWidget(listPaljaData),
                         Get12UnseongWidget(listPaljaData),
@@ -702,22 +887,156 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     });
   }
 
+  //택일모드 기능
+  EditBirthData(int editMode, bool isUp){ //mode 0:시간, 1:일, 2:월, 3:연
+    if(widget.uemYang != 0){
+      ShowDialogMessage('명식이 양력으로 변경됩니다');
+    }
+    switch(editMode){
+      case 0:{  //시간
+        if(isUp == true){ //올리기
+          if(listBirth[0] == 2050 && listBirth[1] == 12 && listBirth[2] == 6 && listPaljaData[7] == 11){
+            ShowDialogMessage('2050년 12월 6일 이후는 조회할 수 없습니다');
+            return;
+          }
+          if(listBirth[3] == -2){
+            listBirth[3] = 12;
+            listBirth[4] = 30;
+          } else {
+              listBirth[3] = ((listPaljaData[7] + 1) * 2);
+              listBirth[4] = 30;
+              if (listBirth[3] > 23) {
+                listBirth[3] = listBirth[3] % 24;
+                EditBirthData(1, true);
+              }
+            }
+          } else {
+          if(listBirth[0] == 1902 && listBirth[1] == 1 && listBirth[2] == 1 && listPaljaData[7] == 0 ){
+            ShowDialogMessage('1902년 1월 1일 이전은 조회할 수 없습니다');
+            return;
+          }
+          if(listBirth[3] == -2){
+            listBirth[3] = 12;
+            listBirth[4] = 30;
+          } else {
+              listBirth[3] = ((listPaljaData[7] - 1) * 2);
+              listBirth[4] = 30;
+              if (listBirth[3] < 0) {
+                listBirth[3] = 22;
+                EditBirthData(1, false);
+              }
+            }
+          }
+      }
+      case 1:{  //일
+        if(isUp == true){
+          if(listBirth[0] == 2050 && listBirth[1] == 12 && listBirth[2] == 6){
+            ShowDialogMessage('2050년 12월 6일 이후는 조회할 수 없습니다');
+            return;
+          }
+          listBirth[2] = listBirth[2] + 1;
+
+          if(listBirth[1] == 2 && (listBirth[0] % 4 == 0)) { //2월 윤달일 때
+            if(listBirth[2] > 29){
+              listBirth[2] = 1;
+              EditBirthData(2, true);
+            }
+          } else {
+            if (listBirth[2] > findGanji.listSolNday[listBirth[1] - 1]) {
+              listBirth[2] = 1;
+              EditBirthData(2, true);
+            }
+          }
+        } else {
+          if(listBirth[0] == 1902 && listBirth[1] == 1 && listBirth[2] == 1){
+            ShowDialogMessage('1902년 1월 1일 이전은 조회할 수 없습니다');
+            return;
+          }
+          listBirth[2] = listBirth[2] - 1;
+
+          if(listBirth[2] == 0){
+            listBirth[2] = findGanji.listSolNday[(listBirth[1] + 10) % findGanji.listSolNday.length];
+            if(listBirth[1] == 3 && (listBirth[0] % 4 == 0)){
+              listBirth[2]++;
+            }
+            EditBirthData(2, false);
+          }
+        }
+      }
+      case 2:{  //월
+        if(isUp == true){
+          if(listBirth[0] == 2050 && listBirth[1] == 12){
+            ShowDialogMessage('2050년 12월 이후는 조회할 수 없습니다');
+            return;
+          }
+          listBirth[1] = listBirth[1] + 1;
+          if(listBirth[1] > 12){
+            listBirth[1] = 1;
+            EditBirthData(3, true);
+          }
+          if (listBirth[2] > findGanji.listSolNday[listBirth[1] - 1]) {
+            listBirth[2] = findGanji.listSolNday[listBirth[1] - 1];
+          }
+        } else {
+          if(listBirth[0] == 1902 && listBirth[1] == 1){
+            ShowDialogMessage('1902년 1월 이전은 조회할 수 없습니다');
+            return;
+          }
+          listBirth[1] = listBirth[1] - 1;
+          if(listBirth[1] == 0){
+            listBirth[1] = 12;
+            EditBirthData(3, false);
+          }
+        }
+      }
+      case 3:{  //연
+        if(isUp == true) {
+          if (listBirth[0] == 2050) {
+            ShowDialogMessage('2050년 이후는 조회할 수 없습니다');
+            return;
+          }
+          listBirth[0] = listBirth[0] + 1;
+        }
+        else {
+          if (listBirth[0] == 1902) {
+            ShowDialogMessage('1902년 이전은 조회할 수 없습니다');
+            return;
+          }
+          listBirth[0] = listBirth[0] - 1;
+        }
+        if (listBirth[1] == 2 && (listBirth[0] % 4 == 0) && listBirth[2] == 29) {
+          listBirth[2] = 28;
+        }
+      }
+    }
+
+    setState(() {
+      listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4]);
+    });
+
+    widget.setWidgetCalendarResultBirthTextFromChooseDayMode(listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4]);
+  }
+
   @override
   void initState() {
     super.initState();
 
     if(widget.birthYear > 1900){ //1900년 이후 출생은 findGanji로 팔자를 뽑는다
       if(widget.uemYang == 0){ //양력
-        listBirth = [widget.birthYear, widget.birthMonth, widget.birthDay];
+        listBirth = [widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin];
         listPaljaData = findGanji.InquireGanji(widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
       }
       else{
         if(widget.uemYang == 1){
           listBirth = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, false);
+          listBirth.add(widget.birthHour);
+          listBirth.add(widget.birthMin);
           listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], widget.birthHour, widget.birthMin);
         }
         else{
           listBirth = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, true);
+          listBirth.add(widget.birthHour);
+          listBirth.add(widget.birthMin);
           listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], widget.birthHour, widget.birthMin);
         }
       }
@@ -799,6 +1118,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
     memoFocusNode = FocusNode();
     isEditSetting = widget.isEditSetting;
+    //isShowChooseDayButton = widget.isShowChooseDayButtons;
   }
 
   @override
@@ -823,6 +1143,10 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     if(isEditSetting != context.watch<Store>().isEditSetting){
       ReloadOptions();
       isEditSetting = context.watch<Store>().isEditSetting;
+    }
+
+    if(widget.isShowChooseDayButtons == true){
+      SetChooseDayMode();
     }
 
     return Stack(

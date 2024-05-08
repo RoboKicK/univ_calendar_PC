@@ -88,6 +88,8 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
 
   String searchText = '';
 
+  ScrollController scrollController = ScrollController();
+
   List<Widget> GetPersonalDataText(int num){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == true){
@@ -244,63 +246,70 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
           child: Container(  //저장목록
             //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
             height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-            width: style.UIButtonWidth,
+            width: style.UIButtonWidth + 38,
             margin: EdgeInsets.only(top: style.UIMarginTop),
             child: ScrollConfiguration(
               behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-              child: ListView.separated(//builder(//
-                scrollDirection: Axis.vertical,
-                itemCount:saveDataManager.mapRecentPerson.length,
-                itemBuilder: (context, i){
-                  bool passVal = false;
-                  if(searchText.isEmpty){
-                    passVal = true;
-                  }
-                  else{
-                    String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.mapRecentPerson[i]['gender']?'남':'여'}) ${saveDataManager.mapRecentPerson[i]['birthYear']}.${saveDataManager.mapRecentPerson[i]['birthMonth']}.${saveDataManager.mapRecentPerson[i]['birthDay']} ${GetUemYangText(saveDataManager.mapRecentPerson[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], false)}";
-                    if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapRecentPerson[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+              child: RawScrollbar(
+                controller: scrollController,
+                thumbColor: style.colorDarkGrey,
+                thickness: 8,
+                radius: Radius.circular(10),
+                child: ListView.separated(//builder(//
+                  scrollDirection: Axis.vertical,
+                  controller: scrollController,
+                  itemCount:saveDataManager.mapRecentPerson.length,
+                  itemBuilder: (context, i){
+                    bool passVal = false;
+                    if(searchText.isEmpty){
                       passVal = true;
                     }
-                  }
-                  if(passVal == true){
-                    return Container(
-                      width: style.UIButtonWidth,
-                      height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                      child:ElevatedButton(
-                        onPressed: (){
-                          context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
-                              saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
-                              saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
-                              '');
-                        },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        child: Column(
-                          children: [
-                            Container(
-                                  width: style.UIButtonWidth,
-                                  height: style.saveDataNameLineHeight,
-                                  padding: EdgeInsets.only(top:6),
-                                  child: Row(
-                                    children:
-                                    GetPersonalDataText(i),
-                                  ),
-                                ),
-                             Container(
+                    else{
+                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.mapRecentPerson[i]['gender']?'남':'여'}) ${saveDataManager.mapRecentPerson[i]['birthYear']}.${saveDataManager.mapRecentPerson[i]['birthMonth']}.${saveDataManager.mapRecentPerson[i]['birthDay']} ${GetUemYangText(saveDataManager.mapRecentPerson[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], false)}";
+                      if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapRecentPerson[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+                        passVal = true;
+                      }
+                    }
+                    if(passVal == true){
+                      return Container(
+                        width: style.UIButtonWidth,
+                        height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                        child:ElevatedButton(
+                          onPressed: (){
+                            context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
+                                saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
+                                saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
+                                '');
+                          },
+                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                              foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                          child: Column(
+                            children: [
+                              Container(
                                     width: style.UIButtonWidth,
-                                    height: style.saveDataMemoLineHeight,
-                                    padding: EdgeInsets.only(top:4),
-                                    child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
-                                ),
-                          ],
+                                    height: style.saveDataNameLineHeight,
+                                    padding: EdgeInsets.only(top:6),
+                                    child: Row(
+                                      children:
+                                      GetPersonalDataText(i),
+                                    ),
+                                  ),
+                               Container(
+                                      width: style.UIButtonWidth,
+                                      height: style.saveDataMemoLineHeight,
+                                      padding: EdgeInsets.only(top:4),
+                                      child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                  ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );}
-                  else{
-                    return SizedBox.shrink();
-                  }
-                },
-                  separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, color: style.colorBlack,); }
+                      );}
+                    else{
+                      return SizedBox.shrink();
+                    }
+                  },
+                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, indent: 20, endIndent: 20, color: style.colorBlack,); }
+                ),
               ),
             ),
           ),

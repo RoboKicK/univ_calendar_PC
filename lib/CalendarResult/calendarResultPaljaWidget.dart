@@ -3,13 +3,14 @@ import '../../style.dart' as style;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
 
 class CalendarResultPaljaWidget extends StatefulWidget {
-  const CalendarResultPaljaWidget({super.key, required this.containerColor, required this.listPaljaData, required this.isShowDrawerUemyangSign, required this.isShowDrawerKoreanGanji, required this.isLastWidget, required this.widgetWidth});
+  const CalendarResultPaljaWidget({super.key, required this.containerColor, required this.listPaljaData, required this.isShowDrawerUemyangSign, required this.isShowDrawerKoreanGanji, required this.isLastWidget, required this.widgetWidth, required this.isShowChooseDayButtons});
 
   final Color containerColor;
   final List<int> listPaljaData;
   final bool isLastWidget;
   final int isShowDrawerUemyangSign, isShowDrawerKoreanGanji;
   final double widgetWidth;
+  final bool isShowChooseDayButtons;
 
   @override
   State<CalendarResultPaljaWidget> createState() => _CalendarResultPaljaWidgetState();
@@ -19,9 +20,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   List<List<String>> listChenganString = [['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'],['갑','을','병','정','무','기','경','신','임','계']];
   List<List<String>> listJijiString = [['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'],['자','축','인','묘','진','사','오','미','신','유','술','해']];
 
-  List<Color> listOhengBoxColor0 = [], listOhengBoxColor1 = [];
-  List<Color> listOhengTextColor0 = [], listOhengTextColor1 = [];
-  List<String> listOhengText0 = [], listOhengText1 = [];
+  List<Color> listOhengBoxColor0 = [Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent];
+  List<Color> listOhengTextColor0 = [Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent];
+  List<String> listOhengText0 = ['','','','','','','',''];
 
   double buttonPaddingVal = 4;
 
@@ -188,7 +189,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   List<Widget> GetCheonganGanjiWidget(){
     List<Widget> listCheonganGanji =[];
 
-    SetOhengBoxAndTextColor();
+   // SetOhengBoxAndTextColor();
 
     if(widget.listPaljaData.length > 10){
       listCheonganGanji.add(Container(  //대운
@@ -324,7 +325,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   List<Widget> GetJijiGanjiWidget(){
     List<Widget> listJijiGanji =[];
 
-    SetOhengBoxAndTextColor();
+//    SetOhengBoxAndTextColor();
 
     if(widget.listPaljaData.length > 10){
       listJijiGanji.add(Container(  //세운
@@ -459,6 +460,39 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   }
 
   SetOhengBoxAndTextColor(){
+    for(int i = 0; i < 8; i++){ //오행 박스와 텍스트 컬러, 텍스트 초기화
+      if(i % 2 == 0){ //천간이면
+        listOhengBoxColor0[i] = style.SetOhengColor(true, widget.listPaljaData[i]);
+        if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == -2){
+          listOhengTextColor0[i] = style.colorBlack;
+        }
+        else{
+          listOhengTextColor0[i] = Colors.white;
+        }
+        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          listOhengText0[i] = style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
+        }
+        else{ //시간모름이면
+          listOhengText0[i] = style.unknownTimeText;
+        }
+      }
+      else{ //지지면
+        listOhengBoxColor0[i] = style.SetOhengColor(false, widget.listPaljaData[i]);
+        if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == -2){
+          listOhengTextColor0[i] = style.colorBlack;
+        }
+        else{
+          listOhengTextColor0[i] = Colors.white;
+        }
+        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          listOhengText0[i] = style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
+        }
+        else{ //시간모름이면
+          listOhengText0[i] = style.unknownTimeText;
+        }
+      }
+    }
+
     if(widget.listPaljaData.length > listOhengBoxColor0.length){  //간지가 많고 컬러 리스트가 적으면 추가
       int i = listOhengBoxColor0.length;
       while(widget.listPaljaData.length > listOhengBoxColor0.length){
@@ -540,39 +574,6 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   @override
   void initState() {
     super.initState();
-
-    for(int i = 0; i < widget.listPaljaData.length; i++){ //오행 박스와 텍스트 컬러, 텍스트 초기화
-      if(i % 2 == 0){ //천간이면
-        listOhengBoxColor0.add(style.SetOhengColor(true, widget.listPaljaData[i]));
-        if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == -2){
-          listOhengTextColor0.add(style.colorBlack);
-        }
-        else{
-          listOhengTextColor0.add(Colors.white);
-        }
-        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
-          listOhengText0.add(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]]);
-        }
-        else{ //시간모름이면
-          listOhengText0.add(style.unknownTimeText);
-        }
-      }
-      else{ //지지면
-        listOhengBoxColor0.add(style.SetOhengColor(false, widget.listPaljaData[i]));
-        if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == -2){
-          listOhengTextColor0.add(style.colorBlack);
-        }
-        else{
-          listOhengTextColor0.add(Colors.white);
-        }
-        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
-          listOhengText0.add(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]]);
-        }
-        else{ //시간모름이면
-          listOhengText0.add(style.unknownTimeText);
-        }
-      }
-    }
   }
 
   @override
@@ -599,6 +600,12 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       ganjiBoxMarginSmaller = 8;
     }
 
+    if(widget.isShowChooseDayButtons == true){
+      ganjiContainerHeight = ganjiContainerHeight + (style.UIBoxLineHeight * 2);
+    }
+
+    SetOhengBoxAndTextColor();
+
     return Container(
         width: (widget.widgetWidth - (style.UIMarginLeft * 2)),
         height: ganjiContainerHeight,
@@ -615,6 +622,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
             ],
             borderRadius: BorderRadius.only(bottomLeft: Radius.circular(widget.isLastWidget==false? 0:style.textFiledRadius), bottomRight: Radius.circular(widget.isLastWidget==false? 0:style.textFiledRadius))),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

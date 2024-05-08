@@ -7,7 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 String fileDirPath = '';
 
+//mapUserData : 사용자 정보, mapWordData : 단어 설정, calendarData : 만세력 설정, sinsalData : 신살, etcSinsalData : 기타 신살, deunSeunData : 대운세운, etcData : 기타
+
 Map mapUserData = {}; //사용자 정보
+int themeData = 1; //테마 데이터
 
 Map mapWordData = {}; //단어 설정 'ilGan', 'yugChin', 'wonJin', 'geukChung', 'hab'   라디오 버튼 1,2,3
 

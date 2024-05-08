@@ -114,10 +114,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   int nowPageCount = 3;
   List<Widget> listPageSelectButton = [];
   List<int> listUniquePageNum = [0,1,2];
-  List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];
+  List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];  //페이지 이름
   List<String> listPageNameController = ['','','','','','','','',''];
   TextEditingController pageNameController = TextEditingController();
-  String nowPageName = '페이지 1';
+  String nowPageName = '';
   int uniquePageNum = 2;
 
   Widget settingWidget = SizedBox.shrink();
@@ -148,16 +148,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     });
   }
 
-  //현재 페이지 이름 저장
+  //페이지 이름 편집 및 저장
   SetNowPageName(String text){
-    nowPageName = listPageName[nowPageNum];
+    //nowPageName = listPageName[nowPageNum];
     String storeNowPageName = '';
-    if(listPageNameController[nowPageNum] == '') {
-      storeNowPageName = nowPageName;
-    } else {
-      storeNowPageName = listPageNameController[nowPageNum];
-    }
-    pageNameController.text = storeNowPageName;
+
+    storeNowPageName = listPageNameController[nowPageNum];
+    nowPageName = storeNowPageName;
+    //pageNameController.text = storeNowPageName;
     context.read<Store>().SetNowPageName(storeNowPageName);
   }
 
@@ -165,7 +163,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   SetNowCalendarNum(int num){
     if(nowPageNum == num){
       setState(() {
-        SetNowPageName(listPageName[nowPageNum]);
+        SetNowPageName(listPageNameController[nowPageNum]);
+        pageNameController.text = nowPageName;
       });
       return;
     }
@@ -175,7 +174,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       nowPageNum = num;
       listCalendarButtonColor[nowPageNum] = style.colorMainBlue;
       listCalendarButtonSize[nowPageNum] = nowCalendarButtonSize;
-      SetNowPageName(listPageName[nowPageNum]);
+      SetNowPageName(listPageNameController[nowPageNum]);
+      pageNameController.text = nowPageName;
     });
   }
 
@@ -293,9 +293,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   SetSettingWidget(bool isShow){
     if(isShow == true){
       settingWidget = TapRegion(
-        onTapOutside: (click) {
-          ShowSettingPage();
-        },
+        //onTapOutside: (click) {
+        //  ShowSettingPage();
+        //},
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height - 6,
@@ -452,19 +452,19 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
 
-    listSideLayerWidget = [
+    listSideLayerWidget = [ //사이드 목록 위젯
       Container(
-        width: style.UIButtonWidth+2,
+        width: style.UIButtonWidth+38,//2,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
         child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget),
       ),
       Container(
-        width: style.UIButtonWidth+2,
+        width: style.UIButtonWidth+38,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
         child: mainCalendarRecentList.MainCalendarRecentList(),
       ),
       Container(
-        width: style.UIButtonWidth+2,
+        width: style.UIButtonWidth+38,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
         child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget),
       ),
@@ -507,21 +507,21 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             child: Icon(Icons.save, size: 20, color:Colors.white),
                           ),
                         ),
-                        Container(  //묶음(group) 불러오기
-                          width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
-                          child: ElevatedButton(
-                            onPressed: (){
-                              setState(() {
-                                SetGroupLoadWidget(true);
-                              });
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.save, size: 20, color:Colors.white),
-                          ),
-                        ),
+                        //Container(  //묶음(group) 불러오기
+                        //  width: 40,
+                        //  height: style.appBarHeight,
+                        //  margin: EdgeInsets.only(left: 00),
+                        //  child: ElevatedButton(
+                        //    onPressed: (){
+                        //      setState(() {
+                        //        SetGroupLoadWidget(true);
+                        //      });
+                        //    },
+                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        //    child: Icon(Icons.save, size: 20, color:Colors.white),
+                        //  ),
+                        //),
                         Container(  //한 페이지 비우기
                           width: 40,
                           height: style.appBarHeight,
@@ -545,7 +545,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.clear, size: 20, color:Colors.white),
+                            child: Icon(Icons.clear_all, size: 20, color:Colors.white),
                           ),
                         ),
                         Container(  //페이지 이름
@@ -564,7 +564,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                 counterText:"",
                                 border: InputBorder.none,
                                 prefix: Text('   '),
-                                hintText: nowPageName,
+                                hintText: listPageName[nowPageNum],
                                 hintStyle: Theme.of(context).textTheme.headlineSmall),
                             onChanged: (value){
                               setState(() {
@@ -605,7 +605,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.settings, size: 20, color:Colors.white),
+                            child: Icon(Icons.dehaze, size: 20, color:Colors.white),
                           ),
                         ),
                         Container(  //설정 버튼
@@ -769,6 +769,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                           IndexedStack(
                             index: nowCalendarHeadLine,
                             children: listSideLayerWidget,
+                            alignment: Alignment.topCenter,
                           )
                         ],
                       ),

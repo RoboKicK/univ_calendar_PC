@@ -11,6 +11,7 @@ import 'calendarSettingWidget.dart' as calendarSettingWidget;
 import 'sinsalSettingWidget.dart' as sinsalSettingWidget;
 import 'deunSeunSettingWidget.dart' as deunSeunSettingWidget;
 import 'etcSettingWidget.dart' as etcSettingWidget;
+import 'themeSettingWidget.dart' as themeSettingWidget;
 
 class SettingManagerWidget extends StatefulWidget {
   const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting});
@@ -139,7 +140,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   }
 
   double widgetWidth = 600;
-  double widgetHeight = 560;
+  double widgetHeight = 560+46;
 
   Widget nextPage = SizedBox.shrink();
   Widget backSpaceButton = SizedBox.shrink();
@@ -147,7 +148,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   Widget mainPage = SizedBox.shrink();
   Widget nowPage = SizedBox.shrink();
 
-  SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타
+  SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타, 7:테마
     setState(() {
       switch(num){
         case 0: {
@@ -170,6 +171,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         }
         case 6: {
           nextPage = etcSettingWidget.EtcSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+        }
+        case 7: {
+          nextPage = themeSettingWidget.ThemeSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
       }
       if(num == 0){
@@ -210,7 +214,8 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   @override
   void didChangeDependencies() {
 
-    mainPage = Container(width: widgetWidth,
+    mainPage = Container(
+      width: widgetWidth,
       height: widgetHeight,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(style.textFiledRadius),
@@ -225,7 +230,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                 height: settingTextContainerHeight,
                 width: widgetWidth,
                 margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop),
-                child: Text("사용자", style: style.settingInfoText0),
+                child: Text("개인 설정", style: style.settingInfoText0),  //"사용자"
               ),
               Container(  //사용자 버튼
                 height: settingButtonContainerHeight,
@@ -249,6 +254,30 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                           //padding: EdgeInsets.only(top: 6),
                           child: GetUserDataText()
                       ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(  //테마
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop,left: style.UIMarginLeft),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(7);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.transparent),
+                          foregroundColor: style.colorBackGround,
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('테마',
+                          style: style.settingText0),
                     ),
                   ],
                 ),

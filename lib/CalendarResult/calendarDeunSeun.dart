@@ -32,59 +32,60 @@ class CalendarDeunSeun extends StatefulWidget {
 }
 
 class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
-  List<int> listDeunCheongan0 = [];
-  List<int> listDeunJiji0 = [];
-  List<Color> listCheonganBoxColor0 = [];
-  List<Color> listCheonganTextColor0 = [];
-  List<Color> listJijiBoxColor0 = [];
-  List<Color> listJijiTextColor0 = [];
+  List<int> listDeunCheongan0 = [0,0,0,0,0,0,0,0,0,0];
+  List<int> listDeunJiji0 = [0,0,0,0,0,0,0,0,0,0];
+  List<Color> listCheonganBoxColor0 =  [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listCheonganTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listJijiBoxColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listJijiTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
 
   List<Color> listContainerColor = [style.colorBoxGray0, style.colorBoxGray1];
   int containerColorNum = 1;
 
-  List<Color> listDeunsuColor0 = []; //천간 지지 선택은 같으니까 리스트 하나로 관리
+  List<Color> listDeunsuColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,]; //천간 지지 선택은 같으니까 리스트 하나로 관리
 
   int deunStart0 = -1;
   int nowDeunNum0 = 0;
   int birthYear0 = 0;
 
-  List<String> listDeunGongmangString = [];
+  List<String> listDeunGongmangString = ['','','','','','','','','','',];
   int deunGongmangTopCount = 0;
   double deunGongmangContainerHeight = style.UIBoxLineHeight;
 
+  List<int> listPrevBirth = [0,0,0,0,0];
   //여기부터 세운
-  List<int> listSeunYear0 = [0,0,0,0,0,0,0,0,0,0];
+  List<int> listSeunYear0 =     [0,0,0,0,0,0,0,0,0,0];
   List<int> listSeunCheongan0 = [0,0,0,0,0,0,0,0,0,0];
-  List<int> listSeunJiji0 = [0,0,0,0,0,0,0,0,0,0];
+  List<int> listSeunJiji0 =     [0,0,0,0,0,0,0,0,0,0];
 
-  List<Color> listSeunCheonganBoxColor0 = [];
-  List<Color> listSeunCheonganTextColor0 = [];
-  List<Color> listSeunJijiBoxColor0 = [];
-  List<Color> listSeunJijiTextColor0 = [];
+  List<Color> listSeunCheonganBoxColor0 =  [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listSeunCheonganTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listSeunJijiBoxColor0 =      [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listSeunJijiTextColor0 =     [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
 
   int seunContainerColorNum = 1;
 
-  List<Color> listSeunsuColor0 = []; //천간 지지 선택은 같으니까 리스트 하나로 관리
+  List<Color> listSeunsuColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,]; //천간 지지 선택은 같으니까 리스트 하나로 관리
 
   int nowSeunNum0 = 0;
   int nowSeunYear = 0;
 
-  List<String> listSeunGongmangString = [];
+  List<String> listSeunGongmangString = ['','','','','','','','','','',];
   int seunGongmangTopCount = 0;
   double seunGongmangContainerHeight = style.UIBoxLineHeight;
 
   //여기부터 월운
   List<int> listWolunCheongan0 = [0,0,0,0,0,0,0,0,0,0,0,0];
-  List<Color> listWolunCheonganBoxColor0 = [];
-  List<Color> listWolunCheonganTextColor0 = [];
-  List<Color> listWolunWolunBoxColor0 = [];
-  List<Color> listWolunWolunTextColor0 = [];
-  List<Color> listWolunJijiBoxColor0 = [];
-  List<Color> listWolunJijiTextColor0 = [];
+  List<Color> listWolunCheonganBoxColor0 =  [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listWolunCheonganTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listWolunWolunBoxColor0 =     [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listWolunWolunTextColor0 =    [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listWolunJijiBoxColor0 =      [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listWolunJijiTextColor0 =     [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
 
   int wolunContainerColorNum = 1;
 
-  List<String> listWolunGongmangString = [];
+  List<String> listWolunGongmangString = ['','','','','','','','','','','',''];
   int wolunGongmangTopCount = 0;
   double wolunGongmangContainerHeight = style.UIBoxLineHeight;
 
@@ -164,46 +165,59 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
     int count = 10;
     if(isPatrol0 == true){  //순행이면
       for(int i = 0; i < count; i++){
-        listDeunCheongan0.add((widget.listPaljaData0[2] + i + 1) % style.stringCheongan[0].length);
-        listDeunJiji0.add((widget.listPaljaData0[3] + i + 1) % style.stringJiji[0].length);
+        listDeunCheongan0[i] = (widget.listPaljaData0[2] + i + 1) % style.stringCheongan[0].length;
+        listDeunJiji0[i] = (widget.listPaljaData0[3] + i + 1) % style.stringJiji[0].length;
       }
     }
     else{
       for(int i = 0; i < count; i++){
-        listDeunCheongan0.add((widget.listPaljaData0[2] - i - 1) % style.stringCheongan[0].length);
-        listDeunJiji0.add((widget.listPaljaData0[3] - i - 1) % style.stringJiji[0].length);
+        listDeunCheongan0[i] = (widget.listPaljaData0[2] - i - 1) % style.stringCheongan[0].length;
+        listDeunJiji0[i] = (widget.listPaljaData0[3] - i - 1) % style.stringJiji[0].length;
       }
     }
 
     //대운 버튼 컬러, 셰도우 컬러
     for(int i = 0; i < count; i++){
-      listCheonganBoxColor0.add(style.SetOhengColor(true, listDeunCheongan0[i]));
+      listCheonganBoxColor0[i] = style.SetOhengColor(true, listDeunCheongan0[i]);
       if(listDeunCheongan0[i] == 6 || listDeunCheongan0[i] == 7){
-        listCheonganTextColor0.add(style.colorBlack);
+        listCheonganTextColor0[i] = style.colorBlack;
       }
       else{
-        listCheonganTextColor0.add(Colors.white);
+        listCheonganTextColor0[i] = Colors.white;
       }
-      listDeunsuColor0.add(Colors.transparent);
     }
     for(int i = 0; i < count; i++){
-      listJijiBoxColor0.add(style.SetOhengColor(false, listDeunJiji0[i]));
+      listJijiBoxColor0[i] = style.SetOhengColor(false, listDeunJiji0[i]);
       if(listDeunJiji0[i] == 9 || listDeunJiji0[i] == 8){
-        listJijiTextColor0.add(style.colorBlack);
+        listJijiTextColor0[i] = style.colorBlack;
       }
       else{
-        listJijiTextColor0.add(Colors.white);
+        listJijiTextColor0[i] = Colors.white;
       }
     }
 
     int nowOld0 = DateTime.now().year - widget.birthYear0 + 1;
     count = 0;
-    while(true){  //조회 했을 때 나이에 맞는 대운을 자동으로 선택함
+
+    bool isNewBirth = false;
+    List<int> listNowBirth = [widget.birthYear0, widget.birthMonth0, widget.birthDay0, widget.birthHour0, widget.birthMin0];
+    for(int i = 0; i < listPrevBirth.length; i++){
+      if(listPrevBirth[i] != listNowBirth[i]){
+        isNewBirth = true;
+      }
+    }
+
+    while(isNewBirth){  //조회 했을 때 나이에 맞는 대운을 자동으로 선택함
       if(deunStart0 != -1){
         if(deunStart0 + (count * 10) >= (nowOld0 - 9) || count == 9){
           nowDeunNum0 = count;
           int hidePersonSaveDataNum = ((personalDataManager.etcData % 10000) / 1000).floor();
           int hideOldSaveDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+
+          for(int i = 0; i < listDeunsuColor0.length; i++){
+            listDeunsuColor0[i] = Colors.transparent;
+          }
+
           //print(hidePersonSaveDataNum);
           if(hidePersonSaveDataNum == 1 || (hideOldSaveDataNum == 1 || hideOldSaveDataNum == 4 || hideOldSaveDataNum == 5)){//widget.isShowDrawerDeunSeunOld == 1){
             SetDeunButtonSelectColor(nowDeunNum0);  //선택한 대운 버튼 표시함
@@ -224,6 +238,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           }
 
           InitWolun();
+
+          listPrevBirth = [widget.birthYear0, widget.birthMonth0, widget.birthDay0, widget.birthHour0, widget.birthMin0];
           break;
         }
         else{
@@ -328,16 +344,18 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
             onPressed: () {
               SetDeunButtonSelectColor(deunNum);
               if(personalDataManager.deunSeunData % 10 != 1) {
-                if (isAddDeunToPalja == true && deunNum == nowDeunNum0) {
-                  widget.setPersonPaljaData(widget.personNum, true, [-2, -2]);
-                  isAddDeunToPalja = false;
-                  isAddSeunToPalja = false;
-                } else {
-                  widget.setPersonPaljaData(
-                      widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                  isAddDeunToPalja = true;
-                  isAddSeunToPalja = false;
-                }
+                widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+
+                //if (isAddDeunToPalja == true && deunNum == nowDeunNum0) {
+                //  widget.setPersonPaljaData(widget.personNum, true, [-2, -2]);
+                //  isAddDeunToPalja = false;
+                //  isAddSeunToPalja = false;
+                //} else {
+                //  widget.setPersonPaljaData(
+                //      widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                //  isAddDeunToPalja = true;
+                //  isAddSeunToPalja = false;
+                //}
               }
               nowDeunNum0 = deunNum;
               SetSeun();
@@ -367,13 +385,15 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           onPressed: () {
             SetDeunButtonSelectColor(deunNum);
             if(personalDataManager.deunSeunData % 10 != 1) {
-              if(isAddDeunToPalja == true && deunNum == nowDeunNum0){
-                widget.setPersonPaljaData(widget.personNum, true, [-2,-2]);
-                isAddDeunToPalja = false;
-              } else {
-                widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);//[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                isAddDeunToPalja = true;
-              }
+              widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+
+              //if(isAddDeunToPalja == true && deunNum == nowDeunNum0){
+              //  widget.setPersonPaljaData(widget.personNum, true, [-2,-2]);
+              //  isAddDeunToPalja = false;
+              //} else {
+              //  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);//[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+              //  isAddDeunToPalja = true;
+              //}
             }
             nowDeunNum0 = deunNum;
             SetSeun();
@@ -505,22 +525,22 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
     //박스 컬러
     int count = 10;
     for(int i = 0; i < count; i++){
-      listSeunCheonganBoxColor0.add(style.SetOhengColor(true, listSeunCheongan0[i]));
+      listSeunCheonganBoxColor0[i] = style.SetOhengColor(true, listSeunCheongan0[i]);
       if(listSeunCheongan0[i] == 6 || listSeunCheongan0[i] == 7){
-        listSeunCheonganTextColor0.add(style.colorBlack);
+        listSeunCheonganTextColor0[i] = style.colorBlack;
       }
       else{
-        listSeunCheonganTextColor0.add(Colors.white);
+        listSeunCheonganTextColor0[i] = Colors.white;
       }
-      listSeunsuColor0.add(Colors.transparent);
+      listSeunsuColor0[i] = Colors.transparent;
     }
     for(int i = 0; i < count; i++){
-      listSeunJijiBoxColor0.add(style.SetOhengColor(false, listSeunJiji0[i]));
+      listSeunJijiBoxColor0[i] = style.SetOhengColor(false, listSeunJiji0[i]);
       if(listSeunJiji0[i] == 9 || listSeunJiji0[i] == 8){
-        listSeunJijiTextColor0.add(style.colorBlack);
+        listSeunJijiTextColor0[i] = style.colorBlack;
       }
       else{
-        listSeunJijiTextColor0.add(Colors.white);
+        listSeunJijiTextColor0[i] = Colors.white;
       }
     }
   }
@@ -637,18 +657,21 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           onPressed: () {
             SetSeunButtonSelectColor(seunNum);
             if(personalDataManager.deunSeunData % 10 != 1) {
-              if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-                widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-                isAddSeunToPalja = false;
-              } else { //아니면 간지 추가
-                if (isAddDeunToPalja == false) {
-                  widget.setPersonPaljaData(
-                      widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                  isAddDeunToPalja = true;
-                }
-                widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-                isAddSeunToPalja = true;
-              }
+              //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
+              widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
+
+             //if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
+             //  widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
+             //  isAddSeunToPalja = false;
+             //} else { //아니면 간지 추가
+             //  if (isAddDeunToPalja == false) {
+             //    widget.setPersonPaljaData(
+             //        widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+             //    isAddDeunToPalja = true;
+             //  }
+             //  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
+             //  isAddSeunToPalja = true;
+             //}
             }
             nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
             setState(() {
@@ -818,12 +841,12 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
     //박스 컬러
     int count = 12;
     for(int i = 0; i < count; i++){
-      listWolunCheonganBoxColor0.add(style.SetOhengColor(true, listWolunCheongan0[i]));
+      listWolunCheonganBoxColor0[i] = style.SetOhengColor(true, listWolunCheongan0[i]);
       if(listWolunCheongan0[i] == 6 || listWolunCheongan0[i] == 7){
-        listWolunCheonganTextColor0.add(style.colorBlack);
+        listWolunCheonganTextColor0[i] = style.colorBlack;
       }
       else{
-        listWolunCheonganTextColor0.add(Colors.white);
+        listWolunCheonganTextColor0[i] = Colors.white;
       }
     }
   }
@@ -1887,8 +1910,6 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
       widgetWidth = widget.widgetWidth - style.UIMarginLeft;
     }
 
-    SetDeun();
-
     if(((personalDataManager.etcData % 10000) / 1000).floor() != 1) { //인적사항 숨김에 나이 표시되어있으면
       int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
       if (isShowPersonalDataNum == 2 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7) {
@@ -1914,6 +1935,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
     else {
       widgetWidth = widget.widgetWidth - style.UIMarginLeft;
     }
+
+    SetDeun();
 
     return Column(
       children: [
