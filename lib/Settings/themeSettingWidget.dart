@@ -18,8 +18,6 @@ class ThemeSettingWidget extends StatefulWidget {
   State<ThemeSettingWidget> createState() => ThemeSettingState();
 }
 
-enum ThemeType { Basic, LuciaBear }
-
 class ThemeSettingState extends State<ThemeSettingWidget> {
 
   double widgetWidth = 0;
@@ -28,8 +26,6 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
   List<int> listPaljaData = [];
 
   int isShowDrawerKoreanGanji = 0;
-
-  ThemeType? themeType = ThemeType.Basic;
 
   List<Color> listContainerColor = [style.colorBoxGray0, style.colorBoxGray1];  //[밝은, 어두운]
   List<Color> listOhengTextColor0 = [Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent];
@@ -261,7 +257,170 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
     );
   }
 
+  Widget GetPaljaWidgetWithSprite(int themeType){
+    String themeTitle = '';
 
+    switch(themeType){
+      case 2 : {
+        themeTitle = 'luciaBear';
+      }
+    }
+
+    return Container(
+        width: (450 - (style.UIMarginLeft * 2)),
+        height: 156,
+        //padding: EdgeInsets.only(top:widget.isLastWidget==false?0:2),
+        decoration: BoxDecoration(color: listContainerColor[1],
+          border: Border(bottom: BorderSide(width: 2, color:style.colorGrey), top: BorderSide(width:2, color:style.colorGrey)),
+          boxShadow: [
+            BoxShadow(
+              color: listContainerColor[1],
+              blurRadius: 0.0,
+              spreadRadius: 0.0,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(  //시간
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 3, top: 5),
+                    child: Stack(
+                      children: [
+                        Image.asset('assets/' + style.SetOhengSpriteString(true, listPaljaData[6], themeTitle)),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(style.stringCheongan[isShowDrawerKoreanGanji][listPaljaData[6]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[6]))),
+                      ]
+                    ),
+                  ),
+                  Container(  //일간
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 3, top: 5),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(true, listPaljaData[4], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringCheongan[isShowDrawerKoreanGanji][listPaljaData[4]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[4]))),
+                        ]
+                    ),
+                  ),
+                  Container(  //월간
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 3, top: 5),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(true, listPaljaData[2], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringCheongan[isShowDrawerKoreanGanji][listPaljaData[2]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[2]))),
+                        ]
+                    ),
+                  ),
+                  Container(  //연간
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 3, top: 5),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(true, listPaljaData[0], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringCheongan[isShowDrawerKoreanGanji][listPaljaData[0]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[0]))),
+                        ]
+                    ),
+                  )
+                ]
+            ),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(  //시지
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 5, top: 3),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(false, listPaljaData[7], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringJiji[isShowDrawerKoreanGanji][listPaljaData[7]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[7]))),
+                        ]
+                    ),
+                  ),
+                  Container(  //일지
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 5, top: 3),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(false, listPaljaData[5], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringJiji[isShowDrawerKoreanGanji][listPaljaData[5]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[5]))),
+                        ]
+                    ),
+                  ),
+                  Container(  //월지
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 5, top: 3),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(false, listPaljaData[3], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringJiji[isShowDrawerKoreanGanji][listPaljaData[3]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[3]))),
+                        ]
+                    ),
+                  ),
+                  Container(  //연지
+                    width: style.fullSizeButtonHeight * 1.4,
+                    height: style.fullSizeButtonHeight * 1.4,
+                    margin: EdgeInsets.only(bottom: 5, top: 3),
+                    child: Stack(
+                        children: [
+                          Image.asset('assets/' + style.SetOhengSpriteString(false, listPaljaData[1], themeTitle)),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Text(style.stringJiji[isShowDrawerKoreanGanji][listPaljaData[1]], style:TextStyle(fontSize: 30, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[1]))),
+                        ]
+                    ),
+                  )
+                ]
+            ),
+          ],
+        )
+    );
+  }
+
+  ShowSnackBar(String text){
+    SnackBar snackBar = SnackBar(
+      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+      backgroundColor: style.colorMainBlue,//Colors.white,
+      //style.colorMainBlue,
+      shape: StadiumBorder(),
+      duration: Duration(milliseconds: style.snackBarDuration),
+      dismissDirection: DismissDirection.down,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          bottom: 20,
+          left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+          right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+    );
+
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   initState() {
@@ -317,10 +476,10 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                       child: ElevatedButton(
                         onPressed: (){
                           setState(() {
-                            themeType = ThemeType.Basic;
+                            
                           });
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
+                        style: ElevatedButton.styleFrom(surfaceTintColor: Colors.transparent, padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
                         child: Column(
                           children: [
                             Container(
@@ -340,24 +499,20 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                                   ],
                                 )
                             ),
-                            Container(
-                              width: 40,
-                              height: 40,
-                              margin: EdgeInsets.only(top:style.UIMarginTop * 0.2, bottom: style.UIMarginTop * 0.2),
-                              child: Radio<ThemeType>(//버튼
-                                  visualDensity: const VisualDensity(
-                                    horizontal: VisualDensity.minimumDensity,
-                                    vertical: VisualDensity.minimumDensity,
-                                  ),
-                                  value: ThemeType.Basic,
-                                  groupValue: themeType,
-                                  fillColor: themeType == ThemeType.Basic? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey),
-                                  splashRadius: 16,
-                                  hoverColor: Colors.white.withOpacity(0.1),
-                                  focusColor: Colors.white.withOpacity(0.1),
-                                  onChanged: (ThemeType? value) {
-
-                                  }),
+                            Container(  //적용 버튼
+                              width: style.UIButtonWidth * 0.32,
+                              height: style.fullSizeButtonHeight,
+                              margin: EdgeInsets.only(top:style.UIMarginTop, bottom:style.UIMarginTop),
+                              child:ElevatedButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      personalDataManager.SaveEtcData(1000000, 1);
+                                      ShowSnackBar('테마가 적용되었습니다');
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, foregroundColor: style.colorBlack, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                  child: Text('적용', style: Theme.of(context).textTheme.headlineSmall)
+                              ),
                             ),
                           ],
                         ),
@@ -372,10 +527,10 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                       child: ElevatedButton(
                         onPressed: (){
                           setState(() {
-                            themeType = ThemeType.LuciaBear;
+
                           });
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
+                        style: ElevatedButton.styleFrom(surfaceTintColor: Colors.transparent, padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
                         child: Column(
                           children: [
                             Container(
@@ -390,32 +545,25 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                                   children: [
                                     GetSajuTitle(style.colorMainBlue),
                                     GetYugchinWidget(true, listPaljaData),
-                                    GetPaljaWidget(Colors.white, Color(0xffff4500), Color(0xffffb020), Color(0xff32cd32), Color(0xff373737)),
+                                    GetPaljaWidgetWithSprite(2),
                                     GetYugchinWidget(false, listPaljaData),
-
                                   ],
                                 )
                             ),
                             Container(
-                              width: 40,
-                              height: 40,
-                              margin: EdgeInsets.only(top:style.UIMarginTop * 0.2, bottom: style.UIMarginTop * 0.2),
-                              child: Radio<ThemeType>(//버튼
-                                  visualDensity: const VisualDensity(
-                                    horizontal: VisualDensity.minimumDensity,
-                                    vertical: VisualDensity.minimumDensity,
-                                  ),
-                                  value: ThemeType.LuciaBear,
-                                  groupValue: themeType,
-                                  fillColor: themeType == ThemeType.LuciaBear? MaterialStateColor.resolveWith((states) => style.colorMainBlue) : MaterialStateColor.resolveWith((states) => style.colorGrey),
-                                  splashRadius: 16,
-                                  hoverColor: Colors.white.withOpacity(0.1),
-                                  focusColor: Colors.white.withOpacity(0.1),
-                                  onChanged: (ThemeType? value) {
+                              width: style.UIButtonWidth * 0.32,
+                              height: style.fullSizeButtonHeight,
+                              margin: EdgeInsets.only(top:style.UIMarginTop, bottom: style.UIMarginTop),
+                              child: ElevatedButton(
+                                  onPressed: (){
                                     setState(() {
-                                      themeType = value;
+                                      personalDataManager.SaveEtcData(1000000, 2);
+                                      ShowSnackBar('테마가 적용되었습니다');
                                     });
-                                  }),
+                                  },
+                                  style: ElevatedButton.styleFrom(padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, foregroundColor: style.colorBlack, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                                  child: Text('적용', style: Theme.of(context).textTheme.headlineSmall)
+                              ),
                             ),
                           ],
                         ),

@@ -39,6 +39,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   double ganjiBoxMarginBigger = 10;
   double ganjiBoxMarginSmaller = 6;
 
+  String themeTitle = '';
+  bool isSpriteTheme = false;
+
   Container GetPlajaBox(int paljaNum, int paljaIndex){
     if(paljaNum != -2){
       if(paljaIndex == 6 || paljaIndex == 0){
@@ -141,6 +144,70 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       }
     }
   }
+  Container GetPlajaBoxWithSprite(int paljaNum, int paljaIndex){
+    if(paljaNum != -2){
+      if(paljaIndex == 6 || paljaIndex == 0){
+        return  Container(  //시간
+          width: paljaBoxSize,
+          height: paljaBoxSize,
+          margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+          child: Stack(
+              children:[
+                Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[paljaIndex], themeTitle)),
+                Align(
+                      alignment: Alignment.center,
+                      child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
+                GetUemYangSign(paljaNum, true),
+              ]
+          ),
+        );
+      }
+      else{
+        return  Container(  //시지
+          width: paljaBoxSize,
+          height: paljaBoxSize,
+          margin: EdgeInsets.only(top: ganjiBoxMarginSmaller,bottom: ganjiBoxMarginBigger),//,
+          child: Stack(
+              children:[
+                Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[paljaIndex], themeTitle)),
+                Align(
+                      alignment: Alignment.center,
+                      child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
+                GetUemYangSign(paljaNum, false),
+              ]
+          ),
+        );
+      }
+    }
+    else{
+      if(paljaIndex == 6 || paljaIndex == 0){
+        return  Container(  //시간 모름일 때
+          width: paljaBoxSize,
+          height: paljaBoxSize,
+          margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+          alignment: Alignment.center,
+          child: Stack(
+              children: [
+                Image.asset('assets/' + themeTitle + 'White.png'),
+                Align(
+                  alignment: Alignment.center,
+                    child: Text(style.unknownTimeText, style:TextStyle(fontSize: unknownTextFontSize*0.8, fontWeight: style.UIOhengFontWeight, color: style.colorBlack)))]),
+          //padding: EdgeInsets.only(bottom:10),
+        );
+      } else {
+        return  Container(  //시간 모름일 때
+          width: paljaBoxSize,
+          height: paljaBoxSize,
+          margin: EdgeInsets.only(top: ganjiBoxMarginSmaller,bottom: ganjiBoxMarginBigger),//,
+           alignment: Alignment.center,
+          child: Stack(
+              children: [
+                Image.asset('assets/' + themeTitle + 'White.png'),
+                Text(style.unknownTimeText, style:TextStyle(fontSize: unknownTextFontSize*0.8, fontWeight: style.UIOhengFontWeight, color: style.colorBlack))]),
+        );
+      }
+    }
+  }
 
   Widget GetUemYangSign(int paljaNum, bool isCheongan){
     if(widget.isShowDrawerUemyangSign == 0){
@@ -180,7 +247,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       return Container(
         width: uemYangBoxSize,
         height: uemYangBoxSize,
-        margin: EdgeInsets.only(left: uemYangBoxMargin, top: uemYangBoxMargin),
+        margin: EdgeInsets.only(left: isSpriteTheme == false? uemYangBoxMargin : uemYangBoxMargin * 2, top: uemYangBoxMargin),
         child: signImage,
       );
     }
@@ -459,6 +526,147 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     return listJijiGanji;
   }
 
+  List<Widget> GetCheonganGanjiWidgetWithSprite(){
+    List<Widget> listCheonganGanji =[];
+
+    if(widget.listPaljaData.length > 10){
+      listCheonganGanji.add(Container(  //대운
+        width: paljaBoxSize,
+        height: paljaBoxSize,
+        margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        child: Stack(
+          children:[
+            Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[10], themeTitle)),
+            Align(
+              alignment: Alignment.center,
+              child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[10]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[10]))),
+            GetUemYangSign(widget.listPaljaData[10], true),
+          ] ,
+        ),
+      ));
+    }
+
+    if(widget.listPaljaData.length > 8){
+      listCheonganGanji.add(Container(  //대운
+        width: paljaBoxSize,
+        height: paljaBoxSize,
+        margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        child: Stack(
+          children:[
+            Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[8], themeTitle)),
+            Align(
+                alignment: Alignment.center,
+                child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[8]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[8]))),
+            GetUemYangSign(widget.listPaljaData[8], true),
+          ] ,
+        ),
+      ));
+    }
+
+    listCheonganGanji.add(GetPlajaBoxWithSprite(widget.listPaljaData[6], 6)); //시간
+    listCheonganGanji.add(Container(  //일간
+      width: paljaBoxSize,
+      height: paljaBoxSize,
+      margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+      child: Stack(
+          children:[
+            Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[4], themeTitle)),
+            Align(
+                alignment: Alignment.center,
+                child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[4]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[4]))),
+            GetUemYangSign(widget.listPaljaData[4], true),
+          ]
+      ),
+    ));
+    listCheonganGanji.add(Container(  //월간
+      width: paljaBoxSize,
+      height: paljaBoxSize,
+      margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+      child: Stack(
+        children:[
+          Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[2], themeTitle)),
+          Align(
+              alignment: Alignment.center,
+              child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[2]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[2]))),
+          GetUemYangSign(widget.listPaljaData[2], true),
+        ] ,
+      ),
+    ));
+    listCheonganGanji.add(GetPlajaBoxWithSprite(widget.listPaljaData[0], 0)); //연간
+
+    return listCheonganGanji;
+  }
+  List<Widget> GetJijiGanjiWidgetWithSprite(){
+    List<Widget> listJijiGanji =[];
+
+    if(widget.listPaljaData.length > 10){
+      listJijiGanji.add(Container(  //세운
+        width: paljaBoxSize,
+        height: paljaBoxSize,
+        margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+        child: Stack(
+          children:[
+            Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[11], themeTitle)),
+            Align(
+                alignment: Alignment.center,
+                child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[11]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[11]))),
+            GetUemYangSign(widget.listPaljaData[11], false),
+          ] ,
+        ),
+      ));
+    }
+
+    if(widget.listPaljaData.length > 8){
+      listJijiGanji.add(Container(  //대운
+        width: paljaBoxSize,
+        height: paljaBoxSize,
+        margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+        child: Stack(
+          children:[
+            Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[9], themeTitle)),
+            Align(
+                alignment: Alignment.center,
+                child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[9]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[9]))),
+            GetUemYangSign(widget.listPaljaData[9], false),
+          ] ,
+        ),
+      ));
+    }
+
+    listJijiGanji.add(GetPlajaBoxWithSprite(widget.listPaljaData[7], 7)); //시지
+    listJijiGanji.add(Container(  //일지
+      width: paljaBoxSize,
+      height: paljaBoxSize,
+      margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+      child: Stack(
+        children:[
+          Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[5], themeTitle)),
+          Align(
+              alignment: Alignment.center,
+              child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[5]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[5]))),
+          GetUemYangSign(widget.listPaljaData[5], false),
+        ],
+      ),
+    ));
+    listJijiGanji.add(Container(  //월지
+      width: paljaBoxSize,
+      height: paljaBoxSize,
+      margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+      child: Stack(
+        children: [
+          Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[3], themeTitle)),
+          Align(
+              alignment: Alignment.center,
+              child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[3]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[3]))),
+          GetUemYangSign(widget.listPaljaData[3], false),
+        ],
+      ),
+    ));
+    listJijiGanji.add(GetPlajaBoxWithSprite(widget.listPaljaData[1], 1)); //연지
+
+    return listJijiGanji;
+  }
+
   SetOhengBoxAndTextColor(){
     for(int i = 0; i < 8; i++){ //오행 박스와 텍스트 컬러, 텍스트 초기화
       if(i % 2 == 0){ //천간이면
@@ -586,18 +794,46 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
 
     ganjiContainerHeight = 156;
 
-    if(widget.listPaljaData.length < 11){
-      paljaBoxSize = style.fullSizeButtonHeight * 1.25;//60
-      ohengFontSize = 30;
-      unknownTextFontSize = 44;
-      ganjiBoxMarginBigger = 10;
-      ganjiBoxMarginSmaller = 6;
+    int themeType = ((personalDataManager.etcData % 10000000) / 1000000).floor();
+    isSpriteTheme = false;
+    if(themeType == 2){
+      isSpriteTheme = true;
+    }
+
+    switch(themeType){
+      case 2 : {
+        themeTitle = 'luciaBear';
+      }
+    }
+
+    if(isSpriteTheme == true){
+      if(widget.listPaljaData.length < 11){
+        paljaBoxSize = style.fullSizeButtonHeight * 1.4;//60
+        ohengFontSize = 30;
+        unknownTextFontSize = 44;
+        ganjiBoxMarginBigger = 5;
+        ganjiBoxMarginSmaller = 3;
+      } else {
+        paljaBoxSize = style.fullSizeButtonHeight * 1.2;//52
+        ohengFontSize = 25;
+        unknownTextFontSize = 36;
+        ganjiBoxMarginBigger = 8;
+        ganjiBoxMarginSmaller = 5;
+      }
     } else {
-      paljaBoxSize = style.fullSizeButtonHeight * 1.083;//52
-      ohengFontSize = 25;
-      unknownTextFontSize = 36;
-      ganjiBoxMarginBigger = 16;
-      ganjiBoxMarginSmaller = 8;
+      if(widget.listPaljaData.length < 11){
+        paljaBoxSize = style.fullSizeButtonHeight * 1.25;//60
+        ohengFontSize = 30;
+        unknownTextFontSize = 44;
+        ganjiBoxMarginBigger = 10;
+        ganjiBoxMarginSmaller = 6;
+      } else {
+        paljaBoxSize = style.fullSizeButtonHeight * 1.083;//52
+        ohengFontSize = 25;
+        unknownTextFontSize = 36;
+        ganjiBoxMarginBigger = 16;
+        ganjiBoxMarginSmaller = 8;
+      }
     }
 
     if(widget.isShowChooseDayButtons == true){
@@ -626,11 +862,11 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: GetCheonganGanjiWidget(),
+              children: isSpriteTheme == false? GetCheonganGanjiWidget() : GetCheonganGanjiWidgetWithSprite(),
             ),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children:GetJijiGanjiWidget(),
+                children: isSpriteTheme == false? GetJijiGanjiWidget() : GetJijiGanjiWidgetWithSprite(),
             ),
           ],
         )

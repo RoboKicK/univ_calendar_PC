@@ -21,7 +21,6 @@ int calendarData = 0;  //12개 1자리:천간 합충극  -  1=합, 2=충, 4=극 
 // 100자리:삼합, 1000자리:육합, 만자리:형, 십만자리:충, 백만자리:파, 천만자리:원진, 억자리:귀문, 십억자리:격각, 백억자리:지장간 1=육친, 2=월률분야, 3=둘다, 9=안보기
 // 천억자리:십이운성, 조자리: 육친
 
-
 int sinsalData = 0; //1자리: 공망, 10자리: 십이신살
 int etcSinsalDataAllOn =  2222222;
 int etcSinsalDataAllOff = 1111111;
@@ -30,13 +29,14 @@ int etcSinsalData = 0;  //1자리: 보기 안보기, 10자리: 천을귀인, 100
 int deunSeunDataAllOn = 2272223; //1자리: 간지추가, 10자리: 육친, 100자리: 십이운성, 1000자리: 십이신살, 만자리: 공망
 int deunSeunDataAllOff = 1191111;
 int deunSeunData = 0; //1자리: 간지 추가, 10자리: 육친, 100자리: 십이운성, 1000자리: 십이신살, 만자리: 공망, 십만자리: 세운에 나이 표시, 백만자리: 월운 표시
-int etcDataAllOn = 273222;
-int etcDataAllOff = 191111;
+int etcDataAllOn = 1273222;
+int etcDataAllOff = 1191111;
 int etcData = 0;  //1자리: 만 나이, 10자리: 간지 음양 표시, 100자리: 한글 간지, 1000자리: 인적사항 숨기기(1:안숨김, 2:만세력에서만 숨김, 3:항상 숨김)
-//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음
-//1,,,4,5,,
+//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 테마
+//테마: 1부터 베이직, 곰돌이
 
 //사용자 정보 저장하는 클래스
+
 SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴더의 주소를 초기화함
   final filedirectory = await getApplicationDocumentsDirectory();
   fileDirPath = filedirectory.path;

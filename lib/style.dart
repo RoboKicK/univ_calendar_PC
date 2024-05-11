@@ -172,4 +172,35 @@ Color SetOhengColor(bool isCheongan, int num){  //오행 박스 컬러
   return Colors.white;
 }
 
+String SetOhengSpriteString(bool isCheongan, int num, String themeTitle){
+  String ohengSpriteString = themeTitle;
+
+  if(isCheongan == true){
+    if(num < 2 && num != -2){
+      return ohengSpriteString = ohengSpriteString + 'Green.png';}
+    else if(num >= 2 && num < 4){
+      return ohengSpriteString = ohengSpriteString + 'Red.png';}
+    else if(num >= 4 && num < 6){
+      return ohengSpriteString = ohengSpriteString + 'Yellow.png';}
+    else if((num >= 6 && num < 8) || num == -2){
+      return ohengSpriteString = ohengSpriteString + 'White.png';}
+    else if(num >= 8){
+      return ohengSpriteString = ohengSpriteString + 'Black.png';}
+  }
+  else{
+    if(num == 0 || num == 11){
+      return ohengSpriteString = ohengSpriteString + 'Black.png';}
+    else if(num == 1 || num == 4 || num == 7 || num == 10){
+      return ohengSpriteString = ohengSpriteString + 'Yellow.png';}
+    else if(num >= 2 && num < 4){
+      return ohengSpriteString = ohengSpriteString + 'Green.png';}
+    else if(num >= 5 && num < 7){
+      return ohengSpriteString = ohengSpriteString + 'Red.png';}
+    else if((num >= 8 && num < 10) || num == -2){
+      return ohengSpriteString = ohengSpriteString + 'White.png';}
+  }
+
+  return themeTitle+'White';
+}
+
 double appBarHeight = 50;
