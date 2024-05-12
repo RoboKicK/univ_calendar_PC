@@ -202,8 +202,10 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
            alignment: Alignment.center,
           child: Stack(
               children: [
-                Image.asset('assets/' + themeTitle + 'White.png'),
-                Text(style.unknownTimeText, style:TextStyle(fontSize: unknownTextFontSize*0.8, fontWeight: style.UIOhengFontWeight, color: style.colorBlack))]),
+                Image.asset('assets/' + themeTitle + 'White.png',),
+                Align(
+                    alignment: Alignment.center,
+                    child: Text(style.unknownTimeText, style:TextStyle(fontSize: unknownTextFontSize*0.8, fontWeight: style.UIOhengFontWeight, color: style.colorBlack)))]),
         );
       }
     }
@@ -570,7 +572,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
       child: Stack(
           children:[
-            Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[4], themeTitle)),
+            Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[4], themeTitle),),
             Align(
                 alignment: Alignment.center,
                 child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[4]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[4]))),

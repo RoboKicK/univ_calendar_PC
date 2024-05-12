@@ -98,6 +98,9 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
 
   double widgetWidth = 0;
 
+  String themeTitle = '';
+  bool isSpriteTheme = false;
+
   SetDeun(){
     birthYear0 = widget.birthYear0;
 
@@ -329,81 +332,129 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
   }
 
   Container GetDeunGanjiBoxAndText(int deunNum, bool isCheongan){
-    if(isCheongan == true){
-      return Container(
-        width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-        margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-        decoration: BoxDecoration(
-          boxShadow: [style.uiDeunSeunShadow],
-          color: listCheonganBoxColor0[deunNum],
-          borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-        ),
-        child: ElevatedButton(
-            onPressed: () {
-              SetDeunButtonSelectColor(deunNum);
-              if(personalDataManager.deunSeunData % 10 != 1) {
-                widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+    if(isSpriteTheme == false){
+      if(isCheongan == true){
+        return Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: listCheonganBoxColor0[deunNum],
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+                SetDeunButtonSelectColor(deunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                }
+                nowDeunNum0 = deunNum;
+                SetSeun();
+                SetSeunButtonSelectColor(-1);
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: listCheonganBoxColor0[deunNum], elevation:0.0, foregroundColor: listCheonganBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
+              child:Align(
+                  alignment: Alignment.center,
+                  child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listDeunCheongan0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listCheonganTextColor0[deunNum]))),
+            )
+        );
+      }
+      else{
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: listJijiBoxColor0[deunNum],
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            //alignment: Alignment.topCenter,
+            child: ElevatedButton(
+              onPressed: () {
+                SetDeunButtonSelectColor(deunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
 
-                //if (isAddDeunToPalja == true && deunNum == nowDeunNum0) {
-                //  widget.setPersonPaljaData(widget.personNum, true, [-2, -2]);
-                //  isAddDeunToPalja = false;
-                //  isAddSeunToPalja = false;
-                //} else {
-                //  widget.setPersonPaljaData(
-                //      widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                //  isAddDeunToPalja = true;
-                //  isAddSeunToPalja = false;
-                //}
-              }
-              nowDeunNum0 = deunNum;
-              SetSeun();
-              SetSeunButtonSelectColor(-1);
-            },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-              backgroundColor: listCheonganBoxColor0[deunNum], elevation:0.0, foregroundColor: listCheonganBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
-          child:Align(
-              alignment: Alignment.center,
-              child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listDeunCheongan0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listCheonganTextColor0[deunNum]))),
-        )
-      );
-    }
-    else{
-      return  Container(
-        width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-        margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-        decoration: BoxDecoration(
-          boxShadow: [style.uiDeunSeunShadow],
-          color: listJijiBoxColor0[deunNum],
-          borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-        ),
-        //alignment: Alignment.topCenter,
-        child: ElevatedButton(
-          onPressed: () {
-            SetDeunButtonSelectColor(deunNum);
-            if(personalDataManager.deunSeunData % 10 != 1) {
-              widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-
-              //if(isAddDeunToPalja == true && deunNum == nowDeunNum0){
-              //  widget.setPersonPaljaData(widget.personNum, true, [-2,-2]);
-              //  isAddDeunToPalja = false;
-              //} else {
-              //  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);//[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-              //  isAddDeunToPalja = true;
-              //}
-            }
-            nowDeunNum0 = deunNum;
-            SetSeun();
-            SetSeunButtonSelectColor(-1);
-          },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-              backgroundColor: listJijiBoxColor0[deunNum], elevation:0.0, foregroundColor: listJijiBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
-          child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))),
-        )
-      );
+                  //if(isAddDeunToPalja == true && deunNum == nowDeunNum0){
+                  //  widget.setPersonPaljaData(widget.personNum, true, [-2,-2]);
+                  //  isAddDeunToPalja = false;
+                  //} else {
+                  //  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);//[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                  //  isAddDeunToPalja = true;
+                  //}
+                }
+                nowDeunNum0 = deunNum;
+                SetSeun();
+                SetSeunButtonSelectColor(-1);
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: listJijiBoxColor0[deunNum], elevation:0.0, foregroundColor: listJijiBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
+              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))),
+            )
+        );
+      }
+    } else {
+      if(isCheongan == true){
+        return Container(
+            width: style.UIPaljaDeunBoxHeight,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+                SetDeunButtonSelectColor(deunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                }
+                nowDeunNum0 = deunNum;
+                SetSeun();
+                SetSeunButtonSelectColor(-1);
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent,foregroundColor: listCheonganBoxColor0[deunNum],
+                  elevation:0.0, surfaceTintColor: Colors.transparent),
+              child:Stack(
+                children: [
+                  Image.asset('assets/' + style.SetOhengSpriteString(true, listDeunCheongan0[deunNum], themeTitle)),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listDeunCheongan0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listCheonganTextColor0[deunNum])))
+                ],
+              ),
+            )
+        );
+      }
+      else{
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight,
+            height: style.UIPaljaDeunBoxHeight,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+                SetDeunButtonSelectColor(deunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                }
+                nowDeunNum0 = deunNum;
+                SetSeun();
+                SetSeunButtonSelectColor(-1);
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent, elevation:0.0, foregroundColor: listJijiBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
+              child:Stack(
+                  children:[
+                    Image.asset('assets/' + style.SetOhengSpriteString(false, listDeunJiji0[deunNum], themeTitle)),
+                  Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))
+                  ),
+                  ]
+              ),
+            )
+        );
+      }
     }
   }
 
@@ -641,90 +692,162 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
   }
 
   Container GetSeunGanjiBoxAndText(int seunNum, bool isCheongan){
-    if(isCheongan == true){
-      return  Container(
-        width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-        margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-        decoration: BoxDecoration(
-          boxShadow: [style.uiDeunSeunShadow],
-          color: listSeunCheonganBoxColor0[seunNum],
-          borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-        ),
-        //alignment: Alignment.topCenter,
-        child: ElevatedButton(
-          onPressed: () {
-            SetSeunButtonSelectColor(seunNum);
-            if(personalDataManager.deunSeunData % 10 != 1) {
-              //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
-              widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
+    if(isSpriteTheme == false){
+      if(isCheongan == true){
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: listSeunCheonganBoxColor0[seunNum],
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            //alignment: Alignment.topCenter,
+            child: ElevatedButton(
+              onPressed: () {
+                SetSeunButtonSelectColor(seunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
+                  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
 
-             //if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-             //  widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-             //  isAddSeunToPalja = false;
-             //} else { //아니면 간지 추가
-             //  if (isAddDeunToPalja == false) {
-             //    widget.setPersonPaljaData(
-             //        widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-             //    isAddDeunToPalja = true;
-             //  }
-             //  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-             //  isAddSeunToPalja = true;
-             //}
-            }
-            nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
-            setState(() {
-              nowSeunNum0 = seunNum;
-            });
-            SetWolun();
-          },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-              backgroundColor: listSeunCheonganBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunCheonganBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
-          child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum]))),
-        )
-      );
-    }
-    else{
-      return  Container(
-        width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-        padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-        margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-        decoration: BoxDecoration(
-          boxShadow: [style.uiDeunSeunShadow],
-          color: listSeunJijiBoxColor0[seunNum],
-          borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-        ),
-        alignment: Alignment.topCenter,
-        child: ElevatedButton(
-          onPressed: () {
-            SetSeunButtonSelectColor(seunNum);
-            if(personalDataManager.deunSeunData % 10 != 1) {
-              if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-                widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-                isAddSeunToPalja = false;
-              } else { //아니면 간지 추가
-                if (isAddDeunToPalja == false) {
-                  widget.setPersonPaljaData(
-                      widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                  isAddDeunToPalja = true;
+                  //if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
+                  //  widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
+                  //  isAddSeunToPalja = false;
+                  //} else { //아니면 간지 추가
+                  //  if (isAddDeunToPalja == false) {
+                  //    widget.setPersonPaljaData(
+                  //        widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                  //    isAddDeunToPalja = true;
+                  //  }
+                  //  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
+                  //  isAddSeunToPalja = true;
+                  //}
                 }
-                widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-                isAddSeunToPalja = true;
-              }
-            }
-            nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
-            setState(() {
-              nowSeunNum0 = seunNum;
-            });
-            SetWolun();
-          },
-          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-              backgroundColor: listSeunJijiBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunJijiBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
-          child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]))),
-        )
-      );
+                nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
+                setState(() {
+                  nowSeunNum0 = seunNum;
+                });
+                SetWolun();
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: listSeunCheonganBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunCheonganBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
+              child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum]))),
+            )
+        );
+      }
+      else{
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: listSeunJijiBoxColor0[seunNum],
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            alignment: Alignment.topCenter,
+            child: ElevatedButton(
+              onPressed: () {
+                SetSeunButtonSelectColor(seunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
+                    widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
+                    isAddSeunToPalja = false;
+                  } else { //아니면 간지 추가
+                    if (isAddDeunToPalja == false) {
+                      widget.setPersonPaljaData(
+                          widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                      isAddDeunToPalja = true;
+                    }
+                    widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
+                    isAddSeunToPalja = true;
+                  }
+                }
+                nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
+                setState(() {
+                  nowSeunNum0 = seunNum;
+                });
+                SetWolun();
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: listSeunJijiBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunJijiBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
+              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]))),
+            )
+        );
+      }
+    } else {
+      if(isCheongan == true){
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+                SetSeunButtonSelectColor(seunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
+                  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
+                }
+                nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
+                setState(() {
+                  nowSeunNum0 = seunNum;
+                });
+                SetWolun();
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent, elevation:0.0, foregroundColor: listSeunCheonganBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
+              child:Stack(
+                  children:[
+                    Image.asset('assets/' + style.SetOhengSpriteString(true, listSeunCheongan0[seunNum], themeTitle)),
+                    Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum])),
+                    ),
+                  ]
+              ),
+            )
+        );
+      }
+      else{
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight,
+            height: style.UIPaljaDeunBoxHeight,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+                SetSeunButtonSelectColor(seunNum);
+                if(personalDataManager.deunSeunData % 10 != 1) {
+                  if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
+                    widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
+                    isAddSeunToPalja = false;
+                  } else { //아니면 간지 추가
+                    if (isAddDeunToPalja == false) {
+                      widget.setPersonPaljaData(
+                          widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
+                      isAddDeunToPalja = true;
+                    }
+                    widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
+                    isAddSeunToPalja = true;
+                  }
+                }
+                nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
+                setState(() {
+                  nowSeunNum0 = seunNum;
+                });
+                SetWolun();
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent, elevation:0.0, foregroundColor: listSeunJijiBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
+              child:Stack(
+                  children:[
+                    Image.asset('assets/' + style.SetOhengSpriteString(false, listSeunJiji0[seunNum], themeTitle)),
+                    Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]),),
+                    ),
+              ])
+            )
+        );
+      }
     }
   }
 
@@ -935,50 +1058,93 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
   }
 
   Container GetWolunGanjiBoxAndText(int wolunNum, bool isCheongan){
-    if(isCheongan == true){
-      return  Container(
-          width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-          height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-          padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-          margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-          decoration: BoxDecoration(
-            boxShadow: [style.uiDeunSeunShadow],
-            color: listWolunCheonganBoxColor0[wolunNum],
-            borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-          ),
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-                backgroundColor: listWolunCheonganBoxColor0[wolunNum], elevation:0.0, foregroundColor: listWolunCheonganBoxColor0[wolunNum], surfaceTintColor: Colors.transparent),
-            child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum]))),
-          )
-      );
-    }
-    else{
-      bool isWhiteText = true;
-      if(wolunNum == 8 || wolunNum == 7){
-        isWhiteText = false;
+    if(isSpriteTheme == false){
+      if(isCheongan == true){
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: listWolunCheonganBoxColor0[wolunNum],
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            child: ElevatedButton(
+              onPressed: () {
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: listWolunCheonganBoxColor0[wolunNum], elevation:0.0, foregroundColor: listWolunCheonganBoxColor0[wolunNum], surfaceTintColor: Colors.transparent),
+              child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum]))),
+            )
+        );
       }
-      return  Container(
-          width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-          height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
-          padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
-          margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
-          decoration: BoxDecoration(
-            boxShadow: [style.uiDeunSeunShadow],
-            color: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length),
-            borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
-          ),
-          alignment: Alignment.topCenter,
-          child: ElevatedButton(
-            onPressed: () {
-            },
-            style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
-                backgroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), elevation:0.0, foregroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), surfaceTintColor: Colors.transparent),
-            child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),
-          )
-      );
+      else{
+        bool isWhiteText = true;
+        if(wolunNum == 8 || wolunNum == 7){
+          isWhiteText = false;
+        }
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            height: style.UIPaljaDeunBoxHeight * 0.8,//(widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.08,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2),
+            margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.5, top: style.UIOhengMarginTop * 0.5),
+            decoration: BoxDecoration(
+              boxShadow: [style.uiDeunSeunShadow],
+              color: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length),
+              borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+            ),
+            alignment: Alignment.topCenter,
+            child: ElevatedButton(
+              onPressed: () {
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), elevation:0.0, foregroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), surfaceTintColor: Colors.transparent),
+              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),
+            )
+        );
+      }
+    } else {
+      if(isCheongan == true){
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight,
+            height: style.UIPaljaDeunBoxHeight,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent, elevation:0.0, foregroundColor: listWolunCheonganBoxColor0[wolunNum], surfaceTintColor: Colors.transparent),
+              child:Stack(
+                  children: [
+                    Image.asset('assets/' + style.SetOhengSpriteString(true, listWolunCheongan0[wolunNum], themeTitle)),
+                    Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum])))],
+              ),
+            )
+        );
+      }
+      else{
+        bool isWhiteText = true;
+        if(wolunNum == 8 || wolunNum == 7){
+          isWhiteText = false;
+        }
+        return  Container(
+            width: style.UIPaljaDeunBoxHeight,
+            height: style.UIPaljaDeunBoxHeight,
+            padding: EdgeInsets.only(top:style.UIOhengBoxPadding2, left:2),
+            child: ElevatedButton(
+              onPressed: () {
+              },
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
+                  backgroundColor: Colors.transparent, elevation:0.0, foregroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), surfaceTintColor: Colors.transparent),
+              child:Stack(
+                  children:[
+                    Image.asset('assets/' + style.SetOhengSpriteString(false, (wolunNum + 1) % style.stringJiji[0].length, themeTitle)),
+                  Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),]
+              ),
+            )
+        );
+      }
     }
   }
 
@@ -1934,6 +2100,18 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
     }
     else {
       widgetWidth = widget.widgetWidth - style.UIMarginLeft;
+    }
+
+    int themeType = ((personalDataManager.etcData % 10000000) / 1000000).floor();
+    isSpriteTheme = false;
+    if(themeType == 2){
+      isSpriteTheme = true;
+    }
+
+    switch(themeType){
+      case 2 : {
+        themeTitle = 'luciaBear';
+      }
     }
 
     SetDeun();
