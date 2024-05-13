@@ -37,10 +37,10 @@ class Sibiunseong{  //12운성 계산해주는 클래스
       startNum = 2;
       break;
     }case 8:{
-      startNum = 5;
+      startNum = 6;
       break;
     }case 9:{
-      startNum = 7;
+      startNum = 5;
       break;
     }
       default:
