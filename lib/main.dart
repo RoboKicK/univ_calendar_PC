@@ -188,7 +188,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.insert(0,Colors.white);
           listCalendarButtonSize.insert(0,16);
           listUniquePageNum.insert(0, uniquePageNum);
-          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
+          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
             if(listPageNameController[i - 1] != ''){
@@ -201,7 +201,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.add(Colors.white);
           listCalendarButtonSize.add(16);
           listUniquePageNum.add(uniquePageNum);
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName ));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
         }
         nowPageCount++;
       } else {
@@ -241,7 +241,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         listCalendarButtonSize = [20,16,16];
         listUniquePageNum = [0,1,2];
         for(int i = 0; i < firstPageCount; i++){
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
@@ -261,7 +261,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         if(nowPageCount == 3){  //페이지 3개뿐일 때
           uniquePageNum++;
           listUniquePageNum.insert(num, uniquePageNum);
-          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
+          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
           for(int i = 0; i < 3; i++){
             listPageNameController[i] = '';
           }
@@ -415,9 +415,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
       nowCalendarHeadLine = buttonNum;
 
-      if(buttonNum == 1 || buttonNum == 3){
-        SetSideOptionLayerWidget(false);
-      }
+      //if(buttonNum == 1 || buttonNum == 3){
+      //  SetSideOptionLayerWidget(false);
+      //}
     });
   }
 
@@ -437,7 +437,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     personalDataManager.SetFileDirectoryPath();
 
     for(int i = 0; i < firstPageCount; i++) {
-      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName));
+      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
@@ -781,6 +781,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                       alignment: Alignment.topCenter,
                       firstCurve: Curves.easeOut,
                       secondCurve: Curves.easeOut,
+
                     )
                     ),
                 ],

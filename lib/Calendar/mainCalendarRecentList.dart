@@ -63,7 +63,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
     }
   }
   String GetInquireDateText(String saveDateString){
-    String saveDateText = "${saveDateString.substring(0,4)}년 ${saveDateString.substring(5,7)}월 ${saveDateString.substring(8,10)}일";
+    String saveDateText = "${saveDateString.substring(0,4)}년 ${int.parse(saveDateString.substring(5,7))}월 ${int.parse(saveDateString.substring(8,10))}일";
 
     return saveDateText;
   }
@@ -90,14 +90,17 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
 
   ScrollController scrollController = ScrollController();
 
-  List<Widget> GetPersonalDataText(int num){
+  List<Map> mapRecentPerson = [];
+
+  List<Widget> GetPersonalNameText(int num){
     List<Widget> listPersonalTextData = [];
-    if(isShowPersonalDataAll == true){
+    if(isShowPersonalDataAll == true || isShowPersonalName == true){
       listPersonalTextData.add(
         Container(
             height: style.saveDataNameTextLineHeight,
             //color:Colors.green,
-            child:Text("${GetNameText(saveDataManager.mapRecentPerson[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
+            //child:Text("${GetNameText(saveDataManager.mapRecentPerson[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
+            child:Text("${GetNameText(mapRecentPerson[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
         ),
       );
       listPersonalTextData.add(
@@ -106,60 +109,38 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               //color:Colors.green,
               //padding:EdgeInsets.only(top:7),
               child:Text("(${saveDataManager.mapRecentPerson[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+    } else {
+       listPersonalTextData.add(Text("${saveDataManager.mapRecentPerson[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
+    }
+    return listPersonalTextData;
+  }
+
+  List<Widget> GetPersonalDataText(int num){
+    List<Widget> listPersonalTextData = [];
+    if(isShowPersonalDataAll == true || isShowPersonalBirth == true){
       listPersonalTextData.add(
           Container(
-              height: style.saveDataNameTextLineHeight,
+              height: style.saveDataNameLineHeight,
               //alignment: Alignment.bottomCenter,
               //color:Colors.grey,
               //padding:EdgeInsets.only(top:2),
-              child:Text(" ${saveDataManager.mapRecentPerson[num]['birthYear']}.${saveDataManager.mapRecentPerson[num]['birthMonth']}.${saveDataManager.mapRecentPerson[num]['birthDay']}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.mapRecentPerson[num]['birthYear']}년 ${saveDataManager.mapRecentPerson[num]['birthMonth']}월 ${saveDataManager.mapRecentPerson[num]['birthDay']}일", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
+          height: style.saveDataNameLineHeight,
           //color:Colors.red,
           //padding:EdgeInsets.only(top:7),
           child:Text("${GetUemYangText(saveDataManager.mapRecentPerson[num]['uemYang'])}", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(Container(
-          height: style.saveDataNameTextLineHeight,
+          height: style.saveDataNameLineHeight,
           //alignment: Alignment.bottomCenter,
           //color:Colors.blue,
           //padding:EdgeInsets.only(top:saveDataManager.mapRecentPerson[num]['birthHour']==-2?1:2),
           child:Text(" ${GetBirthTimeText(saveDataManager.mapRecentPerson[num]['birthHour'], saveDataManager.mapRecentPerson[num]['birthMin'], true)}", style: Theme.of(context).textTheme.titleLarge)));
     } else {
-      if(isShowPersonalName == true){
-        listPersonalTextData.add(
-            Container(
-                height: style.saveDataNameTextLineHeight,
-                //color:Colors.green,
-                child:Text("${GetNameText(saveDataManager.mapRecentPerson[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)
-            ));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.green,
-            //padding:EdgeInsets.only(top:7),
-            child:Text("(${saveDataManager.mapRecentPerson[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleSmall)));
-      }
-      if(isShowPersonalName == false){
-        listPersonalTextData.add(Text("${saveDataManager.mapRecentPerson[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
-      }
-      if(isShowPersonalBirth == true){
-        listPersonalTextData.add( Container(
-            height: style.saveDataNameTextLineHeight,
-            //alignment: Alignment.bottomCenter,
-            //color:Colors.grey,
-            //padding:EdgeInsets.only(top:2),
-            child:Text(" ${saveDataManager.mapRecentPerson[num]['birthYear']}.${saveDataManager.mapRecentPerson[num]['birthMonth']}.${saveDataManager.mapRecentPerson[num]['birthDay']}", style: Theme.of(context).textTheme.titleLarge)));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //color:Colors.red,
-            //padding:EdgeInsets.only(top:7),
-            child:Text("${GetUemYangText(saveDataManager.mapRecentPerson[num]['uemYang'])}", style: Theme.of(context).textTheme.titleLarge)));
-        listPersonalTextData.add(Container(
-            height: style.saveDataNameTextLineHeight,
-            //alignment: Alignment.bottomCenter,
-            //color:Colors.blue,
-            //padding:EdgeInsets.only(top:saveDataManager.mapRecentPerson[num]['birthHour']==-2?1:2),
-            child:Text(" ${GetBirthTimeText(saveDataManager.mapRecentPerson[num]['birthHour'], saveDataManager.mapRecentPerson[num]['birthMin'], true)}", style: Theme.of(context).textTheme.titleLarge)));
-      }
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameLineHeight,
+              child:Text("****.**.** **:**",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
     }
     return listPersonalTextData;
     //return Row(
@@ -173,24 +154,37 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
     //);
   }
 
-  @override
-  void initState() {
-    super.initState();
-
+  CheckPersonalDataHide(){
     if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){
       isShowPersonalDataAll = false;
       int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
       if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
         isShowPersonalName = false;
-      }
+      } else { isShowPersonalName = true; }
       if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
         isShowPersonalBirth = false;
-      }
+      } else { isShowPersonalBirth = true; }
+    } else {
+      isShowPersonalDataAll = true;
     }
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    CheckPersonalDataHide();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    CheckPersonalDataHide();
+
+    mapRecentPerson = saveDataManager.mapRecentPerson;
+    //mapRecentPerson.sort((a, b) => a['name'].compareTo(b['name']));
+
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -247,7 +241,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
             //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
             height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
             width: style.UIButtonWidth + 38,
-            margin: EdgeInsets.only(top: style.UIMarginTop),
+            margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
             child: ScrollConfiguration(
               behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
               child: RawScrollbar(
@@ -265,7 +259,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                       passVal = true;
                     }
                     else{
-                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.mapRecentPerson[i]['gender']?'남':'여'}) ${saveDataManager.mapRecentPerson[i]['birthYear']}.${saveDataManager.mapRecentPerson[i]['birthMonth']}.${saveDataManager.mapRecentPerson[i]['birthDay']} ${GetUemYangText(saveDataManager.mapRecentPerson[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], false)}";
+                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.mapRecentPerson[i]['gender']?'남':'여'}) ${saveDataManager.mapRecentPerson[i]['birthYear']}년 ${saveDataManager.mapRecentPerson[i]['birthMonth']}월 ${saveDataManager.mapRecentPerson[i]['birthDay']}일 ${GetUemYangText(saveDataManager.mapRecentPerson[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], false)}";
                       if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapRecentPerson[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
                         passVal = true;
                       }
@@ -273,42 +267,69 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                     if(passVal == true){
                       return Container(
                         width: style.UIButtonWidth,
-                        height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                        child:ElevatedButton(
-                          onPressed: (){
-                            context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
-                                saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
-                                saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
-                                '');
-                          },
-                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                              foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                          child: Column(
-                            children: [
-                              Container(
-                                    width: style.UIButtonWidth,
+                        height: (style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight,
+                        child:Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: (){
+                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
+                                    saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
+                                    saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
+                                    '');
+                              },
+                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    width: style.UIButtonWidth * 0.9,
                                     height: style.saveDataNameLineHeight,
                                     padding: EdgeInsets.only(top:6),
+                                    child: Row(
+                                      children:
+                                      GetPersonalNameText(i),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: style.UIButtonWidth * 0.9,
+                                    height: style.saveDataNameLineHeight,
+                                    padding: EdgeInsets.only(top:4),
                                     child: Row(
                                       children:
                                       GetPersonalDataText(i),
                                     ),
                                   ),
-                               Container(
-                                      width: style.UIButtonWidth,
-                                      height: style.saveDataMemoLineHeight,
-                                      padding: EdgeInsets.only(top:4),
+                                  Container(
+                                      width: style.UIButtonWidth * 0.9,
+                                      height: style.saveDataNameLineHeight,
+                                      //padding: EdgeInsets.only(top:4),
                                       child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
                                   ),
-                            ],
+                              ],
+                            ),
                           ),
+                            Container(  //저장 버튼
+                              width: style.UIButtonWidth * 0.1,
+                              height: (style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight,
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                    foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                child: Icon(Icons.save, color:Colors.white),
+                              ),
+                            ),
+                          ]
                         ),
                       );}
                     else{
                       return SizedBox.shrink();
                     }
                   },
-                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, indent: 20, endIndent: 20, color: style.colorBlack,); }
+                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent: 20, color: style.colorBlack,); }
                 ),
               ),
             ),

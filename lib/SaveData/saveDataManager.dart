@@ -18,7 +18,7 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001, 단체명식 g001
 int saveDataLimitCount = 3000; //단일,궁합 공용
-int recentDataLimitCount = 1000;  //최근목록
+int recentDataLimitCount = 30;//1000;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
 int groupDataLimitCount = 1000; //단체명식
 
@@ -193,6 +193,10 @@ late var snackBar;
     snackBar('명식이 저장되었습니다');
   }
 
+  //명식을 최초 저장할 때 사용2
+  //Future<void> SavePersonData(String name, )
+
+
   //명식 최초 저장할 때 중복 명식 있는지 확인
   bool SavePersonIsSameChecker(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, sameBirthChecker) {
     bool gender = true;
@@ -330,11 +334,16 @@ late var snackBar;
     else{
       index = int.parse(saveDataNum.substring(1,4));
     }
+
+    if(mapPerson[index]['memo'] != memo){
+      WidgetsBinding.instance!.addPostFrameCallback((_){
+        snackBar('메모가 저장되었습니다');
+      });
+    }
+
     mapPerson[index]['memo'] = memo;
 
     UpdatePersonDataFromMap(index);
-
-    snackBar('메모가 저장되었습니다');
   }
 
   //명식을 즐겨찾기 하거나 해제하여 저장할 때 사용
@@ -401,6 +410,7 @@ late var snackBar;
       await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapPerson[index]['name'], 'gender':mapPerson[index]['gender'], 'uemYang': mapPerson[index]['uemYang'],
         'birthYear':mapPerson[index]['birthYear'], 'birthMonth':mapPerson[index]['birthMonth'],'birthDay':mapPerson[index]['birthDay'], 'birthHour':mapPerson[index]['birthHour'],
         'birthMin':mapPerson[index]['birthMin'], 'saveDate':mapPerson[index]['saveDate'], 'memo':mapPerson[index]['memo'], 'mark':mapPerson[index]['mark']}));
+
     }catch(e){return {};} //내용을 덮어쓴다
   }
 
@@ -432,7 +442,7 @@ late var snackBar;
       if(i < 9){  //최근 목록은 l로 시작
         fileNum = 'l00${i+1}';
       }
-      else if(i < 30){
+      else if(i < recentDataLimitCount){
         fileNum = 'l0${i+1}';
       }
       final file = await CreateSaveFile(fileNum);

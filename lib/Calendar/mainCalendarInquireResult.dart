@@ -6,7 +6,7 @@ import '../style.dart' as style;
 import '../findGanji.dart' as findGanji;
 import '../SaveData/saveDataManager.dart' as saveDataManager;
 import '../CalendarResult/calendarResultAppBarWidget.dart' as calendarResultAppBarWidget;  //앱바
-import '../CalendarResult/calendarResultBirthTextWidget.dart' as calendarResultBirthTextWidget;  //이름과 생년월일
+//import '../CalendarResult/calendarResultBirthTextWidget2.dart' as calendarResultBirthTextWidget2;  //이름과 생년월일
 import '../CalendarResult/calendarResultPaljaWidget.dart' as calendarResultPaljaWidget;  //팔자
 import '../CalendarResult/InquireSinsals/yugchinWidget.dart' as yugchinWidget;  //육친
 import '../CalendarResult/InquireSinsals/sibiunseong.dart' as sibiunseong; //12운성
@@ -21,7 +21,7 @@ import 'package:provider/provider.dart';
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
-    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode});
+    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType});
 
   final String name;
   final bool gender;
@@ -33,6 +33,7 @@ class MainCalendarInquireResult extends StatefulWidget {
   final bool isEditSetting;
   final bool isShowChooseDayButtons;
   final setWidgetCalendarResultBirthTextFromChooseDayMode;
+  final setUemYangBirthType;
 
   @override
   State<MainCalendarInquireResult> createState() => _MainCalendarInquireResultState();
@@ -385,7 +386,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
   Widget GetChooseDayWidget(){
     if(widget.isShowChooseDayButtons == true) {
-
         return Column(
           children: [
             Container(
@@ -531,6 +531,9 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  //calendarResultBirthTextWidget2.CalendarResultBirthTextWidget2(name:widget.name, gender:widget.gender? '남' : '여', uemYang:widget.uemYang, birthYear:widget.birthYear, birthMonth:widget.birthMonth, birthDay:widget.birthDay,
+                  //    birthHour:widget.birthHour, birthMin:widget.birthMin, isShowDrawerManOld:0, widgetWidth:widgetWidth,
+                  //    isOneWidget:(widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false, isEditSetting:isEditSetting, setTargetName:null),
                   SizedBox(
                     height: 4
                   ),
@@ -891,6 +894,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   EditBirthData(int editMode, bool isUp){ //mode 0:시간, 1:일, 2:월, 3:연
     if(widget.uemYang != 0){
       ShowDialogMessage('명식이 양력으로 변경됩니다');
+      //widget.setUemYangBirthType();
     }
     switch(editMode){
       case 0:{  //시간

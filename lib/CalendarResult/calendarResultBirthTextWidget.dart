@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class CalendarResultBirthTextWidget extends StatefulWidget {
   const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth, required this.isEditSetting,
-  required this.setTargetName});
+  required this.setTargetName, required this.setUemYangBirthType});
 
   final String name;
   final String gender;
@@ -19,6 +19,7 @@ class CalendarResultBirthTextWidget extends StatefulWidget {
   final bool isOneWidget;
   final bool isEditSetting;
   final setTargetName;
+  final setUemYangBirthType;
 
   @override
   State<CalendarResultBirthTextWidget> createState() => _CalendarResultBirthTextWidgetState();
@@ -42,7 +43,14 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
         return '';
       }
     }
-    int old = DateTime.now().year - widget.birthYear + 1;
+    int birthYear = widget.birthYear;
+    if(widget.uemYang != 0){
+      //print(widget.birthMonth);
+      //print(widget.birthDay);
+      //List<int> listSolBirth = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, widget.uemYang == 1? false:true);
+      birthYear = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, widget.uemYang == 1? false:true)[0];//listSolBirth[0];
+    }
+    int old = DateTime.now().year - birthYear + 1;//widget.birthYear + 1;
     if((personalDataManager.etcData % 10) == 2){ //만으로 표시
       old--;
       if(DateTime.now().month < widget.birthMonth || (DateTime.now().month == widget.birthMonth && DateTime.now().day < widget.birthDay)){
@@ -92,8 +100,14 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       }
 
       //썸머타임 조회
-      if(findGanji.CheckSummerTime(widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin) == true){
-        birthTimeText = birthTimeText + ' (써머타임 -60분)';
+      if(widget.uemYang == 0) {
+        if (findGanji.CheckSummerTime(widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin) == true) {
+          birthTimeText = birthTimeText + ' (-60분)';
+        }
+      } else {
+        List<int> listYangBirth = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, widget.uemYang == 1? false:true);
+        if(findGanji.CheckSummerTime(listYangBirth[0], listYangBirth[1], listYangBirth[2], widget.birthHour, widget.birthMin) == true)
+          birthTimeText = birthTimeText + ' (-60분)';
       }
 
       return Text(birthTimeText, style: textStyle);
@@ -137,7 +151,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
         ],
       );
     } else {
-      birthText = '${widget.birthYear}.${widget.birthMonth}.${widget.birthDay}';
+      birthText = '${widget.birthYear}년 ${widget.birthMonth}월 ${widget.birthDay}일';
       return Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -166,7 +180,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   }
 
   Widget GetBirthTextWidget(){
-    if(widget.isOneWidget == true){
+    if(widget.isOneWidget == true){ //안씀
       textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
       return Container(
         width: widget.widgetWidth,
@@ -204,6 +218,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
           margin: EdgeInsets.only(top: 6),
           //color: Colors.blue,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -281,13 +296,32 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                   Text('${GetOld()} ', style: textStyle),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  GetManTextWidget(),
-                  GetBirthText(),
-                ],
+              Container(
+                height: 20,
+                child: ElevatedButton(
+                    onPressed: (){
+                      widget.setUemYangBirthType();
+                    },
+                    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        foregroundColor: Colors.transparent, surfaceTintColor: Colors.transparent),
+                    child: GetBirthText()
+                ),
               ),
+              //Row(
+              //  mainAxisAlignment: MainAxisAlignment.start,
+              //  children: [
+              //    //GetManTextWidget(),
+              //    Container(
+              //      height: 24,
+              //      child: ElevatedButton(
+              //          onPressed: (){},
+              //          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), fixedSize: Size(100, 22), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+              //              foregroundColor: Colors.transparent, surfaceTintColor: Colors.transparent),
+              //          child: GetBirthText()
+              //      ),
+              //    ),
+              //  ],
+              //),
             ],
           ),
         ),

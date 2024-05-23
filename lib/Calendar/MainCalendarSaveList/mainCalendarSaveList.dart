@@ -134,7 +134,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataMemoLineHeight,
-              child:Text("${saveDataManager.mapPersonSortedMark[num]['birthYear']}.${saveDataManager.mapPersonSortedMark[num]['birthMonth']}.${saveDataManager.mapPersonSortedMark[num]['birthDay']}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+              child:Text("${saveDataManager.mapPersonSortedMark[num]['birthYear']}년 ${saveDataManager.mapPersonSortedMark[num]['birthMonth']}월 ${saveDataManager.mapPersonSortedMark[num]['birthDay']}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
           child:Text("${GetUemYangText(saveDataManager.mapPersonSortedMark[num]['uemYang'])}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
@@ -151,26 +151,35 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
     return listPersonalTextData;
   }
 
+  CheckPersonalDataHide(){
+    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){
+      isShowPersonalDataAll = false;
+      int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+      if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
+        isShowPersonalName = false;
+      } else { isShowPersonalName = true; }
+      if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
+        isShowPersonalBirth = false;
+      } else { isShowPersonalBirth = true; }
+    } else {
+      isShowPersonalDataAll = true;
+    }
+  }
+
   String searchText = '';
 
   @override
   void initState() {
     super.initState();
 
-    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){
-      isShowPersonalDataAll = false;
-      int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
-      if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
-        isShowPersonalName = false;
-      }
-      if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
-        isShowPersonalBirth = false;
-      }
-    }
+    CheckPersonalDataHide();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    CheckPersonalDataHide();
+
     return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
@@ -246,7 +255,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                     passVal = true;
                   }
                   else{
-                    String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}.${saveDataManager.mapPersonSortedMark[i]['birthMonth']}.${saveDataManager.mapPersonSortedMark[i]['birthDay']} ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
+                    String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}년 ${saveDataManager.mapPersonSortedMark[i]['birthMonth']}월 ${saveDataManager.mapPersonSortedMark[i]['birthDay']}일 ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
                     if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPersonSortedMark[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
                       passVal = true;
                     }
@@ -319,7 +328,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                       birthYear0: saveDataManager.mapPersonSortedMark[i]['birthYear'], birthMonth0: saveDataManager.mapPersonSortedMark[i]['birthMonth'],
                                       birthDay0: saveDataManager.mapPersonSortedMark[i]['birthDay'], birthHour0: saveDataManager.mapPersonSortedMark[i]['birthHour'], birthMin0: saveDataManager.mapPersonSortedMark[i]['birthMin'],
                                       memo:saveDataManager.mapPersonSortedMark[i]['memo']??'', saveDate: saveDataManager.mapPersonSortedMark[i]['saveDate']??'', isMark: saveDataManager.mapPersonSortedMark[i]['mark']??false,
-                                      saveDataNum: saveDataManager.mapPersonSortedMark[i]['num'], listIndex: i, closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
+                                      saveDataNum: saveDataManager.mapPersonSortedMark[i]['num'], closeOption: widget.setSideOptionLayerWidget, goToEditMemo: false, key:UniqueKey()),
                                 ));
                               },
                               style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

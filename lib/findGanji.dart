@@ -26,10 +26,10 @@
     int targetDay = _targetDay;
     int days = 49;
 
-    if(listLunNday[targetYear - stanYear][((targetMonth - 1) * 2) + 1] > 0){  //윤월인지 확인
+    //if(listLunNday[targetYear - stanYear][((targetMonth - 1) * 2) + 1] > 0){  //윤월인지 확인
       //isLeap = true;
       //print('Leap');
-    }
+    //}
 
     for(int i = 0; i < targetYear - stanYear; i++){ //targetYear의 전년도 까지의 날짜 수 계산
       for(int j = 0; j < listLunNday[i].length; j++){
@@ -64,15 +64,16 @@
         days = days - 366;
       }
     }
-    if(solYear % 4 != 0 && days > 366){
+
+    if(solYear % 4 != 0 && days >= 366){
       solYear++;
       days = days - 365;
     }
-    else if (solYear % 4 == 0 && days > 367){
+    else if (solYear % 4 == 0 && days >= 367){
       solYear++;
       days = days - 366;
     }
-    //print(solYear);
+
     int monthNday = 0;
     while(true){
       if(solMonth == 1 && solYear % 4 == 0){
@@ -92,9 +93,62 @@
     solDay = days;
 
     List<int> listSolarBirth = [solYear, solMonth, solDay];
-    print(listSolarBirth);
+
     return listSolarBirth;
   }
+
+  SolarToLunar(int _targetYear, int _targetMonth, int _targetDay){
+  int targetYear = _targetYear;
+  int targetMonth = _targetMonth;
+  int targetDay = _targetDay;
+  int days = -49;
+
+  for(int i = 0; i < targetYear - stanYear; i++){ //targetYear의 전년도 까지의 날짜 수 계산
+    for(int j = 0; j < listSolNday.length; j++){
+      days = days + listSolNday[j];
+      if(((i + 1) % 4 == 0) && j == 1){ //2월 윤달에 하루 더함
+        days++;
+      }
+    }
+  }
+  for(int i = 0; i < (targetMonth - 1); i++){ //당해의 전월까지 계산
+    days = days + listSolNday[i];
+    if(((targetYear) % 4 == 0) && i == 1){ //2월 윤달에 하루 더함
+      days++;
+    }
+  }
+
+  days = days + targetDay;
+
+  //여기까지가 총 일수 계산
+
+  int lunYear = 1901;
+  int lunMonth = 0, lunDay = 0;
+
+  int lunNdayYear = 0, lunNdayMonth = 0;
+
+  while(true){
+    if(days > listLunNday[lunNdayYear][lunNdayMonth]){
+      days = days - listLunNday[lunNdayYear][lunNdayMonth];
+
+      lunNdayMonth++;
+      if(lunNdayMonth > (listLunNday[0].length - 1)){
+        lunNdayMonth = 0;
+        lunNdayYear++;
+      }
+    } else {
+      break;
+    }
+  }
+
+  lunYear = lunYear + lunNdayYear;
+  lunMonth = (lunNdayMonth * 0.5).floor() + 1;
+  lunDay = days;
+
+  List<int> listLunarBirth = [lunYear, lunMonth, lunDay, lunNdayMonth % 2 == 0? 0:1]; //마지막 변수는 윤월 표시
+
+  return listLunarBirth;
+}
 
   List<int> InquireGanji(int _targetYear, int _targetMonth, int _targetDay, int _targetHour, int _targetMin){
     int targetYear = _targetYear;
@@ -128,7 +182,6 @@
         }
       }
     }
-
 
     bool isSeasonBefore = false;  //절입시간 전인지 표시
 

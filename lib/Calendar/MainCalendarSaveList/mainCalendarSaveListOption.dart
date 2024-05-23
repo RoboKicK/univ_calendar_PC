@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class MainCalendarSaveListOption extends StatefulWidget {
   const MainCalendarSaveListOption({super.key, required this.name0, required this.gender0, required this.uemYang0, required this.birthYear0, required this.birthMonth0,
     required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo, required this.isMark, required this.saveDataNum,
-  required this.closeOption, required this.listIndex});
+  required this.closeOption, required this.goToEditMemo});
 
   final String name0;
   final bool gender0;
@@ -23,8 +23,8 @@ class MainCalendarSaveListOption extends StatefulWidget {
   final bool isMark;  //즐겨찾기
   final String saveDataNum;
 
-  final listIndex;
   final closeOption;
+  final bool goToEditMemo;
 
   @override
   State<MainCalendarSaveListOption> createState() => _MainCalendarSaveListOptionState();
@@ -399,7 +399,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       listPersonalTextData.add(
           Container(
               height: style.saveDataMemoLineHeight,
-              child:Text("${widget.birthYear0}.${widget.birthMonth0}.${widget.birthDay0}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+              child:Text("${widget.birthYear0}년 ${widget.birthMonth0}월 ${widget.birthDay0}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
           child:Text("${uemYangText0}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
@@ -420,6 +420,21 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   FocusNode femaleFocusNode = FocusNode();
   FocusNode birthTextFocusNode = FocusNode();
   FocusNode birthHourTextFocusNode = FocusNode();
+
+  CheckPersonalDataHide(){
+    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){
+      isShowPersonalDataAll = false;
+      int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+      if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
+        isShowPersonalName = false;
+      } else { isShowPersonalName = true; }
+      if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
+        isShowPersonalBirth = false;
+      } else { isShowPersonalBirth = true; }
+    } else {
+      isShowPersonalDataAll = true;
+    }
+  }
 
   @override
   void initState() {
@@ -481,15 +496,10 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       markIcon = Icons.check_circle;
     }
 
-    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){
-      isShowPersonalDataAll = false;
-      int isShowPersonalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
-      if(isShowPersonalDataNum == 1 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 7){
-        isShowPersonalName = false;
-      }
-      if(isShowPersonalDataNum == 4 || isShowPersonalDataNum == 5 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7){
-        isShowPersonalBirth = false;
-      }
+    CheckPersonalDataHide();
+
+    if(widget.goToEditMemo == true){
+      SetEditingMemo();
     }
   }
 
@@ -500,7 +510,19 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   }
 
   @override
+  void deactivate(){
+    super.deactivate();
+
+    if(isEditingMemo == 1){
+      SetEditingMemo();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    CheckPersonalDataHide();
+
     return Container(
       width: style.UIButtonWidth + 30,
       margin: EdgeInsets.only(top:style.UIMarginTop, bottom: style.UIMarginTop),
@@ -561,7 +583,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                   ],
                 ),
                 [
-                  Expanded( //메모
+                  Expanded( //
                   child: Column(
                     children:[
                       Container(  //저장일자 제목
@@ -574,7 +596,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                       Container( //저장일자 정보
                         width: style.UIButtonWidth,
                         height: style.saveDataMemoLineHeight,
-                        child:Text("${widget.saveDate.substring(0,4)}년 ${widget.saveDate.substring(5,7)}월 ${widget.saveDate.substring(8,10)}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                        child:Text("${widget.saveDate.substring(0,4)}년 ${int.parse(widget.saveDate.substring(5,7))}월 ${int.parse(widget.saveDate.substring(8,10))}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
                       ),
                       Container(  //메모 제목
                         width: style.UIButtonWidth,
@@ -958,7 +980,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                                     setState(() {
                                                       print(saveDataManager.fileDirPath);
                                                     });
-                                                    widget.closeOption(false,0);
+                                                    widget.closeOption(false);//widget.closeOption(false,0);
                                                     Navigator.of(context).pop(true);
                                                   },
                                                   child: Text('네')),
@@ -978,20 +1000,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                 ),
                               ),
                             ],
-                          ),
-                          Container(  //조회 버튼
-                            width: style.UIButtonWidth,
-                            height: style.fullSizeButtonHeight,
-                            margin: EdgeInsets.only(top:style.UIButtonWidth*0.02),
-                            child:ElevatedButton(
-                                onPressed: (){
-                                  context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPersonSortedMark[widget.listIndex]['name'], saveDataManager.mapPersonSortedMark[widget.listIndex]['gender'], saveDataManager.mapPersonSortedMark[widget.listIndex]['uemYang'],
-                                      saveDataManager.mapPersonSortedMark[widget.listIndex]['birthYear'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMonth'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthDay'],
-                                      saveDataManager.mapPersonSortedMark[widget.listIndex]['birthHour'], saveDataManager.mapPersonSortedMark[widget.listIndex]['birthMin'], saveDataManager.mapPersonSortedMark[widget.listIndex]['memo'], saveDataManager.mapPersonSortedMark[widget.listIndex]['num']);
-                                },
-                                style: ElevatedButton.styleFrom(foregroundColor: Colors.white, padding:EdgeInsets.only(left:0), backgroundColor: style.colorMainBlue, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
-                                child: Text('조회', style: Theme.of(context).textTheme.headlineSmall)
-                            ),
                           ),
                         ],
                       ),
