@@ -34,7 +34,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
   List<String> _listOhengText = ['-', '-', '-', '-', '-', '-'];
   List<Color> _listSelectedBoxColor = [style.colorMainBlue, Colors.black38, Colors.black38, Colors.black38, Colors.black38, Colors.black38];
   List<double> _listButtonPaddingVal = [0, 0, 0, 0, 0, 0]; // = [16, 16, 16, 16, 16, 16];
-  List<int> _listSelectedButtonNum = [-2, -2, -2, -2, -2, -2];
+  List<int> _listSelectedButtonNum = [30, 30, 30, 30, 30, 30];
 
   List<List<int>> listGanjiChangeResult = [];
   List<Container> listGanjiChangeResultButton = [];
@@ -94,7 +94,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
     _listOhengTextColor[5] = style.colorBlack;
     _listOhengText[5] = '?';
     _listButtonPaddingVal[5] = 0; //unknownPaddingVal;
-    _listSelectedButtonNum[5] = -2;
+    _listSelectedButtonNum[5] = 30;
   }
 
   ResetAll() {
@@ -103,7 +103,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
       _listOhengTextColor[i] = style.colorBlack;
       _listOhengText[i] = '-';
       _listButtonPaddingVal[i] = 0;
-      _listSelectedButtonNum[i] = -2;
+      _listSelectedButtonNum[i] = 30;
       if (i == 0)
         _listSelectedBoxColor[i] = style.colorMainBlue;
       else
@@ -135,19 +135,19 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
 
   bool InquireConditionChecker() {
     //모두 선택했는지 확인
-    if (_listSelectedButtonNum[0] == -2) {
+    if (_listSelectedButtonNum[0] == 30) {
       ShowDialogMessage('연간을 선택해주세요');
       return false;
-    } else if (_listSelectedButtonNum[1] == -2) {
+    } else if (_listSelectedButtonNum[1] == 30) {
       ShowDialogMessage('연지를 선택해주세요');
       return false;
-    } else if (_listSelectedButtonNum[2] == -2) {
+    } else if (_listSelectedButtonNum[2] == 30) {
       ShowDialogMessage('월지를 선택해주세요');
       return false;
-    } else if (_listSelectedButtonNum[3] == -2) {
+    } else if (_listSelectedButtonNum[3] == 30) {
       ShowDialogMessage('일간을 선택해주세요');
       return false;
-    } else if (_listSelectedButtonNum[4] == -2) {
+    } else if (_listSelectedButtonNum[4] == 30) {
       ShowDialogMessage('일지를 선택해주세요');
       return false;
     }
@@ -234,7 +234,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                         onPressed: () {
                           Navigator.of(context).pop();
                           context.read<Store>().SetPersonInquireInfo('이름 없음', true, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
-                              listGanjiChangeResult[i][4], '', '');
+                              listGanjiChangeResult[i][4], '', DateTime.utc(3000));
                         },
                         child: Text('남자'),
                       ),
@@ -243,7 +243,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           onPressed: () {
                             Navigator.of(context).pop();
                             context.read<Store>().SetPersonInquireInfo('이름 없음', false, 0, listGanjiChangeResult[i][0], listGanjiChangeResult[i][1], listGanjiChangeResult[i][2], listGanjiChangeResult[i][3],
-                                listGanjiChangeResult[i][4], '', '');
+                                listGanjiChangeResult[i][4], '', DateTime.utc(3000));
                           },
                           child: Text('여자')),
                     ],
@@ -261,7 +261,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
     String text = '';
 
     text = '${listBirth[0]}년 ${listBirth[1]}월 ${listBirth[2]}일 ';
-    if (listBirth[3] == -2) {
+    if (listBirth[3] == 30) {
       text = text + '시간 모름';
     } else {
       text = text + style.stringJiji[style.uemYangStringTypeNum][((((listBirth[3] + ((listBirth[4] + 30) / 60)) / 2).floor()) % style.stringJiji[0].length).floor()] + '시';

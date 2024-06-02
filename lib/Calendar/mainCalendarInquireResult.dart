@@ -5,7 +5,7 @@ import 'package:univ_calendar_pc/main.dart';
 import '../style.dart' as style;
 import '../findGanji.dart' as findGanji;
 import '../SaveData/saveDataManager.dart' as saveDataManager;
-import '../CalendarResult/calendarResultAppBarWidget.dart' as calendarResultAppBarWidget;  //앱바
+//import '../CalendarResult/calendarResultAppBarWidget.dart' as calendarResultAppBarWidget;  //앱바
 //import '../CalendarResult/calendarResultBirthTextWidget2.dart' as calendarResultBirthTextWidget2;  //이름과 생년월일
 import '../CalendarResult/calendarResultPaljaWidget.dart' as calendarResultPaljaWidget;  //팔자
 import '../CalendarResult/InquireSinsals/yugchinWidget.dart' as yugchinWidget;  //육친
@@ -21,14 +21,14 @@ import 'package:provider/provider.dart';
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
-    required this.memo, required this.saveDataNum, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType});
+    required this.memo, required this.saveDate, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType});
 
   final String name;
   final bool gender;
   final int uemYang; //0: 양력, 1:음력 평달, 2:음력 윤달
   final int birthYear, birthMonth, birthDay, birthHour, birthMin;
   final String memo;
-  final String saveDataNum;
+  final DateTime saveDate;
   final double widgetWidth;
   final bool isEditSetting;
   final bool isShowChooseDayButtons;
@@ -53,6 +53,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   int dayGongmangNum = 0;
   List<int> listRocGongmangNum = [];
   List<int> listBirth = [];
+  late DateTime saveDate;
 
   bool showMemo = false;
   String prefixMemo = '', editingMemo = '';
@@ -220,7 +221,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
       }
       else{ //메모 저장
         showMemo = false;
-        saveDataManager.SavePersonDataMemo(widget.saveDataNum, editingMemo);
+        saveDataManager.SavePersonDataMemo2(widget.name, widget.gender, widget.uemYang, listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4], saveDate, editingMemo);
         prefixMemo = editingMemo;
         editingMemo = '';
       }
@@ -903,7 +904,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
             ShowDialogMessage('2050년 12월 6일 이후는 조회할 수 없습니다');
             return;
           }
-          if(listBirth[3] == -2){
+          if(listBirth[3] == 30){
             listBirth[3] = 12;
             listBirth[4] = 30;
           } else {
@@ -919,7 +920,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
             ShowDialogMessage('1902년 1월 1일 이전은 조회할 수 없습니다');
             return;
           }
-          if(listBirth[3] == -2){
+          if(listBirth[3] == 30){
             listBirth[3] = 12;
             listBirth[4] = 30;
           } else {
@@ -1049,7 +1050,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
     }
 
-    saveDataManager.SaveRecentPersonData(widget.name, widget.gender == true? '남' : '여', widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin, widget.memo);
+    saveDate = widget.saveDate;
+    saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
     gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
 
     calendarData = personalDataManager.calendarData;

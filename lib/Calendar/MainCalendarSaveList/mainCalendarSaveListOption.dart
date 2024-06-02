@@ -11,17 +11,15 @@ import 'package:provider/provider.dart';
 
 class MainCalendarSaveListOption extends StatefulWidget {
   const MainCalendarSaveListOption({super.key, required this.name0, required this.gender0, required this.uemYang0, required this.birthYear0, required this.birthMonth0,
-    required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo, required this.isMark, required this.saveDataNum,
+    required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo,
   required this.closeOption, required this.goToEditMemo});
 
   final String name0;
   final bool gender0;
   final int uemYang0;
   final int birthYear0, birthMonth0, birthDay0, birthHour0, birthMin0;
-  final String saveDate;
+  final DateTime saveDate;
   final String memo;
-  final bool isMark;  //즐겨찾기
-  final String saveDataNum;
 
   final closeOption;
   final bool goToEditMemo;
@@ -51,7 +49,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   String GetBirthTimeText(int birthHour, int birthMin){
     String birthTimeText = '';
 
-    if(birthHour == -2){
+    if(birthHour == 30){
       return birthTimeText = '시간 모름';
     }
     else {
@@ -119,11 +117,13 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     '11:30 ~ 13:30 午시', '13:30 ~ 15:30 未시', '15:30 ~ 17:30 申시', '17:30 ~ 19:30 酉시', '19:30 ~ 21:30 戌시', '21:30 ~ 23:30 亥시'];
   var popUpSelect = '간지 선택 ▼';
 
+  int uemYangType0 = 0;
   int targetBirthYear = 0;
   int targetBirthMonth = 0;
   int targetBirthDay = 0;
-  int targetBirthHour = 0;  //시간 모름일 때는 -2로 조회한다
+  int targetBirthHour = 0;  //시간 모름일 때는 30로 조회한다
   int targetBirthMin = 0;
+  bool gender0 = true;
 
   bool isUemryoc = true;
   bool isYundal = false;
@@ -133,8 +133,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   TextEditingController hourController = TextEditingController();
 
   String seasonMessageDate = '';  //절입시간 안내할 때 중복 방지용 변수
-
-  IconData markIcon = Icons.check_circle_outline;
 
   bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true;
   
@@ -291,7 +289,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       buttonMode = 1;
     }
     else{ //메모 저장 후 종료
-      saveDataManager.SavePersonDataMemo(widget.saveDataNum, editingMemo);
+      saveDataManager.SavePersonDataMemo2(editingName0, gender0, uemYangType0, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, widget.saveDate, editingMemo);
       prefixMemo = editingMemo;
       editingMemo = '';
       isEditingMemo = 0;
@@ -304,6 +302,9 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       isEditingPersonData = 1;
       buttonMode = 2;
       nameController.text = editingName0;
+      if(editingName0 == '이름 없음'){
+        nameController.text = '';
+      }
       birthController.text = editingBirthDay0;
       String birthMinString = '';
       if(editingBirthMin0 < 10){
@@ -320,7 +321,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
         birthHourString = '${editingBirthHour0}';
       }
       hourController.text = '${birthHourString} ${birthMinString}';
-      if(editingBirthHour0 == -2){
+      if(editingBirthHour0 == 30){
         hourController.text = '';
       }
     }
@@ -360,35 +361,23 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     return firstLineText;
   }
 
-  SetMarkIcon() { //주의! 아이콘 저장 순서 때문에 조건문과 반대로 되어있음
-    setState(() {
-      if (saveDataManager.mapPerson[int.parse(
-          widget.saveDataNum.substring(1, 4))]['mark'] == true) {
-        markIcon = Icons.check_circle_outline;
-      }
-      else {
-        markIcon = Icons.check_circle;
-      }
-    });
-  }
-
   List<Widget> GetPersonNameText(){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("${widget.gender0 == true ? '남성' : '여성'}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${gender0 == true ? '남성' : '여성'}", style: Theme.of(context).textTheme.titleLarge)));
     }
     else {
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("${GetNameText(widget.name0)}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${GetNameText(editingName0)}", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("(${widget.gender0 == true ?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${gender0 == true ?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
     }
 
     return listPersonalTextData;
@@ -399,13 +388,13 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       listPersonalTextData.add(
           Container(
               height: style.saveDataMemoLineHeight,
-              child:Text("${widget.birthYear0}년 ${widget.birthMonth0}월 ${widget.birthDay0}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+              child:Text("${targetBirthYear}년 ${targetBirthMonth}월 ${targetBirthDay}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
           child:Text("${uemYangText0}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
-          child:Text(" ${GetBirthTimeText(widget.birthHour0, widget.birthMin0)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+          child:Text(" ${GetBirthTimeText(targetBirthHour, targetBirthMin)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
     } else {
       listPersonalTextData.add(
           Container(
@@ -490,11 +479,14 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       isYundal = true;
     }
 
+    uemYangType0 = widget.uemYang0;
+    targetBirthYear = widget.birthYear0;
+    targetBirthMonth = widget.birthMonth0;
+    targetBirthDay = widget.birthDay0;
+    targetBirthHour = widget.birthHour0;
+    targetBirthMin = widget.birthMin0;
+    gender0 = widget.gender0;
     uemYangText0 = GetUemYangText(widget.uemYang0);
-    
-    if(widget.isMark == true){
-      markIcon = Icons.check_circle;
-    }
 
     CheckPersonalDataHide();
 
@@ -534,13 +526,13 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                     Column(
                       children: [
                         Container(  //이름
-                          width: style.UIButtonWidth * 0.8,
+                          width: style.UIButtonWidth * 0.9,
                           height: style.saveDataNameLineHeight,
                           child:Row(
                             children: GetPersonNameText(),
                           ),
                         ),Container(  //생년월일
-                          width: style.UIButtonWidth * 0.8,
+                          width: style.UIButtonWidth * 0.9,
                           height: style.saveDataMemoLineHeight,
                           padding: EdgeInsets.only(top:4),
                           child:Row(
@@ -548,22 +540,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                           ),
                         ),
                       ],
-                    ),
-                    Container(  //즐겨찾기 버튼
-                      width: style.UIButtonWidth * 0.1,
-                      height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                      alignment: Alignment.topCenter,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            SetMarkIcon();
-                            saveDataManager.SavePersonMark(widget.saveDataNum);
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        child: Icon(markIcon, color:Colors.white, size: style.UIButtonWidth * 0.06),
-                      ),
                     ),
                     Container(  //닫기 버튼
                       width: style.UIButtonWidth * 0.1,
@@ -596,7 +572,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                       Container( //저장일자 정보
                         width: style.UIButtonWidth,
                         height: style.saveDataMemoLineHeight,
-                        child:Text("${widget.saveDate.substring(0,4)}년 ${int.parse(widget.saveDate.substring(5,7))}월 ${int.parse(widget.saveDate.substring(8,10))}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                        child:Text("${widget.saveDate.year}년 ${widget.saveDate.month}월 ${widget.saveDate.day}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
                       ),
                       Container(  //메모 제목
                         width: style.UIButtonWidth,
@@ -976,7 +952,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                               ElevatedButton(
                                                   style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                                                   onPressed: () async {
-                                                    await saveDataManager.DeletePersonData(widget.saveDataNum);
+                                                    await saveDataManager.DeletePersonData2(editingName0 == ''?'이름 없음':editingName0, gender0, uemYangType0, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, widget.saveDate);
                                                     setState(() {
                                                       print(saveDataManager.fileDirPath);
                                                     });
@@ -1032,6 +1008,17 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                           child: Text('수정 완료', style:Theme.of(context).textTheme.headlineSmall,),
                           onPressed: () {
 
+                           int prevUemYangType = uemYangType0;
+                           int prevBirthYear = targetBirthYear;
+                           int prevBirthMonth = targetBirthMonth;
+                           int prevBirthDay = targetBirthDay;
+                           int prevBirthHour = targetBirthHour;
+                           int prevBirthMin = targetBirthMin;
+                           String prevName = editingName0;
+                           if(editingName0 ==''){
+                             prevName = '이름 없음';
+                           }
+
                             if(editingGender0 == Gender.None){
                               ShowDialogMessage('성별을 선택해 주세요');
                               return;
@@ -1051,8 +1038,8 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
 
                             if(hourController.text.length == 0){  //시간모름일 때
                               if(popUpSelect == popUpVal[0]){
-                                targetBirthHour = -2; //시간 모름일 때는 -2로 정함
-                                targetBirthMin = -2;  //분도 -2로 정함
+                                targetBirthHour = 30; //시간 모름일 때는 30로 정함
+                                targetBirthMin = 30;  //분도 30로 정함
                               }
                               else{
                                 targetBirthHour = GanjiSelect();
@@ -1094,12 +1081,15 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                               editingName0 = nameController.text;
                             }
 
-                            saveDataManager.SaveEditedPersonData(widget.saveDataNum, editingName0, editingGender0 == Gender.Male? true:false, uemYangType, targetBirthYear, targetBirthMonth,
-                                targetBirthDay, targetBirthHour, targetBirthMin);
+                            saveDataManager.SaveEditedPersonData2(prevName, gender0, prevUemYangType, prevBirthYear, prevBirthMonth, prevBirthDay, prevBirthHour, prevBirthMin, widget.saveDate,
+                            editingName0, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+
                             setState(() {
                               editingBirthDay0 = birthController.text;
                               editingBirthHour0 = targetBirthHour;
                               editingBirthMin0 = targetBirthMin;
+                              uemYangType0 = uemYangType;
+                              gender0 = genderVal;
                               GetBirthTimeText(targetBirthHour, targetBirthMin);
                               SetEditingPersonData();
                             });

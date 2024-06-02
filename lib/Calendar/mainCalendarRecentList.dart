@@ -42,7 +42,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
       partition = '.';
     }
 
-    if(birthHour == -2){
+    if(birthHour == 30){
       return birthTimeText = '시간 모름';
     }
     else {
@@ -62,8 +62,8 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
       return birthTimeText;
     }
   }
-  String GetInquireDateText(String saveDateString){
-    String saveDateText = "${saveDateString.substring(0,4)}년 ${int.parse(saveDateString.substring(5,7))}월 ${int.parse(saveDateString.substring(8,10))}일";
+  String GetInquireDateText(DateTime saveDateString){
+    String saveDateText = "${saveDateString.year}년 ${saveDateString.month}월 ${saveDateString.day}일";
 
     return saveDateText;
   }
@@ -108,9 +108,9 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               height: style.saveDataNameTextLineHeight,
               //color:Colors.green,
               //padding:EdgeInsets.only(top:7),
-              child:Text("(${saveDataManager.mapRecentPerson[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
     } else {
-       listPersonalTextData.add(Text("${saveDataManager.mapRecentPerson[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
+       listPersonalTextData.add(Text("${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge));
     }
     return listPersonalTextData;
   }
@@ -124,18 +124,18 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               //alignment: Alignment.bottomCenter,
               //color:Colors.grey,
               //padding:EdgeInsets.only(top:2),
-              child:Text("${saveDataManager.mapRecentPerson[num]['birthYear']}년 ${saveDataManager.mapRecentPerson[num]['birthMonth']}월 ${saveDataManager.mapRecentPerson[num]['birthDay']}일", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.GetSelectedRecentBirthData('birthYear',num)}년 ${saveDataManager.GetSelectedRecentBirthData('birthMonth',num)}월 ${saveDataManager.GetSelectedRecentBirthData('birthDay',num)}일", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(Container(
           height: style.saveDataNameLineHeight,
           //color:Colors.red,
           //padding:EdgeInsets.only(top:7),
-          child:Text("${GetUemYangText(saveDataManager.mapRecentPerson[num]['uemYang'])}", style: Theme.of(context).textTheme.titleLarge)));
+          child:Text("${GetUemYangText(saveDataManager.GetSelectedRecentBirthData('uemYang',num))}", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(Container(
           height: style.saveDataNameLineHeight,
           //alignment: Alignment.bottomCenter,
           //color:Colors.blue,
           //padding:EdgeInsets.only(top:saveDataManager.mapRecentPerson[num]['birthHour']==-2?1:2),
-          child:Text(" ${GetBirthTimeText(saveDataManager.mapRecentPerson[num]['birthHour'], saveDataManager.mapRecentPerson[num]['birthMin'], true)}", style: Theme.of(context).textTheme.titleLarge)));
+          child:Text(" ${GetBirthTimeText(saveDataManager.GetSelectedRecentBirthData('birthHour',num), saveDataManager.GetSelectedRecentBirthData('birthMin',num), true)}", style: Theme.of(context).textTheme.titleLarge)));
     } else {
       listPersonalTextData.add(
           Container(
@@ -167,6 +167,33 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
     } else {
       isShowPersonalDataAll = true;
     }
+  }
+
+  ShowSameCheckerMessage(String birth, String name, bool gender, int uemYangType, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          actionsAlignment: MainAxisAlignment.center,
+          title: Text('이미 같은 명식이 저장되어 있습니다\n그래도 저장하시겠습니까?'),
+          content: Text(birth, textAlign: TextAlign.center),
+          buttonPadding: EdgeInsets.only(left:20, right:20, top:0),
+          actions: [
+            ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                onPressed: (){
+                  saveDataManager.SavePersonData2(name, gender, uemYangType, birthYear, birthMonth, birthDay, birthHour, birthMin);
+
+                  Navigator.pop(context);
+                },
+                child: Text('저장')),
+            ElevatedButton(
+                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                child: Text('취소')),
+          ],
+        ));
   }
 
   @override
@@ -259,8 +286,8 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                       passVal = true;
                     }
                     else{
-                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.mapRecentPerson[i]['gender']?'남':'여'}) ${saveDataManager.mapRecentPerson[i]['birthYear']}년 ${saveDataManager.mapRecentPerson[i]['birthMonth']}월 ${saveDataManager.mapRecentPerson[i]['birthDay']}일 ${GetUemYangText(saveDataManager.mapRecentPerson[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], false)}";
-                      if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapRecentPerson[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.GetSelectedRecentBirthData('gender',i) == true?'남':'여'}) ${saveDataManager.GetSelectedRecentBirthData('birthYear',i)}년 ${saveDataManager.GetSelectedRecentBirthData('birthMonth', i)}월 ${saveDataManager.GetSelectedRecentBirthData('birthDay',i)}일 ${GetUemYangText(saveDataManager.GetSelectedRecentBirthData('uemYang', i))} ${GetBirthTimeText(saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), false)}";
+                      if(data.toLowerCase().contains(searchText.toLowerCase())){
                         passVal = true;
                       }
                     }
@@ -272,10 +299,9 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                           children: [
                             ElevatedButton(
                               onPressed: (){
-                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.mapRecentPerson[i]['gender'], saveDataManager.mapRecentPerson[i]['uemYang'],
-                                    saveDataManager.mapRecentPerson[i]['birthYear'], saveDataManager.mapRecentPerson[i]['birthMonth'], saveDataManager.mapRecentPerson[i]['birthDay'],
-                                    saveDataManager.mapRecentPerson[i]['birthHour'], saveDataManager.mapRecentPerson[i]['birthMin'], '',
-                                    '');
+                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i), saveDataManager.GetSelectedRecentBirthData('uemYang',i),
+                                    saveDataManager.GetSelectedRecentBirthData('birthYear',i), saveDataManager.GetSelectedRecentBirthData('birthMonth',i),
+                                    saveDataManager.GetSelectedRecentBirthData('birthDay',i), saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin',i), '', saveDataManager.mapRecentPerson[i]['saveDate']);
                               },
                               style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                   foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
@@ -314,7 +340,14 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-
+                                    print('save');
+                                    bool isSamePerson = saveDataManager.SavePersonIsSameChecker(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i) == true? '남':'여', saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                        saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i), saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), ShowSameCheckerMessage);
+                                    if(isSamePerson == true){
+                                      saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
+                                          saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                          saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
+                                          saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i));                                         ;}
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

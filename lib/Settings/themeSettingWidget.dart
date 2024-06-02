@@ -69,13 +69,13 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
 
   Color SetOhengColor(bool isCheongan, int num, Color white, Color red, Color yellow, Color green, Color black){  //오행 박스 컬러
     if(isCheongan == true){
-      if(num < 2 && num != -2){
+      if(num < 2 && num != 30){
         return green;}
       else if(num >= 2 && num < 4){
         return red;}
       else if(num >= 4 && num < 6){
         return yellow;}
-      else if((num >= 6 && num < 8) || num == -2){
+      else if((num >= 6 && num < 8) || num == 30){
         return white;}
       else if(num >= 8){
         return black;}
@@ -89,7 +89,7 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
         return green;}
       else if(num >= 5 && num < 7){
         return red;}
-      else if((num >= 8 && num < 10) || num == -2){
+      else if((num >= 8 && num < 10) || num == 30){
         return white;}
     }
 
@@ -99,7 +99,7 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
   SetOhengTextColor(){
     for(int i = 0; i < 8; i++){ //오행 박스와 텍스트 컬러, 텍스트 초기화
       if(i % 2 == 0){ //천간이면
-        if(listPaljaData[i] == 6 || listPaljaData[i] == 7 || listPaljaData[i] == -2){
+        if(listPaljaData[i] == 6 || listPaljaData[i] == 7 || listPaljaData[i] == 30){
           listOhengTextColor0[i] = style.colorBlack;
         }
         else{
@@ -108,7 +108,7 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
         listOhengText0[i] = style.stringCheongan[isShowDrawerKoreanGanji][listPaljaData[i]];
       }
       else{ //지지면
-        if(listPaljaData[i] == 8 || listPaljaData[i] == 9 || listPaljaData[i] == -2){
+        if(listPaljaData[i] == 8 || listPaljaData[i] == 9 || listPaljaData[i] == 30){
           listOhengTextColor0[i] = style.colorBlack;
         }
         else{
@@ -430,7 +430,6 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
     widgetHeight = widget.widgetHeight;
 
     listPaljaData = findGanji.InquireGanji(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
-    print(DateTime.now());
 
     if(((personalDataManager.etcData % 1000) / 100).floor() == 2){
       isShowDrawerKoreanGanji = 1;

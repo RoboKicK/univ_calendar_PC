@@ -214,7 +214,6 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
 
     tempNum = ((dataNum % 10000000) / 1000000).floor();
     isShowYangin = tempNum == 1? false : true;
-    print(isShowEtc);
   }
 
   @override

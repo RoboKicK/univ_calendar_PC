@@ -181,11 +181,11 @@ class _CalendarMainState extends State<CalendarMain> {
                     controller: pageNameController,
                     onEditingComplete: () {
                       Navigator.of(context).pop();
-                      widget.setNowPageName(pageNameController.text);
-                      setState(() {
-                        listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
-                        saveDataManager.SaveGroupData(listGroupMap);
-                      });
+                      //widget.setNowPageName(pageNameController.text);
+                      //setState(() {
+                      //  listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
+                      //  saveDataManager.SaveGroupData(listGroupMap);
+                      //});
                     },
                     decoration: InputDecoration(
                       labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
@@ -211,8 +211,8 @@ class _CalendarMainState extends State<CalendarMain> {
                   }
                   widget.setNowPageName(groupName);
                   setState(() {
-                    listGroupMap.add({'groupName':groupName});
-                    saveDataManager.SaveGroupData(listGroupMap);
+                    listGroupMap.insert(0,{'groupName':groupName});
+                    saveDataManager.SaveGroupData2(listGroupMap);
                   });
                 },
                 child: Text('저장'),
@@ -433,7 +433,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   int targetBirthYear = 0;
   int targetBirthMonth = 0;
   int targetBirthDay = 0;
-  int targetBirthHour = 0; //시간 모름일 때는 -2로 조회한다
+  int targetBirthHour = 0; //시간 모름일 때는 30로 조회한다
   int targetBirthMin = 0;
   int uemYangType = 0; //0: 양력, 1:음력 평달, 2:음력 윤달
   bool isUemryoc = false;
@@ -653,8 +653,8 @@ class _CalendarWidget extends State<CalendarWidget> {
     if (hourController.text.length == 0) {
       //시간모름일 때
       if (popUpSelect == popUpVal[0]) {
-        _targetBirthHour = -2; //시간 모름일 때는 -2로 정함
-        _targetBirthMin = -2; //분도 -2로 정함
+        _targetBirthHour = 30; //시간 모름일 때는 30로 정함
+        _targetBirthMin = 30; //분도 30로 정함
       }
     } else if (hourController.text.length == 5) {
       _targetBirthHour = int.parse(hourController.text.substring(0, 2));
@@ -773,7 +773,8 @@ class _CalendarWidget extends State<CalendarWidget> {
   FocusNode birthHourTextFocusNode = FocusNode();
 
   String personMemo = '';
-  String personDataNum = '';
+  DateTime personSaveDate = DateTime.utc(3000);
+  //String personDataNum = '';
 
   int nowUnderLine = 0;
   var nowCalendarHeadLine = 0;
@@ -795,31 +796,31 @@ class _CalendarWidget extends State<CalendarWidget> {
   //그룹 저장할 때 명식 정보 보냄
   Map ReportPersonData(){
     Map personData = {'name': targetName, 'gender':genderVal, 'uemYang': uemYangType, 'birthYear':targetBirthYear, 'birthMonth':targetBirthMonth,
-      'birthDay':targetBirthDay, 'birthHour':targetBirthHour, 'birthMin':targetBirthMin, 'saveDate':personDataNum, 'memo':personMemo, 'mark':false};
+      'birthDay':targetBirthDay, 'birthHour':targetBirthHour, 'birthMin':targetBirthMin, 'saveDate':DateTime.now(), 'memo':personMemo, 'mark':false};
 
     return personData;
   }
 
-  SetMarkIcon(){  //주의! 아이콘 저장 순서 때문에 조건문과 반대로 되어있음
-    setState(() {
-        if(personDataNum != ''){
-          if(saveDataManager.mapPerson[int.parse(personDataNum.substring(1,4))]['mark'] == true){
-            markIcon = Icons.check_circle_outline;
-          }
-          else{
-            markIcon = Icons.check_circle;
-          }
-        }
-        else{
-          if(saveDataManager.mapPerson.last['mark'] == true){
-            markIcon = Icons.check_circle_outline;
-          }
-          else{
-            markIcon = Icons.check_circle;
-          }
-        }
-    });
-  }
+  //SetMarkIcon(){  //주의! 아이콘 저장 순서 때문에 조건문과 반대로 되어있음
+  //  setState(() {
+  //      if(personDataNum != ''){
+  //        if(saveDataManager.mapPerson[int.parse(personDataNum.substring(1,4))]['mark'] == true){
+  //          markIcon = Icons.check_circle_outline;
+  //        }
+  //        else{
+  //          markIcon = Icons.check_circle;
+  //        }
+  //      }
+  //      else{
+  //        if(saveDataManager.mapPerson.last['mark'] == true){
+  //          markIcon = Icons.check_circle_outline;
+  //        }
+  //        else{
+  //          markIcon = Icons.check_circle;
+  //        }
+  //      }
+  //  });
+  //}
 
   //위젯 가로 크기 정하기
   SetWidgetWidth(int widgetCount, {bool fromMain = false}){
@@ -909,18 +910,22 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
             if(isSamePerson == true){
+              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+              isSaved = 0;
+              personSaveDate = saveDataManager.mapPerson.last['saveDate'];
+              return;
               int mapPersonLength = saveDataManager.mapPerson.length;
               if(mapPersonLength < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-                personDataNum = 'p00${mapPersonLength}';
+                //personDataNum = 'p00${mapPersonLength}';
               }
               else if(mapPersonLength < 100){
-                personDataNum = 'p0${mapPersonLength}';
+                //personDataNum = 'p0${mapPersonLength}';
               }
               else{
-                personDataNum = 'p${mapPersonLength}';
+                //personDataNum = 'p${mapPersonLength}';
               }
 
-              saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
               setState(() {
                 isSaved = 0;
                 SetWidgetMarkButton();
@@ -948,8 +953,8 @@ class _CalendarWidget extends State<CalendarWidget> {
             child: ElevatedButton(
               child: Icon(markIcon, color:Colors.white),
               onPressed: (){
-                SetMarkIcon();
-                saveDataManager.SavePersonMark(personDataNum);
+                //SetMarkIcon();
+                //saveDataManager.SavePersonMark(personDataNum);
               },
               style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                   foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
@@ -983,7 +988,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                   SetWidgetChooseDayButton();
                   calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
                       name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-                      birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
+                      birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
                     setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,);
                 });
               }
@@ -1004,7 +1009,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 SetWidgetChooseDayButton();
                 calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
                     name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-                    birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
+                    birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
                   setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,);
               });
             },
@@ -1018,7 +1023,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     }
   }
 
-  ShowSameCheckerMessage(String birth){
+  ShowSameCheckerMessage(String birth, String name, bool gender, int uemYangType, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -1030,9 +1035,10 @@ class _CalendarWidget extends State<CalendarWidget> {
             ElevatedButton(
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
-                  saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
                   setState(() {
                     isSaved = 0;
+                    personSaveDate = DateTime.now();
                   });
                   Navigator.pop(context);
                 },
@@ -1055,7 +1061,8 @@ class _CalendarWidget extends State<CalendarWidget> {
         isSaved = 1;
         calendarResultWidget = SizedBox.shrink();
 
-        personDataNum = '';
+        //personDataNum = '';
+        personSaveDate = DateTime.utc(3000);
         personMemo = '';
         isShowChooseDayButtons = false;
         isChangeUemYangBirthType = false;
@@ -1142,33 +1149,33 @@ class _CalendarWidget extends State<CalendarWidget> {
       isEditSetting = !isEditSetting;
       double _widgetWidth = widgetWidth;
 
-      if(isWithSave == true){
-        personDataNum = saveDataManager.mapPerson.last['num'];
-      }
+      //if(isWithSave == true){
+      //  personDataNum = saveDataManager.mapPerson.last['num'];
+      //}
 
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDataNum: personDataNum, widgetWidth: _widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
+        birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, memo: personMemo, saveDate: personSaveDate, widgetWidth: _widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
           setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,);
       SetWidgetBackButton();
       SetWidgetSaveButton();
       SetWidgetCalendarResultBirthText();
       SetWidgetChooseDayButton();
 
-      if (personDataNum != '') {
-        isSaved = 0;
-
-        if (saveDataManager.mapPerson[int.parse(personDataNum.substring(1, 4))]['mark'] == true) {
-          markIcon = Icons.check_circle;
-        } else {
-          markIcon = Icons.check_circle_outline;
-        }
-      }
+      //if (personDataNum != '') {
+      //  isSaved = 0;
+//
+      //  if (saveDataManager.mapPerson[int.parse(personDataNum.substring(1, 4))]['mark'] == true) {
+      //    markIcon = Icons.check_circle;
+      //  } else {
+      //    markIcon = Icons.check_circle_outline;
+      //  }
+      //}
     });
   }
 
   //다른 위젯에서 조회 정보 입력
-  SetInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo, String saveDataNum){
+  SetInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo){
     targetName = name;
     genderVal = gender;
     uemYangType = uemYang;
@@ -1178,14 +1185,13 @@ class _CalendarWidget extends State<CalendarWidget> {
     targetBirthHour = birthHour;
     targetBirthMin = birthMin;
     personMemo = memo;
-    personDataNum = saveDataNum;
   }
 
   //명식 이름 변경
   SetTargetName(String name){
-    targetName = name;
-    if(isSaved == 0){
-      saveDataManager.SaveEditedPersonData(personDataNum, targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+    if(personSaveDate != DateTime.utc(3000)){
+      saveDataManager.SaveEditedPersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate,
+        name, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
 
       SnackBar snackBar = SnackBar(
         content: Text('이름이 수정되었습니다', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
@@ -1204,6 +1210,8 @@ class _CalendarWidget extends State<CalendarWidget> {
       ScaffoldMessenger.of(context).removeCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
+
+    targetName = name;
   }
 
   //음력 양력 생일 변경
@@ -1310,7 +1318,7 @@ class _CalendarWidget extends State<CalendarWidget> {
             widget.loadPersonData['birthHour'],
             widget.loadPersonData['birthMin'],
             widget.loadPersonData['memo'],
-            '');
+        );
         SetCalendarResultWidget();
       } else {}
 
@@ -1327,7 +1335,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         targetBirthHour = personInquireInfo['targetBirthHour'];
         targetBirthMin = personInquireInfo['targetBirthMin'];
         personMemo = personInquireInfo['personMemo'];
-        personDataNum = personInquireInfo['personDataNum'];
+        personSaveDate = personInquireInfo['personSaveDate'];
 
         SetCalendarResultWidget();
 
@@ -1409,8 +1417,9 @@ class _CalendarWidget extends State<CalendarWidget> {
                                 child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: targetName, gender0: genderVal, uemYang0: uemYangType,
                                     birthYear0: targetBirthYear, birthMonth0: targetBirthMonth,
                                     birthDay0: targetBirthDay, birthHour0: targetBirthHour, birthMin0: targetBirthMin,
-                                    memo:saveDataManager.mapPerson[int.parse(personDataNum.substring(1,4))]['memo']??'', saveDate: saveDataManager.mapPerson[int.parse(personDataNum.substring(1,4))]['saveDate'], isMark: saveDataManager.mapPerson[int.parse(personDataNum.substring(1,4))]['mark']??false,
-                                    saveDataNum: personDataNum, closeOption: widget.setSideOptionLayerWidget, goToEditMemo: true, key:UniqueKey()),
+                                    memo:saveDataManager.mapPerson[saveDataManager.FindMapPersonIndex(targetName, saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear,
+                                        targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), personSaveDate)]['memo']??'', saveDate: personSaveDate,
+                                    closeOption: widget.setSideOptionLayerWidget, goToEditMemo: true, key:UniqueKey()),
                               ));
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
@@ -1759,7 +1768,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                 bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
 
                                 if(isSamePerson == true){
-                                  saveDataManager.SavePersonData(targetName, genderVal==true?'남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
                                   SetCalendarResultWidget(isWithSave: true);
                                 }
                               } else {

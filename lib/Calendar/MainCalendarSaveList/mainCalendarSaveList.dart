@@ -49,7 +49,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       partition = '.';
     }
 
-    if(birthHour == -2){
+    if(birthHour == 30){
       return birthTimeText = '시간 모름';
     }
     else {
@@ -113,17 +113,17 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("${saveDataManager.mapPersonSortedMark[num]['gender']?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.GetSelectedBirthData('gender',num) == true?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge)));
     }
     else {
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("${GetNameText(saveDataManager.mapPersonSortedMark[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${GetNameText(saveDataManager.mapPerson[num]['name'])}", style: Theme.of(context).textTheme.titleLarge)));
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("(${saveDataManager.mapPersonSortedMark[num]['gender']?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${saveDataManager.GetSelectedBirthData('gender', num) == true?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
     }
 
     return listPersonalTextData;
@@ -134,13 +134,13 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataMemoLineHeight,
-              child:Text("${saveDataManager.mapPersonSortedMark[num]['birthYear']}년 ${saveDataManager.mapPersonSortedMark[num]['birthMonth']}월 ${saveDataManager.mapPersonSortedMark[num]['birthDay']}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+              child:Text("${saveDataManager.GetSelectedBirthData('birthYear',num)}년 ${saveDataManager.GetSelectedBirthData('birthMonth',num)}월 ${saveDataManager.GetSelectedBirthData('birthDay',num)}일", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
-          child:Text("${GetUemYangText(saveDataManager.mapPersonSortedMark[num]['uemYang'])}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+          child:Text("${GetUemYangText(saveDataManager.GetSelectedBirthData('uemYang',num))}",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
       listPersonalTextData.add(Container(
           height: style.saveDataMemoLineHeight,
-          child:Text(" ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[num]['birthHour'], saveDataManager.mapPersonSortedMark[num]['birthMin'], true)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+          child:Text(" ${GetBirthTimeText(saveDataManager.GetSelectedBirthData('birthHour',num), saveDataManager.GetSelectedBirthData('birthMin',num), true)}", style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
     } else {
       listPersonalTextData.add(
           Container(
@@ -247,7 +247,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
               child: ListView.separated(
                 scrollDirection: Axis.vertical,
                 controller: scrollController,
-                itemCount:saveDataManager.mapPersonSortedMark.length,
+                itemCount:saveDataManager.mapPerson.length,
                 itemBuilder: (context, i){
                   bool passVal = false;
                   //검색 조회
@@ -255,8 +255,8 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                     passVal = true;
                   }
                   else{
-                    String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}년 ${saveDataManager.mapPersonSortedMark[i]['birthMonth']}월 ${saveDataManager.mapPersonSortedMark[i]['birthDay']}일 ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
-                    if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPersonSortedMark[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
+                    String data = "${saveDataManager.mapPerson[i]['name']}(${saveDataManager.GetSelectedBirthData('gender',i) == true?'남':'여'}) ${saveDataManager.GetSelectedBirthData('birthYear',i)}년 ${saveDataManager.GetSelectedBirthData('birthMonth', i)}월 ${saveDataManager.GetSelectedBirthData('birthDay',i)}일 ${GetUemYangText(saveDataManager.GetSelectedBirthData('uemYang', i))} ${GetBirthTimeText(saveDataManager.GetSelectedBirthData('birthHour',i), saveDataManager.GetSelectedBirthData('birthMin', i), false)}";
+                    if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPerson[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
                       passVal = true;
                     }
                   }
@@ -269,17 +269,17 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                         children: [
                           ElevatedButton(
                             onPressed: (){
-                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPersonSortedMark[i]['name'], saveDataManager.mapPersonSortedMark[i]['gender'], saveDataManager.mapPersonSortedMark[i]['uemYang'],
-                                    saveDataManager.mapPersonSortedMark[i]['birthYear'], saveDataManager.mapPersonSortedMark[i]['birthMonth'], saveDataManager.mapPersonSortedMark[i]['birthDay'],
-                                    saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], saveDataManager.mapPersonSortedMark[i]['memo'],
-                                    saveDataManager.mapPersonSortedMark[i]['num']);
+                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPerson[i]['name'], saveDataManager.GetSelectedBirthData('gender', i), saveDataManager.GetSelectedBirthData('uemYang',i),
+                                    saveDataManager.GetSelectedBirthData('birthYear',i), saveDataManager.GetSelectedBirthData('birthMonth',i),
+                                    saveDataManager.GetSelectedBirthData('birthDay',i), saveDataManager.GetSelectedBirthData('birthHour',i), saveDataManager.GetSelectedBirthData('birthMin',i),
+                                    saveDataManager.GetSelectedBirthData('memo',i)??'', saveDataManager.mapPerson[i]['saveDate']);
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Column(
                               children: [
                                 Container(
-                                  width: style.UIButtonWidth * 0.8,
+                                  width: style.UIButtonWidth * 0.9,
                                   height: style.saveDataNameLineHeight,
                                   padding: EdgeInsets.only(top:6),
                                   //color:Colors.green,
@@ -289,7 +289,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                   ),
                                 ),
                                 Container(
-                                    width: style.UIButtonWidth * 0.8,
+                                    width: style.UIButtonWidth * 0.9,
                                     height: style.saveDataMemoLineHeight,
                                     padding: EdgeInsets.only(top:4),
                                     //color:Colors.yellow,
@@ -300,20 +300,20 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                               ],
                             ),
                           ),
-                          Container(  //즐겨찾기 버튼
-                            width: style.UIButtonWidth * 0.1,
-                            height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
-                                });
-                              },
-                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                              child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
-                            ),
-                          ),
+                          //Container(  //즐겨찾기 버튼
+                          //  width: style.UIButtonWidth * 0.1,
+                          //  height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                          //  child: ElevatedButton(
+                          //    onPressed: () {
+                          //      setState(() {
+                          //        saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
+                          //      });
+                          //    },
+                          //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                          //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                          //    child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                          //  ),
+                          //),
                           Container(  //옵션 버튼
                             width: style.UIButtonWidth * 0.1,
                             height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
@@ -324,11 +324,11 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                 widget.setSideOptionWidget(Container(
                                   width: style.UIButtonWidth + 30,
                                   height: MediaQuery.of(context).size.height - style.appBarHeight,
-                                  child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPersonSortedMark[i]['name'], gender0: saveDataManager.mapPersonSortedMark[i]['gender'], uemYang0: saveDataManager.mapPersonSortedMark[i]['uemYang'],
-                                      birthYear0: saveDataManager.mapPersonSortedMark[i]['birthYear'], birthMonth0: saveDataManager.mapPersonSortedMark[i]['birthMonth'],
-                                      birthDay0: saveDataManager.mapPersonSortedMark[i]['birthDay'], birthHour0: saveDataManager.mapPersonSortedMark[i]['birthHour'], birthMin0: saveDataManager.mapPersonSortedMark[i]['birthMin'],
-                                      memo:saveDataManager.mapPersonSortedMark[i]['memo']??'', saveDate: saveDataManager.mapPersonSortedMark[i]['saveDate']??'', isMark: saveDataManager.mapPersonSortedMark[i]['mark']??false,
-                                      saveDataNum: saveDataManager.mapPersonSortedMark[i]['num'], closeOption: widget.setSideOptionLayerWidget, goToEditMemo: false, key:UniqueKey()),
+                                  child: mainCalendarSaveListOption.MainCalendarSaveListOption(name0: saveDataManager.mapPerson[i]['name'], gender0: saveDataManager.GetSelectedBirthData('gender', i), uemYang0: saveDataManager.GetSelectedBirthData('uemYang',i),
+                                      birthYear0: saveDataManager.GetSelectedBirthData('birthYear',i), birthMonth0: saveDataManager.GetSelectedBirthData('birthMonth',i),
+                                      birthDay0: saveDataManager.GetSelectedBirthData('birthDay',i), birthHour0: saveDataManager.GetSelectedBirthData('birthHour',i), birthMin0: saveDataManager.GetSelectedBirthData('birthMin',i),
+                                      memo:saveDataManager.mapPerson[i]['memo']??'', saveDate: saveDataManager.mapPerson[i]['saveDate']??DateTime.now(),
+                                      closeOption: widget.setSideOptionLayerWidget, goToEditMemo: false, key:UniqueKey()),
                                 ));
                               },
                               style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

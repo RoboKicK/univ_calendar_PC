@@ -28,7 +28,7 @@ class _YugchinWidgetState extends State<YugchinWidget> {
     int divideVal = (widget.listPaljaData.length / 2).floor();
 
     if(widget.stanIlganNum % 2 == 0){ //양일간
-      if(widget.listPaljaData[0] != -2){
+      if(widget.listPaljaData[0] != 30){
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[(widget.listPaljaData[0] - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       } else {
         listCheonganYugchinString.add(style.emptySinsalText);
@@ -39,7 +39,7 @@ class _YugchinWidgetState extends State<YugchinWidget> {
       } else {
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[(widget.listPaljaData[4] - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       }
-      if(widget.listPaljaData[6] != -2){
+      if(widget.listPaljaData[6] != 30){
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[(widget.listPaljaData[6] - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       }
       else{
@@ -53,7 +53,7 @@ class _YugchinWidgetState extends State<YugchinWidget> {
       }
     }
     else{ //음일간
-      if(widget.listPaljaData[0] != -2){
+      if(widget.listPaljaData[0] != 30){
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[((widget.listPaljaData[0]%2 == 1? widget.listPaljaData[0]:(widget.listPaljaData[0]+2)) - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       } else {
         listCheonganYugchinString.add(style.emptySinsalText);
@@ -64,7 +64,7 @@ class _YugchinWidgetState extends State<YugchinWidget> {
       } else {
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[((widget.listPaljaData[4]%2 == 1? widget.listPaljaData[4]:(widget.listPaljaData[4]+2)) - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       }
-      if(widget.listPaljaData[6] != -2){
+      if(widget.listPaljaData[6] != 30){
         listCheonganYugchinString.add(yugchinClass.YugchinClass().list6chin[((widget.listPaljaData[6]%2 == 1? widget.listPaljaData[6]:(widget.listPaljaData[6]+2)) - widget.stanIlganNum + style.stringCheongan[0].length) % style.stringCheongan[0].length]);
       }
       else{
@@ -122,14 +122,14 @@ class _YugchinWidgetState extends State<YugchinWidget> {
 
     int divideVal = (widget.listPaljaData.length / 2).floor();
 
-    if(widget.listPaljaData[1] != -2){
+    if(widget.listPaljaData[1] != 30){
       listCheonganJijiString.add(yugchinClass.YugchinClass().list6chin[yugchinClass.YugchinClass().FindJijiYugchin0(widget.listPaljaData[1],widget.stanIlganNum)]);
     } else {
       listCheonganJijiString.add(style.emptySinsalText);
     }
     listCheonganJijiString.add(yugchinClass.YugchinClass().list6chin[yugchinClass.YugchinClass().FindJijiYugchin0(widget.listPaljaData[3],widget.stanIlganNum)]);
     listCheonganJijiString.add(yugchinClass.YugchinClass().list6chin[yugchinClass.YugchinClass().FindJijiYugchin0(widget.listPaljaData[5],widget.stanIlganNum)]);
-    if(widget.listPaljaData[7] != -2){
+    if(widget.listPaljaData[7] != 30){
       listCheonganJijiString.add(yugchinClass.YugchinClass().list6chin[yugchinClass.YugchinClass().FindJijiYugchin0(widget.listPaljaData[7],widget.stanIlganNum)]);
     }
     else{

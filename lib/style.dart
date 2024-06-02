@@ -145,13 +145,13 @@ int uemYangStringTypeNum = 0;
 
 Color SetOhengColor(bool isCheongan, int num){  //오행 박스 컬러
   if(isCheongan == true){
-    if(num < 2 && num != -2){
+    if(num < 2){
       return colorGreen;}
     else if(num >= 2 && num < 4){
       return colorRed;}
     else if(num >= 4 && num < 6){
       return colorYellow;}
-    else if((num >= 6 && num < 8) || num == -2){
+    else if((num >= 6 && num < 8) || num == 30){
       return Colors.white;}
     else if(num >= 8){
       return colorBlack;}
@@ -165,7 +165,7 @@ Color SetOhengColor(bool isCheongan, int num){  //오행 박스 컬러
       return colorGreen;}
     else if(num >= 5 && num < 7){
       return colorRed;}
-    else if((num >= 8 && num < 10) || num == -2){
+    else if((num >= 8 && num < 10) || num == 30){
       return Colors.white;}
   }
 
@@ -176,13 +176,13 @@ String SetOhengSpriteString(bool isCheongan, int num, String themeTitle){
   String ohengSpriteString = themeTitle;
 
   if(isCheongan == true){
-    if(num < 2 && num != -2){
+    if(num < 2){
       return ohengSpriteString = ohengSpriteString + 'Green.png';}
     else if(num >= 2 && num < 4){
       return ohengSpriteString = ohengSpriteString + 'Red.png';}
     else if(num >= 4 && num < 6){
       return ohengSpriteString = ohengSpriteString + 'Yellow.png';}
-    else if((num >= 6 && num < 8) || num == -2){
+    else if((num >= 6 && num < 8) || num == 30){
       return ohengSpriteString = ohengSpriteString + 'White.png';}
     else if(num >= 8){
       return ohengSpriteString = ohengSpriteString + 'Black.png';}
@@ -196,7 +196,7 @@ String SetOhengSpriteString(bool isCheongan, int num, String themeTitle){
       return ohengSpriteString = ohengSpriteString + 'Green.png';}
     else if(num >= 5 && num < 7){
       return ohengSpriteString = ohengSpriteString + 'Red.png';}
-    else if((num >= 8 && num < 10) || num == -2){
+    else if((num >= 8 && num < 10) || num == 30){
       return ohengSpriteString = ohengSpriteString + 'White.png';}
   }
 

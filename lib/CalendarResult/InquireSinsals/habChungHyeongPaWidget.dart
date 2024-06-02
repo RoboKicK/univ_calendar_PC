@@ -49,7 +49,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 1 || switchNum == 3 || switchNum == 5 || switchNum == 7 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[a * 2] + 5) % style.stringCheongan[0].length == _listPaljaData[b * 2]
                 && a * 2 != b * 2) {
               if (listHabChungString[a].length > 3) {
@@ -82,7 +82,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || switchNum == 3 || switchNum == 6 || switchNum == 7 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[a * 2] + 4) % style.stringCheongan[0].length == _listPaljaData[b * 2]
                 && a * 2 != b * 2) {
               if (_listPaljaData[a * 2] > 3) { //갑을병정이 아니면 충
@@ -140,7 +140,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 4 || switchNum == 5 || switchNum == 6 || switchNum == 7 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[a * 2] + 4) % style.stringCheongan[0].length == _listPaljaData[b * 2]
                 && a * 2 != b * 2) {
               if (_listPaljaData[a * 2] < 4) { //갑을병정이면 극
@@ -253,7 +253,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if (((_listPaljaData[(a * 2) + 1] - 1) % style.stringJiji[0].length) + ((_listPaljaData[(b * 2) + 1] - 1) % style.stringJiji[0].length) == 11) {
               if (listHabChungString[a].length > 3) {
                 if (listHabChungString[a].substring(listHabChungString[a].length - 4, listHabChungString[a].length - 3) !=
@@ -281,7 +281,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
       bool isShowAll = true;
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2 && a != b && _listPaljaData[(a * 2) + 1] != _listPaljaData[(b * 2) + 1]) { //모름이 아니고 같은 지지를 비교하지 않을 때
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30 && a != b && _listPaljaData[(a * 2) + 1] != _listPaljaData[(b * 2) + 1]) { //모름이 아니고 같은 지지를 비교하지 않을 때
             if ((((_listPaljaData[(a * 2) + 1] + 1) % style.stringJiji[0].length)/3).floor() == (((_listPaljaData[(b * 2) + 1] + 1) % style.stringJiji[0].length)/3).floor()) {
               isShowAll = switchNum == 3? true : false;  //다보기 : 왕지가 있을 때만 보기
               if(isShowAll == false) {  //왕지가 있어야 보기
@@ -321,7 +321,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
       bool isShowAll = true;
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2 && a != b) { //모름이 아니고 같은 지지를 비교하지 않을 때
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30 && a != b) { //모름이 아니고 같은 지지를 비교하지 않을 때
             if ((_listPaljaData[(a * 2) + 1] - _listPaljaData[(b * 2) + 1]).abs() == 4 || (_listPaljaData[(a * 2) + 1] - _listPaljaData[(b * 2) + 1]).abs() == 8) {
               isShowAll = switchNum == 3? true : false;  //다보기 : 왕지가 있을 때만 보기
               if(isShowAll == false) {
@@ -358,7 +358,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum != 1 || isAllShow == true) { //충 안 보기가 아닐 때
       for (int a = count; a > -1; a--) {
         for (int b = count - 1; b > -1; b--) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] + 6) % style.stringJiji[0].length == _listPaljaData[(b * 2) + 1]
                 && a != b) {
               if (listHabChungString[a].length > 3) {
@@ -394,7 +394,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum != 9 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] == 0 && _listPaljaData[(b * 2) + 1] == 3) ||
                 (_listPaljaData[(a * 2) + 1] == 3 && _listPaljaData[(b * 2) + 1] == 0)) { //자묘형
               if(switchNum == 1 || switchNum == 3 || switchNum == 5 || switchNum == 7 || isAllShow == true) {
@@ -455,7 +455,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] == 0 || _listPaljaData[(a * 2) + 1] == 2 || _listPaljaData[(a * 2) + 1] == 4)
                 && _listPaljaData[(a * 2) + 1] + 7 == _listPaljaData[(b * 2) + 1]) { //자미원진, 인유원진, 진해원진
               if (listHabChungString[a].length > 4) {
@@ -516,7 +516,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] == 0 && _listPaljaData[(b * 2) + 1] == 9) ||
                 (_listPaljaData[(a * 2) + 1] == 9 && _listPaljaData[(b * 2) + 1] == 0)) { //자유귀문
               if (listHabChungString[a].length > 4) {
@@ -602,7 +602,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] + 2) % style.stringJiji[0].length == _listPaljaData[(b * 2) + 1]
                 || (_listPaljaData[(a * 2) + 1] - 2) % style.stringJiji[0].length == _listPaljaData[(b * 2) + 1]) {
               if (listHabChungString[a].length > 4) {
@@ -627,7 +627,7 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
     if(switchNum == 2 || isAllShow == true) {
       for (int a = count; a > -1; a--) {
         for (int b = 0; b <= count; b++) {
-          if (_listPaljaData[a * 2] != -2 && _listPaljaData[b * 2] != -2) {
+          if (_listPaljaData[a * 2] != 30 && _listPaljaData[b * 2] != 30) {
             if ((_listPaljaData[(a * 2) + 1] + 3) % style.stringJiji[0].length == _listPaljaData[(b * 2) + 1]
                 || (_listPaljaData[(a * 2) + 1] - 3) % style.stringJiji[0].length == _listPaljaData[(b * 2) + 1]) {
               if (listHabChungString[a].length > 3) {

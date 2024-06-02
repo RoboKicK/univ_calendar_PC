@@ -63,14 +63,14 @@ class Sibiunseong{  //12운성 계산해주는 클래스
 
     int divideVal = (_listPaljaData.length / 2).floor();
 
-    if(_listPaljaData[1] != -2){
+    if(_listPaljaData[1] != 30){
       list12UnSeongString.add(Find12Unseong(_listPaljaData[1], stanIlganNum));
     } else {
       list12UnSeongString.add(style.emptySinsalText);
     }
     list12UnSeongString.add(Find12Unseong(_listPaljaData[3], stanIlganNum));
     list12UnSeongString.add(Find12Unseong(_listPaljaData[5], stanIlganNum));
-    if(_listPaljaData[7] != -2){
+    if(_listPaljaData[7] != 30){
       list12UnSeongString.add(Find12Unseong(_listPaljaData[7], stanIlganNum));
     }
     else{

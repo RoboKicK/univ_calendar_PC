@@ -38,44 +38,186 @@ late var snackBar;
     if(mapPerson.length != 0)
       return;
 
-    for(int i = 0; i <= saveDataLimitCount; i++){
-      if(i < 10){
-        try {
-          mapPerson.add(
-              jsonDecode(await File('${fileDirPath}/p00${i}').readAsString()));
-        } catch(e){break;}
+    String saveDataString = '';
+
+    try { //저장 데이터 확인 및 불러오기
+      saveDataString = jsonDecode(await File('${fileDirPath}/personData').readAsString());
+
+      if(saveDataString.isNotEmpty) {
+
+        int startNum = 0;
+        int endNum = 3;
+        int parsingStep = 0;
+
+        String personName = '';
+        int birthData = 0;
+        late DateTime saveDate;
+        String personMemo = '';
+
+        while (true) {
+          if (saveDataString.length < endNum + 2) {
+            break;
+          }
+
+          if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+            switch (parsingStep) {
+              case 0:
+                {
+                  //이름 불러오기
+                  personName = saveDataString.substring(startNum, endNum - 2);
+                  startNum = endNum;
+                  birthData = int.parse(saveDataString.substring(startNum, startNum + 14));
+                  startNum = startNum + 16;
+                  saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
+                  startNum = startNum + 28;
+                  endNum = startNum + 2;
+
+                  parsingStep++;
+                }
+              case 1:
+                {
+                  personMemo = saveDataString.substring(startNum, endNum - 2);
+                  startNum = endNum;
+                  endNum = startNum + 2;
+
+                  mapPerson.add({'name': personName, 'birthData': birthData, 'saveDate': saveDate, 'memo': personMemo});
+                  parsingStep = 0;
+                }
+            }
+          } else {
+            endNum++;
+          }
+        }
       }
-      else if(i < 100){
-        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/p0${i}').readAsString()));}
-            catch(e){break;}
+  } catch(e) {};
+
+    try{  //초기 버전 저장데이터 확인
+      Map mapTemp = jsonDecode(await File('${fileDirPath}/p000').readAsString());
+      if(mapTemp.isNotEmpty){
+        for(int i = 0; i <= saveDataLimitCount; i++){
+          if(i < 10){
+            try {
+              mapTemp = jsonDecode(await File('${fileDirPath}/p00${i}').readAsString());
+              await File('${fileDirPath}/p00${i}').delete();
+            } catch(e){break;}
+          }
+          else if(i < 100){
+            try{
+              mapTemp = jsonDecode(await File('${fileDirPath}/p0${i}').readAsString());
+              await File('${fileDirPath}/p0${i}').delete();
+            } catch(e){break;}
+          }
+          else{
+            try {
+              mapTemp = jsonDecode(await File('${fileDirPath}/p${i}').readAsString());
+              await File('${fileDirPath}/p${i}').delete();
+            } catch(e){break;}
+          }
+
+          int birthHour = mapTemp['birthHour'];
+          int birthMin = mapTemp['birthMin'];
+          if(birthHour == -2){
+            birthHour = 30;
+          }
+          if(birthMin == -2){
+            birthMin = 0;
+          }
+
+
+          int birthData = (((mapTemp['gender'] == true? 1 : 2) * 10000000000000) + (mapTemp['uemYang'] * 1000000000000) + (mapTemp['birthYear'] * 100000000) +
+              (mapTemp['birthMonth'] * 1000000) + (mapTemp['birthDay'] * 10000) + (birthHour * 100) + birthMin).toInt();
+
+          Map personData = {'name':mapTemp['name'], 'birthData':birthData, 'saveDate':DateTime.parse(mapTemp['saveDate']), 'memo':mapTemp['memo']};
+          mapPerson.add(personData);
+        }
+
+        SavePersonFile();
       }
-      else{
-        try{mapPerson.add(jsonDecode(await File('${fileDirPath}/p${i}').readAsString()));}
-            catch(e){break;}
-      }
-    }
-    SortPersonFromMark();
+    } catch(e) {};
+
+    //SortPersonFromMark();
   }
   LoadRecentPeople() async {
   if(mapRecentPerson.length != 0)
     return;
 
-  for(int i = 0; i <= recentDataLimitCount; i++){
-    if(i < 10){
-      try {
-        mapRecentPerson.add(
-            jsonDecode(await File('${fileDirPath}/l00${i}').readAsString()));
-      } catch(e){break;}
+  String saveDataString = '';
+
+
+  try { //저장 데이터 확인 및 불러오기
+    saveDataString = jsonDecode(await File('${fileDirPath}/recentPersonData').readAsString());
+
+    if(saveDataString.isNotEmpty) {
+      int startNum = 0;
+      int endNum = 3;
+
+      String personName = '';
+      int birthData = 0;
+      late DateTime saveDate;
+
+      while (true) {
+        if (saveDataString.length < endNum + 2) {
+          break;
+        }
+
+        if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+          personName = saveDataString.substring(startNum, endNum - 2);
+          startNum = endNum;
+          birthData = int.parse(saveDataString.substring(startNum, startNum + 14));
+          startNum = startNum + 16;
+          saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
+          startNum = startNum + 28;
+          endNum = startNum + 2;
+          mapRecentPerson.add({'name': personName, 'birthData': birthData, 'saveDate': saveDate});
+        } else {
+          endNum++;
+        }
+      }
     }
-    else if(i < 100){
-      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/l0${i}').readAsString()));}
-      catch(e){break;}
+  } catch(e) {};
+
+  try{  //초기 버전 저장데이터 확인
+    Map mapTemp = jsonDecode(await File('${fileDirPath}/l000').readAsString());
+    if(mapTemp.isNotEmpty){
+      for(int i = 0; i <= saveDataLimitCount; i++){
+        if(i < 10){
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/l00${i}').readAsString());
+            await File('${fileDirPath}/l00${i}').delete();
+          } catch(e){break;}
+        }
+        else if(i < 100){
+          try{
+            mapTemp = jsonDecode(await File('${fileDirPath}/l0${i}').readAsString());
+            await File('${fileDirPath}/l0${i}').delete();
+          } catch(e){break;}
+        }
+        else{
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/l${i}').readAsString());
+            await File('${fileDirPath}/l${i}').delete();
+          } catch(e){break;}
+        }
+
+        int birthHour = mapTemp['birthHour'];
+        int birthMin = mapTemp['birthMin'];
+        if(birthHour == -2){
+          birthHour = 30;
+        }
+        if(birthMin == -2){
+          birthMin = 0;
+        }
+
+        int birthData = (((mapTemp['gender'] == true? 1 : 2) * 10000000000000) + (mapTemp['uemYang'] * 1000000000000) + (mapTemp['birthYear'] * 100000000) +
+            (mapTemp['birthMonth'] * 1000000) + (mapTemp['birthDay'] * 10000) + (birthHour * 100) + birthMin).toInt();
+
+        Map personData = {'name':mapTemp['name'], 'birthData':birthData, 'saveDate':DateTime.parse(mapTemp['saveDate'])};
+        mapRecentPerson.add(personData);
+      }
+
+      SaveRecentPersonFile();
     }
-    else{
-      try{mapRecentPerson.add(jsonDecode(await File('${fileDirPath}/l${i}').readAsString()));}
-      catch(e){break;}
-    }
-  }
+  } catch(e) {};
 }
   LoadSavedGroup() async {
   if(listMapGroup.length != 0)
@@ -125,18 +267,18 @@ late var snackBar;
 }
 
   //북마크 순으로 정렬
-  SortPersonFromMark() {
-  mapPersonSortedMark.clear();
-
-  for(int i = 0; i < mapPerson.length; i++){
-    mapPersonSortedMark.add(mapPerson[i]);
-  }
-
-  mapPersonSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
-}
-  SortGroupFromMark(){
-
-  }
+  //SortPersonFromMark() {
+  //  mapPersonSortedMark.clear();
+  //
+  //  for(int i = 0; i < mapPerson.length; i++){
+  //    mapPersonSortedMark.add(mapPerson[i]);
+  //  }
+  //
+  //  mapPersonSortedMark.sort((a,b) => a['mark'].toString().length.compareTo(b['mark'].toString().length));
+  //}
+  //SortGroupFromMark(){
+  //
+  //}
 
   //저장할 때 내용을 저장할 빈 파일을 생성함
   Future<File> CreateSaveFile(String fileNum) async {
@@ -144,61 +286,101 @@ late var snackBar;
   }
 
   //그룹을 최초 저장할 때 사용
-  Future<void> SaveGroupData(List<Map> groupData) async{
-    int count = listMapGroup.length;
-    String fileNum = '';
-    if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-      fileNum = 'g00${count}';
-    }
-    else if(count < 100){
-      fileNum = 'g0${count}';
-    }
-    else{
-      fileNum = 'g${count}';
-    }
-    final file = await CreateSaveFile(fileNum);
-    await file.writeAsString(jsonEncode(groupData));
+  SaveGroupData2(List<Map> groupData) {
+    String groupMemoString = '';
 
-    listMapGroup.add(jsonDecode(await file.readAsString()));
-    SortGroupFromMark();
-    snackBar('단체 명식이 저장되었습니다');
+    if(groupData[0]['memo'] == null){
+      groupMemoString == '';
+    } else {
+      groupMemoString = groupData[0]['memo'];
+    }
+
+    groupData[0]['saveDate'] = DateTime.now();
+
+    listMapGroup.add(groupData);
+
+    SaveGroupFile();
   }
 
-  //명식을 최초 저장할 때 사용
-  Future<void> SavePersonData(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) async {
+  Future<void> SaveGroupFile() async {
+    String jsonString = '';
+    String personMemoString = '';
 
-    bool gender = true;
-    if(genderString == '여'){
-      gender = false;
+    for(int i = 0; i < listMapGroup.length; i++){
+      jsonString = jsonString + listMapGroup[i][0]['groupName'] + '{{' + listMapGroup[i][0]['saveDate'] + '{{' + listMapGroup[i][0]['saveDate'] + '{{';
+      for(int j = 1; j < listMapGroup[i].length; j++){
+        if(listMapGroup[i][j]['memo'] == null){
+          personMemoString == '';
+        } else {
+          personMemoString = listMapGroup[i][j]['memo'];
+        }
+
+        jsonString = jsonString + listMapGroup[i][j]['name'] + '{{' + listMapGroup[i][j]['birthData'].toString() + '{{' + listMapGroup[i][j]['saveDate'].toString() + '{{' + personMemoString;
+
+        if(j < listMapGroup[i].length - 1){
+          jsonString = jsonString + '{{';
+        } else {
+          jsonString = jsonString + '}}';
+        }
+      }
+      //['name'] + '{{' + mapPerson[i]['birthData'].toString() + '{{' + mapPerson[i]['saveDate'].toString() + '{{' + mapPerson[i]['memo'] + '{{';
     }
 
-      int count = mapPerson.length;
-      String fileNum = '';
-      if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'p00${count}';
-      }
-      else if(count < 100){
-        fileNum = 'p0${count}';
-      }
-      else{
-        fileNum = 'p${count}';
-      }
-      final file = await CreateSaveFile(fileNum);
+    final file = await CreateSaveFile('groupData');
 
-      await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
-        'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
+    await file.writeAsString(jsonEncode(jsonString));
+  }
 
-      mapPerson.add(jsonDecode(await file.readAsString()));
-      SortPersonFromMark();
+  //-- 여기부터 단일 명식 저장
+  //명식을 최초 저장할 때 사용
+
+  int ConvertToBirthData(bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
+    int genderInt = 1;  //남자:1
+    if(gender == false){
+      genderInt = 2;  //여자:2
+    }
+
+    int birthData = (genderInt * 10000000000000) + (uemYang * 1000000000000) + (birthYear * 100000000) + (birthMonth * 1000000) + (birthDay * 10000) + (birthHour * 100) + birthMin;
+
+    return birthData;
+  }
+
+  //명식을 최초 저장할 때 사용2 - mapPerson에 명식을 추가
+  SavePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, {String memo = ''}) {
+    //int genderVal = genderInt * 10000000000000;
+    //int uemYangVal = uemYang * 1000000000000;
+    //int birthYearVal = birthYear * 100000000;
+    //int birthMonthVal = birthMonth * 1000000;
+    //int birthDayVal = birthDay * 10000;
+    //int birthHourVal = birthHour * 100;
+    //int birthMinVal = birthMin;
+
+    int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
+
+    Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now(), 'memo':memo};
+    mapPerson.add(personData);
+    SavePersonFile();
+
     snackBar('명식이 저장되었습니다');
   }
 
-  //명식을 최초 저장할 때 사용2
-  //Future<void> SavePersonData(String name, )
+  //단일 명식을 json파일로 저장
+  Future<void> SavePersonFile() async {
+    String jsonString = '';
 
+    for(int i = 0; i < mapPerson.length; i++){
+      jsonString = jsonString + mapPerson[i]['name'] + '{{' + mapPerson[i]['birthData'].toString() + '{{' + mapPerson[i]['saveDate'].toString() + '{{' + mapPerson[i]['memo'] + '{{';
+    }
+
+    final file = await CreateSaveFile('personData');
+
+    await file.writeAsString(jsonEncode(jsonString));
+  }
 
   //명식 최초 저장할 때 중복 명식 있는지 확인
   bool SavePersonIsSameChecker(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, sameBirthChecker) {
+      //(String name, int birthData, sameBirthChecker) {
+    //(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, sameBirthChecker) {
     bool gender = true;
     if(genderString == '여'){
       gender = false; }
@@ -206,9 +388,28 @@ late var snackBar;
     bool sameDataChecker = true;
     String birthMessage = '';
 
+    int genderInt = 1;  //남자:1
+    if(gender == false){
+      genderInt = 2;  //여자:2
+    }
+
     for(int i = 0; i < mapPerson.length; i++){
-      if(mapPerson[i]['gender'] == gender && mapPerson[i]['uemYang'] == uemYang && mapPerson[i]['birthYear'] == birthYear && mapPerson[i]['birthMonth'] == birthMonth && mapPerson[i]['birthDay'] == birthDay && mapPerson[i]['birthHour'] == birthHour && mapPerson[i]['birthMin'] == birthMin){
+      int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
+      //if(mapPerson[i]['gender'] == gender && mapPerson[i]['uemYang'] == uemYang && mapPerson[i]['birthYear'] == birthYear && mapPerson[i]['birthMonth'] == birthMonth && mapPerson[i]['birthDay'] == birthDay && mapPerson[i]['birthHour'] == birthHour && mapPerson[i]['birthMin'] == birthMin){
+      if(mapPerson[i]['birthData'] == birthData ){ //mapPerson[i]['name'] == name &&
         String uemYangMessage = '';
+        //int genderInt = ((birthData / 10000000000000) % 10).floor();
+        //int uemYang = ((birthData / 1000000000000) % 10).floor();
+        //int birthYear = ((birthData / 100000000) % 10000).floor();
+        //int birthMonth = ((birthData / 1000000) % 100).floor();
+        //int birthDay = ((birthData / 10000) % 100).floor();
+        //int birthHour = ((birthData / 100) % 100).floor();
+        //int birthMin = birthData % 100;
+        //String genderString = '남';
+        //if(genderInt == 2){
+        //  genderString = '여';
+        //}
+
         if(uemYang == 0){
           uemYangMessage = '양력';
         }
@@ -219,7 +420,7 @@ late var snackBar;
           uemYangMessage = '음력 윤달';
         }
         String birthHourMessage = '';
-        if(birthHour == -2){
+        if(birthHour == 30){
           birthHourMessage = '시간 모름';
         }
         else{
@@ -229,241 +430,172 @@ late var snackBar;
           else{
             birthHourMessage = '${birthHour}';
           }
-          if(birthMin != -2){
+          if(birthHour != 30){
             if(birthMin < 10){
               birthHourMessage = birthHourMessage + ':0${birthMin}';
             }
-            else if(birthMin != -2){
+            else if(birthHour != 30){
               birthHourMessage = birthHourMessage + ':${birthMin}';
             }
           }
         }
         if(birthMessage == '') {
-          birthMessage = '${mapPerson[i]['name']}(${genderString}) ${birthYear}.${birthMonth}.${birthDay}(${uemYangMessage}) ${birthHourMessage}';
-
+          birthMessage = '${mapPerson[i]['name']}(${genderString}) ${birthYear}년 ${birthMonth}월 ${birthDay}일(${uemYangMessage}) ${birthHourMessage}';
         }
         else{
-          birthMessage = birthMessage + '\n${mapPerson[i]['name']}(${genderString}) ${birthYear}.${birthMonth}.${birthDay}(${uemYangMessage}) ${birthHourMessage}';
+          birthMessage = birthMessage + '\n${mapPerson[i]['name']}(${genderString}) ${birthYear}년 ${birthMonth}월 ${birthDay}일 (${uemYangMessage}) ${birthHourMessage}';
         }
 
         sameDataChecker = false;  //중복 명식이 있으면 false
       }
-
     }
 
     if(sameDataChecker == false){
-      sameBirthChecker(birthMessage);
+      sameBirthChecker(birthMessage, name, gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
     }
 
     return sameDataChecker;
 }
 
-  //명식을 삭제할 때 사용
-  DeletePersonData(String num) async {
-    int index = int.parse(num.substring(1,4));
-    if(index == mapPerson.length-1){  //map의 마지막 파일이면
-      String fileNum = '';
-      if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-        fileNum = 'p00${index}';
-      }
-      else if(index < 100){
-        fileNum = 'p0${index}';
-      }
-      else{
-        fileNum = 'p${index}';
-      }
-      File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-      mapPerson.removeLast();
-    }
-    else{
-      for(int i = index; i < mapPerson.length-1; i++){
-        String fileNum = '';
-        if(i < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-          fileNum = 'p00${i}';
-        }
-        else if(i < 100){
-          fileNum = 'p0${i}';
-        }
-        else{
-          fileNum = 'p${i}';
-        }
-        mapPerson[i]['name'] = mapPerson[i+1]['name'];
-        mapPerson[i]['gender'] = mapPerson[i+1]['gender'];
-        mapPerson[i]['uemYang'] = mapPerson[i+1]['uemYang'];
-        mapPerson[i]['birthYear'] = mapPerson[i+1]['birthYear'];
-        mapPerson[i]['birthMonth'] = mapPerson[i+1]['birthMonth'];
-        mapPerson[i]['birthDay'] = mapPerson[i+1]['birthDay'];
-        mapPerson[i]['birthHour'] = mapPerson[i+1]['birthHour'];
-        mapPerson[i]['birthMin'] = mapPerson[i+1]['birthMin'];
-        mapPerson[i]['saveDate'] = mapPerson[i+1]['saveDate'];
-        mapPerson[i]['memo'] = mapPerson[i+1]['memo'];
-        mapPerson[i]['mark'] = mapPerson[i+1]['mark'];
-        //mapPerson[i] = mapPerson[i+1];
-        try{
-         await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'name': mapPerson[i+1]['name'], 'gender':mapPerson[i+1]['gender'], 'uemYang': mapPerson[i+1]['uemYang'],
-           'birthYear':mapPerson[i+1]['birthYear'], 'birthMonth':mapPerson[i+1]['birthMonth'],'birthDay':mapPerson[i+1]['birthDay'], 'birthHour':mapPerson[i+1]['birthHour'],
-           'birthMin':mapPerson[i+1]['birthMin'], 'saveDate':mapPerson[i+1]['saveDate'], 'memo':mapPerson[i+1]['memo'], 'mark':mapPerson[i+1]['mark']}));
-        }catch(e){return {};}
-      }
-      String fileNum = '';
-      if(mapPerson.length < 11){
-        fileNum = 'p00${mapPerson.length - 1}';
-      }
-      else if(mapPerson.length < 101){
-        fileNum = 'p0${mapPerson.length - 1}';
-      }
-      else{
-        fileNum = 'p${mapPerson.length - 1}';
-      }
+  //명식을 삭제할 때 사용2 - mapPerson에서 명식을 삭제
+  DeletePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate) {
 
-      File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-      mapPerson.removeLast();
-    }
-
-    SortPersonFromMark();
+    mapPerson.removeAt(FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate));
+    SavePersonFile();
 
     snackBar('명식이 삭제되었습니다');
   }
 
-  //명식의 메모를 최초, 또는 수정하여 저장할 때 사용
-  SavePersonDataMemo(String saveDataNum, String memo) async {
-    int index;
-    if(saveDataNum == ''){
-      index = mapPerson.length - 1;
-    }
-    else{
-      index = int.parse(saveDataNum.substring(1,4));
+  //mapPerson에서 해당 인덱스 찾기
+  int FindMapPersonIndex(String name, int birthData, DateTime saveDate){
+    for(int i = 0; i < mapPerson.length; i++){
+      if(mapPerson[i]['birthData'] == birthData){
+        if(mapPerson[i]['name'] == name && mapPerson[i]['saveDate'] == saveDate){
+          return i;
+        }
+      }
     }
 
-    if(mapPerson[index]['memo'] != memo){
+    return -1;
+  }
+
+  //명식의 메모를 수정하여 저장할 때 사용
+  SavePersonDataMemo2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo){
+    int personIndex = FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate);
+
+    if(mapPerson[personIndex]['memo'] != memo){
+      mapPerson[personIndex]['memo'] = memo;
+      SavePersonFile();
       WidgetsBinding.instance!.addPostFrameCallback((_){
         snackBar('메모가 저장되었습니다');
       });
     }
-
-    mapPerson[index]['memo'] = memo;
-
-    UpdatePersonDataFromMap(index);
   }
 
-  //명식을 즐겨찾기 하거나 해제하여 저장할 때 사용
-  SavePersonMark(String saveDataNum) async {
-    int index = 0;
-    if(saveDataNum != '') {
-      index = int.parse(saveDataNum.substring(1, 4));
-    }
-    else{
-      index = mapPerson.length - 1;
-    }
+  //명식의 정보를 수정하여 저장
+  SaveEditedPersonData2(String prevName, bool prevGender, int prevUemYang, int prevBirthYear, int prevBirthMonth, int prevBirthDay, int prevBirthHour, int prevBirthMin, DateTime saveDate, String nowName,
+      bool nowGender, int nowUemYang, int nowBirthYear, int nowBirthMonth, int nowBirthDay, int nowBirthHour, int nowBirthMin){
 
-    if(mapPerson[index]['mark'] == true){
-      mapPerson[index]['mark'] = false;
-      snackBar('즐겨찾기가 해제 되었습니다');
-    }
-    else{
-      mapPerson[index]['mark'] = true;
-      snackBar('즐겨찾기 되었습니다');
-    }
+    int personIndex = FindMapPersonIndex(prevName, ConvertToBirthData(prevGender, prevUemYang, prevBirthYear, prevBirthMonth, prevBirthDay, prevBirthHour, prevBirthMin), saveDate);
+    mapPerson[personIndex]['name'] = nowName;
+    mapPerson[personIndex]['birthData'] = ConvertToBirthData(nowGender, nowUemYang, nowBirthYear, nowBirthMonth, nowBirthDay, nowBirthHour, nowBirthMin);
 
-    UpdatePersonDataFromMap(index);
+    SavePersonFile();
+
+    snackBar('명식이 수정되었습니다');
   }
 
-  //명식의 정보를 수정하여 저장할 때 사용
-  SaveEditedPersonData(String saveDataNum, String name, bool genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) async{
-  int index = int.parse(saveDataNum.substring(1,4));
-
-  mapPerson[index]['name'] = name;
-  mapPerson[index]['gender'] = genderString;
-  mapPerson[index]['uemYang'] = uemYang;
-  mapPerson[index]['birthYear'] = birthYear;
-  mapPerson[index]['birthMonth'] = birthMonth;
-  mapPerson[index]['birthDay'] = birthDay;
-  mapPerson[index]['birthHour'] = birthHour;
-  mapPerson[index]['birthMin'] = birthMin;
-
-  UpdatePersonDataFromMap(index);
-
-  snackBar('명식이 수정되었습니다');
-}
-
-  //명식의 내용을 수정하여 저장한 후 map에 업데이트 함
-  UpdatePersonDataFromMap(int index) async{
-    SortPersonFromMark();
-
-    String fileNum = '';
-    if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
-      fileNum = 'p00${index}';
+  //명식의 출생 정보를 선택하여 반환
+  GetSelectedBirthData(String type, int index){
+    switch(type){
+      case 'gender':{
+        if(((mapPerson[index]['birthData'] / 10000000000000) % 10).floor() == 1){
+          return true;
+        } else {
+          return false;
+        }
+      }
+      case 'uemYang':{
+        return ((mapPerson[index]['birthData'] / 1000000000000) % 10).floor();
+      }
+      case 'birthYear':{
+        return ((mapPerson[index]['birthData'] / 100000000) % 10000).floor();
+      }
+      case 'birthMonth':{
+        return ((mapPerson[index]['birthData'] / 1000000 ) % 100).floor();
+      }
+      case 'birthDay':{
+        return ((mapPerson[index]['birthData'] / 10000 ) % 100).floor();
+      }
+      case 'birthHour':{
+        return ((mapPerson[index]['birthData'] / 100 ) % 100).floor();
+      }
+      case 'birthMin':{
+        return mapPerson[index]['birthData'] % 100;
+      }
     }
-    else if(index < 100){
-      fileNum = 'p0${index}';
-    }
-    else{
-      fileNum = 'p${index}';
-    }
-    try{
-      //File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);  //원래 있던 파일을 삭제하고
-
-      //final file = await CreateSaveFile(fileNum); //같은 파일 이름으로 새로 생성한다
-
-      final file = File('${fileDirPath}/${fileNum}');
-
-      await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapPerson[index]['name'], 'gender':mapPerson[index]['gender'], 'uemYang': mapPerson[index]['uemYang'],
-        'birthYear':mapPerson[index]['birthYear'], 'birthMonth':mapPerson[index]['birthMonth'],'birthDay':mapPerson[index]['birthDay'], 'birthHour':mapPerson[index]['birthHour'],
-        'birthMin':mapPerson[index]['birthMin'], 'saveDate':mapPerson[index]['saveDate'], 'memo':mapPerson[index]['memo'], 'mark':mapPerson[index]['mark']}));
-
-    }catch(e){return {};} //내용을 덮어쓴다
   }
 
   //최근 명식 저장
-  Future<void> SaveRecentPersonData(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo) async {
-  bool gender = true;
-  if(genderString == '여'){
-    gender = false;
-  }
+  SaveRecentPersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) {
+  int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
 
-  bool isSameData = false;
-  int sameDataCheckCount = 9;
-  if((mapRecentPerson.length - 1) < sameDataCheckCount){
-    sameDataCheckCount = (mapRecentPerson.length - 1);
-  }
-  for(int i = 0; i < sameDataCheckCount; i++){
-    if(mapRecentPerson.isNotEmpty && mapRecentPerson[i]['gender'] == gender && mapRecentPerson[i]['uemYang'] == uemYang && mapRecentPerson[i]['birthYear'] == birthYear && mapRecentPerson[i]['birthMonth'] == birthMonth && mapRecentPerson[i]['birthDay'] == birthDay && mapRecentPerson[i]['birthHour'] == birthHour && mapRecentPerson[i]['birthMin'] == birthMin){
-      isSameData = true;
-    }
-  }
-  if(isSameData == true){
-    return;
-  }
+  Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now()};
+  mapRecentPerson.insert(0, personData);
 
-  int count = min(mapRecentPerson.length, recentDataLimitCount) - 1;
-  String fileNum = '';
-  if(count > 0){
-    for(int i = count; i > -1; i--){
-      if(i < 9){  //최근 목록은 l로 시작
-        fileNum = 'l00${i+1}';
-      }
-      else if(i < recentDataLimitCount){
-        fileNum = 'l0${i+1}';
-      }
-      final file = await CreateSaveFile(fileNum);
-
-      await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapRecentPerson[i]['name'], 'gender':mapRecentPerson[i]['gender'], 'uemYang': mapRecentPerson[i]['uemYang'],
-        'birthYear':mapRecentPerson[i]['birthYear'], 'birthMonth':mapRecentPerson[i]['birthMonth'], 'birthDay':mapRecentPerson[i]['birthDay'], 'birthHour':mapRecentPerson[i]['birthHour'],
-        'birthMin':mapRecentPerson[i]['birthMin'], 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
+  while(true){
+    if(mapRecentPerson.length > recentDataLimitCount){
+      mapRecentPerson.removeLast();
+    } else {
+      break;
     }
   }
 
-  count = mapRecentPerson.length;
-  fileNum = 'l000';
-  final file = await CreateSaveFile(fileNum);
+  SaveRecentPersonFile();
+}
 
-  await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
-    'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':memo, 'mark':false}));
-
-  mapRecentPerson.insert(0, jsonDecode(await file.readAsString()));
-  if(mapRecentPerson.length > recentDataLimitCount){
-    mapRecentPerson.removeLast();
+  //최근 명식의 출생 정보를 선택하여 반환
+  GetSelectedRecentBirthData(String type, int index){
+  switch(type){
+    case 'gender':{
+      if(((mapRecentPerson[index]['birthData'] / 10000000000000) % 10).floor() == 1){
+        return true;
+      } else {
+        return false;
+      }
+    }
+    case 'uemYang':{
+      return ((mapRecentPerson[index]['birthData'] / 1000000000000) % 10).floor();
+    }
+    case 'birthYear':{
+      return ((mapRecentPerson[index]['birthData'] / 100000000) % 10000).floor();
+    }
+    case 'birthMonth':{
+      return ((mapRecentPerson[index]['birthData'] / 1000000 ) % 100).floor();
+    }
+    case 'birthDay':{
+      return ((mapRecentPerson[index]['birthData'] / 10000 ) % 100).floor();
+    }
+    case 'birthHour':{
+      return ((mapRecentPerson[index]['birthData'] / 100 ) % 100).floor();
+    }
+    case 'birthMin':{
+      return mapRecentPerson[index]['birthData'] % 10;
+    }
   }
+}
+
+  //최근 명식을 json파일로 저장
+  Future<void> SaveRecentPersonFile() async {
+  String jsonString = '';
+
+  for(int i = 0; i < mapRecentPerson.length; i++){
+    jsonString = jsonString + mapRecentPerson[i]['name'] + '{{' + mapRecentPerson[i]['birthData'].toString() + '{{' + mapRecentPerson[i]['saveDate'].toString() + '{{';
+  }
+
+  final file = await CreateSaveFile('recentPersonData');
+
+  await file.writeAsString(jsonEncode(jsonString));
 }
 
   //일진일기를 최초 저장할 때 사용
@@ -668,3 +800,278 @@ late var snackBar;
 
     snackBar('일기가 삭제되었습니다');
   }
+
+
+
+  /*
+
+
+Future<void> SaveRecentPersonData(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo) async {
+  bool gender = true;
+  if(genderString == '여'){
+    gender = false;
+  }
+
+  bool isSameData = false;
+  int sameDataCheckCount = 9;
+  if((mapRecentPerson.length - 1) < sameDataCheckCount){
+    sameDataCheckCount = (mapRecentPerson.length - 1);
+  }
+  for(int i = 0; i < sameDataCheckCount; i++){
+    if(mapRecentPerson.isNotEmpty && mapRecentPerson[i]['gender'] == gender && mapRecentPerson[i]['uemYang'] == uemYang && mapRecentPerson[i]['birthYear'] == birthYear && mapRecentPerson[i]['birthMonth'] == birthMonth && mapRecentPerson[i]['birthDay'] == birthDay && mapRecentPerson[i]['birthHour'] == birthHour && mapRecentPerson[i]['birthMin'] == birthMin){
+      isSameData = true;
+    }
+  }
+  if(isSameData == true){
+    return;
+  }
+
+  int count = min(mapRecentPerson.length, recentDataLimitCount) - 1;
+  String fileNum = '';
+  if(count > 0){
+    for(int i = count; i > -1; i--){
+      if(i < 9){  //최근 목록은 l로 시작
+        fileNum = 'l00${i+1}';
+      }
+      else if(i < recentDataLimitCount){
+        fileNum = 'l0${i+1}';
+      }
+      final file = await CreateSaveFile(fileNum);
+
+      await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapRecentPerson[i]['name'], 'gender':mapRecentPerson[i]['gender'], 'uemYang': mapRecentPerson[i]['uemYang'],
+        'birthYear':mapRecentPerson[i]['birthYear'], 'birthMonth':mapRecentPerson[i]['birthMonth'], 'birthDay':mapRecentPerson[i]['birthDay'], 'birthHour':mapRecentPerson[i]['birthHour'],
+        'birthMin':mapRecentPerson[i]['birthMin'], 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
+    }
+  }
+
+  count = mapRecentPerson.length;
+  fileNum = 'l000';
+  final file = await CreateSaveFile(fileNum);
+
+  await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
+    'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':memo, 'mark':false}));
+
+  mapRecentPerson.insert(0, jsonDecode(await file.readAsString()));
+  if(mapRecentPerson.length > recentDataLimitCount){
+    mapRecentPerson.removeLast();
+  }
+}
+
+
+
+
+
+  //명식의 내용을 수정하여 저장한 후 map에 업데이트 함
+  //UpdatePersonDataFromMap(int index) async{
+  //  //SortPersonFromMark();
+//
+  //  String fileNum = '';
+  //  if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+  //    fileNum = 'p00${index}';
+  //  }
+  //  else if(index < 100){
+  //    fileNum = 'p0${index}';
+  //  }
+  //  else{
+  //    fileNum = 'p${index}';
+  //  }
+  //  try{
+  //    //File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);  //원래 있던 파일을 삭제하고
+//
+  //    //final file = await CreateSaveFile(fileNum); //같은 파일 이름으로 새로 생성한다
+//
+  //    final file = File('${fileDirPath}/${fileNum}');
+//
+  //    await file.writeAsString(jsonEncode({'num':fileNum, 'name': mapPerson[index]['name'], 'gender':mapPerson[index]['gender'], 'uemYang': mapPerson[index]['uemYang'],
+  //      'birthYear':mapPerson[index]['birthYear'], 'birthMonth':mapPerson[index]['birthMonth'],'birthDay':mapPerson[index]['birthDay'], 'birthHour':mapPerson[index]['birthHour'],
+  //      'birthMin':mapPerson[index]['birthMin'], 'saveDate':mapPerson[index]['saveDate'], 'memo':mapPerson[index]['memo'], 'mark':mapPerson[index]['mark']}));
+//
+  //  }catch(e){return {};} //내용을 덮어쓴다
+  //}
+
+  //---------------여기부터 최근 명식
+  //최근 명식 저장
+
+
+  //명식을 즐겨찾기 하거나 해제하여 저장할 때 사용
+  //SavePersonMark(String saveDataNum) async {
+  //  int index = 0;
+  //  if(saveDataNum != '') {
+  //    index = int.parse(saveDataNum.substring(1, 4));
+  //  }
+  //  else{
+  //    index = mapPerson.length - 1;
+  //  }
+//
+  //  if(mapPerson[index]['mark'] == true){
+  //    mapPerson[index]['mark'] = false;
+  //    snackBar('즐겨찾기가 해제 되었습니다');
+  //  }
+  //  else{
+  //    mapPerson[index]['mark'] = true;
+  //    snackBar('즐겨찾기 되었습니다');
+  //  }
+//
+  //  UpdatePersonDataFromMap(index);
+  //}
+
+  //명식의 정보를 수정하여 저장할 때 사용
+  SaveEditedPersonData(String saveDataNum, String name, bool genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) async{
+  int index = int.parse(saveDataNum.substring(1,4));
+
+  mapPerson[index]['name'] = name;
+  mapPerson[index]['gender'] = genderString;
+  mapPerson[index]['uemYang'] = uemYang;
+  mapPerson[index]['birthYear'] = birthYear;
+  mapPerson[index]['birthMonth'] = birthMonth;
+  mapPerson[index]['birthDay'] = birthDay;
+  mapPerson[index]['birthHour'] = birthHour;
+  mapPerson[index]['birthMin'] = birthMin;
+
+  UpdatePersonDataFromMap(index);
+
+  snackBar('명식이 수정되었습니다');
+}
+
+
+  Future<void> SavePersonData(String name, String genderString, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) async {
+
+    bool gender = true;
+    if(genderString == '여'){
+      gender = false;
+    }
+
+      int count = mapPerson.length;
+      String fileNum = '';
+      if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+        fileNum = 'p00${count}';
+      }
+      else if(count < 100){
+        fileNum = 'p0${count}';
+      }
+      else{
+        fileNum = 'p${count}';
+      }
+      final file = await CreateSaveFile(fileNum);
+
+      await file.writeAsString(jsonEncode({'num':fileNum, 'name': name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
+        'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'saveDate':DateTime.now().toString(), 'memo':'', 'mark':false}));
+
+      mapPerson.add(jsonDecode(await file.readAsString()));
+      //SortPersonFromMark();
+    snackBar('명식이 저장되었습니다');
+  }
+
+    Future<void> SaveGroupData(List<Map> groupData) async{
+    int count = listMapGroup.length;
+    String fileNum = '';
+    if(count < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+      fileNum = 'g00${count}';
+    }
+    else if(count < 100){
+      fileNum = 'g0${count}';
+    }
+    else{
+      fileNum = 'g${count}';
+    }
+    final file = await CreateSaveFile(fileNum);
+    await file.writeAsString(jsonEncode(groupData));
+
+    listMapGroup.add(jsonDecode(await file.readAsString()));
+    //SortGroupFromMark();
+    snackBar('단체 명식이 저장되었습니다');
+  }
+
+
+  //명식을 삭제할 때 사용
+  DeletePersonData(String num) async {
+    int index = int.parse(num.substring(1,4));
+    if(index == mapPerson.length-1){  //map의 마지막 파일이면
+      String fileNum = '';
+      if(index < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+        fileNum = 'p00${index}';
+      }
+      else if(index < 100){
+        fileNum = 'p0${index}';
+      }
+      else{
+        fileNum = 'p${index}';
+      }
+      File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
+      mapPerson.removeLast();
+    }
+    else{
+      for(int i = index; i < mapPerson.length-1; i++){
+        String fileNum = '';
+        if(i < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
+          fileNum = 'p00${i}';
+        }
+        else if(i < 100){
+          fileNum = 'p0${i}';
+        }
+        else{
+          fileNum = 'p${i}';
+        }
+        mapPerson[i]['name'] = mapPerson[i+1]['name'];
+        mapPerson[i]['gender'] = mapPerson[i+1]['gender'];
+        mapPerson[i]['uemYang'] = mapPerson[i+1]['uemYang'];
+        mapPerson[i]['birthYear'] = mapPerson[i+1]['birthYear'];
+        mapPerson[i]['birthMonth'] = mapPerson[i+1]['birthMonth'];
+        mapPerson[i]['birthDay'] = mapPerson[i+1]['birthDay'];
+        mapPerson[i]['birthHour'] = mapPerson[i+1]['birthHour'];
+        mapPerson[i]['birthMin'] = mapPerson[i+1]['birthMin'];
+        mapPerson[i]['saveDate'] = mapPerson[i+1]['saveDate'];
+        mapPerson[i]['memo'] = mapPerson[i+1]['memo'];
+        mapPerson[i]['mark'] = mapPerson[i+1]['mark'];
+        //mapPerson[i] = mapPerson[i+1];
+        try{
+         await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'name': mapPerson[i+1]['name'], 'gender':mapPerson[i+1]['gender'], 'uemYang': mapPerson[i+1]['uemYang'],
+           'birthYear':mapPerson[i+1]['birthYear'], 'birthMonth':mapPerson[i+1]['birthMonth'],'birthDay':mapPerson[i+1]['birthDay'], 'birthHour':mapPerson[i+1]['birthHour'],
+           'birthMin':mapPerson[i+1]['birthMin'], 'saveDate':mapPerson[i+1]['saveDate'], 'memo':mapPerson[i+1]['memo'], 'mark':mapPerson[i+1]['mark']}));
+        }catch(e){return {};}
+      }
+      String fileNum = '';
+      if(mapPerson.length < 11){
+        fileNum = 'p00${mapPerson.length - 1}';
+      }
+      else if(mapPerson.length < 101){
+        fileNum = 'p0${mapPerson.length - 1}';
+      }
+      else{
+        fileNum = 'p${mapPerson.length - 1}';
+      }
+
+      File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
+      mapPerson.removeLast();
+    }
+
+    //SortPersonFromMark();
+
+    snackBar('명식이 삭제되었습니다');
+  }
+
+
+    //명식의 메모를 최초, 또는 수정하여 저장할 때 사용
+  SavePersonDataMemo(String saveDataNum, String memo) async {
+
+    int index;
+    if(saveDataNum == ''){
+      index = mapPerson.length - 1;
+    }
+    else{
+      index = int.parse(saveDataNum.substring(1,4));
+    }
+
+    if(mapPerson[index]['memo'] != memo){
+      WidgetsBinding.instance!.addPostFrameCallback((_){
+        snackBar('메모가 저장되었습니다');
+      });
+    }
+
+    mapPerson[index]['memo'] = memo;
+
+    //UpdatePersonDataFromMap(index);
+  }
+
+
+   */

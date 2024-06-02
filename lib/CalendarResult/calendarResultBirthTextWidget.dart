@@ -83,7 +83,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   Text GetBirthTimeText() {
     String birthTimeText = '';
 
-    if (widget.birthHour == -2) {
+    if (widget.birthHour == 30) {
       birthTimeText = '시간 모름';
       return Text(birthTimeText, style: textStyle);
     } else {
@@ -123,6 +123,92 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       }
     }
     return nameText;
+  }
+
+  ChangePersonName(){
+    if(nameText == '이름 없음'){
+      nameTextController.text = '';
+    } else {
+      nameTextController.text = nameText;
+    }
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.center,
+        //title: Text('성별을 선택해 주세요'),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: nameTextController,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
+                maxLength: 10,
+                cursorColor: style.colorBlack,
+                autofocus: true,
+                onEditingComplete: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    nameText = nameTextController.text;
+                    widget.setTargetName(nameText);
+                  });
+                },
+                decoration: InputDecoration(
+                  labelText: '이름을 수정합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                  hintText: '이름 없음', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                  counterText:'',
+                  focusedBorder:UnderlineInputBorder(
+                    borderSide: BorderSide(width:2, color:style.colorDarkGrey),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                nameText = nameTextController.text;
+                widget.setTargetName(nameText);
+              });
+            },
+            child: Text('저장'),
+          ),
+          ElevatedButton(
+              style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소')),
+        ],
+      ),
+    );
+  }
+
+  TextButton GetGenderTextButtonWidget(){
+    String genderString = '';
+    Text genderTextWidget;
+    if(((personalDataManager.etcData % 10000) / 1000).floor() != 1 && isShowPersonalName == false){
+      if(widget.gender == '남'){
+        genderString = '남성 ';
+      } else {
+        genderString = '여성 ';
+      }
+      genderTextWidget = Text(genderString, style: textStyle);
+    } else {
+      genderString = '(${widget.gender}) ';
+      genderTextWidget = Text(genderString, style: textStyle);
+    }
+
+    return TextButton(
+        onPressed: (){
+          ChangePersonName();
+        },
+        style: TextButton.styleFrom(padding: EdgeInsets.all(0), minimumSize: Size(0, 20)),
+        child: genderTextWidget);
   }
 
   Text GetGenderTextWidget(){
@@ -228,71 +314,12 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                     height: 20,
                     child: TextButton(
                         onPressed: (){
-                          if(nameText == '이름 없음'){
-                            nameTextController.text = '';
-                          } else {
-                            nameTextController.text = nameText;
-                          }
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              actionsAlignment: MainAxisAlignment.center,
-                              //title: Text('성별을 선택해 주세요'),
-                              content: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: nameTextController,
-                                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
-                                      maxLength: 10,
-                                      cursorColor: style.colorBlack,
-                                      autofocus: true,
-                                      onEditingComplete: () {
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          nameText = nameTextController.text;
-                                          widget.setTargetName(nameText);
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        labelText: '이름을 수정합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
-                                        hintText: '이름 없음', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
-                                        counterText:'',
-                                        focusedBorder:UnderlineInputBorder(
-                                          borderSide: BorderSide(width:2, color:style.colorDarkGrey),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
-                              actions: [
-                                ElevatedButton(
-                                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      nameText = nameTextController.text;
-                                      widget.setTargetName(nameText);
-                                    });
-                                  },
-                                  child: Text('저장'),
-                                ),
-                                ElevatedButton(
-                                    style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: Text('취소')),
-                              ],
-                            ),
-                          );
+                          ChangePersonName();
                         },
                         style: TextButton.styleFrom(padding: EdgeInsets.all(0), minimumSize: Size(0, 20)),
                         child: Text(GetName(), style: textStyle)),
                   ),
-                  GetGenderTextWidget(),
+                  GetGenderTextButtonWidget(),
                   Text('${GetOld()} ', style: textStyle),
                 ],
               ),

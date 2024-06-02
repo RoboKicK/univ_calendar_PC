@@ -261,7 +261,7 @@ class Jijanggan{  //지장간 계산해주는 클래스
     listCheonganYugchin.add(GetJijangganString(_listPaljaData[1], _listPaljaData[4], isAllShow));
     listCheonganYugchin.add(GetJijangganString(_listPaljaData[3], _listPaljaData[4], isAllShow));
     listCheonganYugchin.add(GetJijangganString(_listPaljaData[5], _listPaljaData[4], isAllShow));
-    if(_listPaljaData[7] != -2){
+    if(_listPaljaData[7] != 30){
       listCheonganYugchin.add(GetJijangganString(_listPaljaData[7], _listPaljaData[4], isAllShow));
     }
     else{

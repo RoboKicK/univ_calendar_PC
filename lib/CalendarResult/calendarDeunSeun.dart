@@ -379,14 +379,6 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
                 SetDeunButtonSelectColor(deunNum);
                 if(personalDataManager.deunSeunData % 10 != 1) {
                   widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-
-                  //if(isAddDeunToPalja == true && deunNum == nowDeunNum0){
-                  //  widget.setPersonPaljaData(widget.personNum, true, [-2,-2]);
-                  //  isAddDeunToPalja = false;
-                  //} else {
-                  //  widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);//[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                  //  isAddDeunToPalja = true;
-                  //}
                 }
                 nowDeunNum0 = deunNum;
                 SetSeun();
@@ -709,21 +701,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               onPressed: () {
                 SetSeunButtonSelectColor(seunNum);
                 if(personalDataManager.deunSeunData % 10 != 1) {
-                  //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
                   widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
-
-                  //if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-                  //  widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-                  //  isAddSeunToPalja = false;
-                  //} else { //아니면 간지 추가
-                  //  if (isAddDeunToPalja == false) {
-                  //    widget.setPersonPaljaData(
-                  //        widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                  //    isAddDeunToPalja = true;
-                  //  }
-                  //  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-                  //  isAddSeunToPalja = true;
-                  //}
                 }
                 nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
                 setState(() {
@@ -753,18 +731,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               onPressed: () {
                 SetSeunButtonSelectColor(seunNum);
                 if(personalDataManager.deunSeunData % 10 != 1) {
-                  if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-                    widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-                    isAddSeunToPalja = false;
-                  } else { //아니면 간지 추가
-                    if (isAddDeunToPalja == false) {
-                      widget.setPersonPaljaData(
-                          widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                      isAddDeunToPalja = true;
-                    }
-                    widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-                    isAddSeunToPalja = true;
-                  }
+                  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
                 }
                 nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
                 setState(() {
@@ -788,7 +755,6 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               onPressed: () {
                 SetSeunButtonSelectColor(seunNum);
                 if(personalDataManager.deunSeunData % 10 != 1) {
-                  //widget.setPersonPaljaData(widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]);
                   widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
                 }
                 nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
@@ -818,18 +784,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               onPressed: () {
                 SetSeunButtonSelectColor(seunNum);
                 if(personalDataManager.deunSeunData % 10 != 1) {
-                  if(isAddSeunToPalja == true && seunNum == nowSeunNum0){ //이미 선택된 세운 누르면 취소
-                    widget.setPersonPaljaData(widget.personNum, false, [-2,-2]);
-                    isAddSeunToPalja = false;
-                  } else { //아니면 간지 추가
-                    if (isAddDeunToPalja == false) {
-                      widget.setPersonPaljaData(
-                          widget.personNum, true, [listDeunCheongan0[nowDeunNum0], listDeunJiji0[nowDeunNum0]]); //[listDeunCheongan0[deunNum], listDeunJiji0[deunNum]]);
-                      isAddDeunToPalja = true;
-                    }
-                    widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]]);
-                    isAddSeunToPalja = true;
-                  }
+                  widget.setPersonPaljaData(widget.personNum, false, [listSeunCheongan0[seunNum], listSeunJiji0[seunNum]], AddDeunCheongan:listDeunCheongan0[nowDeunNum0], AddDeunJiji:listDeunJiji0[nowDeunNum0]);
                 }
                 nowSeunYear = (nowDeunNum0 * 10) + deunStart0 - 1 + seunNum + widget.birthYear0;
                 setState(() {
@@ -2283,7 +2238,6 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               GetSeunGanjiBoxAndText(2, true),
               GetSeunGanjiBoxAndText(1, true),
               GetSeunGanjiBoxAndText(0, true),
-
             ],
           ),
         ),
@@ -2317,7 +2271,6 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               GetSeunGanjiBoxAndText(2, false),
               GetSeunGanjiBoxAndText(1, false),
               GetSeunGanjiBoxAndText(0, false),
-
             ],
           ),
         ),
@@ -2402,7 +2355,7 @@ class DeunFindClass{
     int nowOld = targetYear - birthYear + 1;
 
     if(deunStart > nowOld){
-      listDeun.add(-2);listDeun.add(-2);// = [-2,-2];
+      listDeun.add(30);listDeun.add(30);// = [-2,-2];
       return listDeun;
     } else {
       int count = 0;

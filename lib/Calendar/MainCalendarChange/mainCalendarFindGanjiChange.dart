@@ -98,16 +98,16 @@ class MainCalendarFindGanjiChange{
       int seasonEndHour = ((seasonEndData % 10000) / 100).floor();
       int seasonEndMin = seasonEndData % 100;
 
-      List<int> guessPalja = findGanji.InquireGanji(seasonStartYear, seasonStartMonth, seasonStartDay, -2, -2); //절기 시작 팔자에서부터 비교하여 찾아낸다
+      List<int> guessPalja = findGanji.InquireGanji(seasonStartYear, seasonStartMonth, seasonStartDay, 30, 30); //절기 시작 팔자에서부터 비교하여 찾아낸다
 
       disYearCheongan = (listPalja[3] - guessPalja[4] + style.stringCheongan[0].length) % style.stringCheongan[0].length; //일간의 차이를 구함
       nowJiji = startJiji + disYearCheongan;  //일간의 차이만큼 지지를 뺌
 
-      int finalYear = -2,
-          finalMonth = -2,
-          finalDay = -2,
-          finalHour = -2,
-          finalMin = -2;  //최종 날짜
+      int finalYear = 30,
+          finalMonth = 30,
+          finalDay = 30,
+          finalHour = 30,
+          finalMin = 30;  //최종 날짜
 
       int solNday = 0;
 
@@ -123,7 +123,7 @@ class MainCalendarFindGanjiChange{
             finalYear = seasonStartYear;
             finalMonth = seasonStartMonth;
             if (((10 * i) + seasonStartDay + nowJiji) == seasonStartDay) { //절기 당일이면 절입시간까지 검사
-              if (listPalja[5] == -2) { //시간 모름이면
+              if (listPalja[5] == 30) { //시간 모름이면
                 finalDay = nowJiji + (10 * i) + seasonStartDay;
               }
               else { //시지를 정했으면
@@ -134,13 +134,13 @@ class MainCalendarFindGanjiChange{
                   finalMin = 29;
                 }
                 else { //절입시간 이전으로 시간을 선택했으면
-                  finalDay = -2;
+                  finalDay = 30;
                 }
               }
             }
             else { //절기 당일이 아니면 날짜와 시지 정함
               finalDay = nowJiji + (10 * i) + seasonStartDay;
-              if(listPalja[5] != -2){
+              if(listPalja[5] != 30){
                 finalHour = (listPalja[5] * 2);
                 finalMin = 30;
               }
@@ -151,7 +151,7 @@ class MainCalendarFindGanjiChange{
             finalYear = seasonEndYear;
             finalMonth = seasonEndMonth;
             if ((((10 * i) + seasonStartDay + nowJiji) % solNday) == seasonEndDay) { //다음 절기 당일이면 절입시간까지 검사
-              if (listPalja[5] == -2) { //시간 모름이면
+              if (listPalja[5] == 30) { //시간 모름이면
                 finalDay = ((10 * i) + seasonStartDay + nowJiji) % solNday;
               }
               else { //시지를 정했으면
@@ -181,13 +181,13 @@ class MainCalendarFindGanjiChange{
                   }
                 }
                 else { //절입시간 이후로 시간을 선택했으면
-                  finalDay = -2;
+                  finalDay = 30;
                 }
               }
             }
             else { //다음 절기 당일이 아니면 날짜와 시지 입력
               finalDay = (nowJiji + (10 * i) + seasonStartDay) % solNday;
-              if(listPalja[5] != -2){
+              if(listPalja[5] != 30){
                 finalHour = (listPalja[5] * 2);
                 finalMin = 30;
               }
@@ -196,7 +196,7 @@ class MainCalendarFindGanjiChange{
         }
       }
 
-      if(finalDay != -2){
+      if(finalDay != 30){
         listGanjiDay.add([finalYear, finalMonth, finalDay, finalHour, finalMin]);
       }
     }

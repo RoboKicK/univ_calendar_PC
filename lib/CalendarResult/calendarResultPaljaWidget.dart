@@ -43,7 +43,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   bool isSpriteTheme = false;
 
   Container GetPlajaBox(int paljaNum, int paljaIndex){
-    if(paljaNum != -2){
+    if(paljaNum != 30){
       if(paljaIndex == 6 || paljaIndex == 0){
         return  Container(  //시간
           width: paljaBoxSize,
@@ -145,7 +145,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     }
   }
   Container GetPlajaBoxWithSprite(int paljaNum, int paljaIndex){
-    if(paljaNum != -2){
+    if(paljaNum != 30){
       if(paljaIndex == 6 || paljaIndex == 0){
         return  Container(  //시간
           width: paljaBoxSize,
@@ -673,13 +673,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     for(int i = 0; i < 8; i++){ //오행 박스와 텍스트 컬러, 텍스트 초기화
       if(i % 2 == 0){ //천간이면
         listOhengBoxColor0[i] = style.SetOhengColor(true, widget.listPaljaData[i]);
-        if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == -2){
+        if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == 30){
           listOhengTextColor0[i] = style.colorBlack;
         }
         else{
           listOhengTextColor0[i] = Colors.white;
         }
-        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+        if(widget.listPaljaData[i] != 30){  //시간모름 아니면
           listOhengText0[i] = style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
         }
         else{ //시간모름이면
@@ -688,13 +688,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       }
       else{ //지지면
         listOhengBoxColor0[i] = style.SetOhengColor(false, widget.listPaljaData[i]);
-        if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == -2){
+        if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == 30){
           listOhengTextColor0[i] = style.colorBlack;
         }
         else{
           listOhengTextColor0[i] = Colors.white;
         }
-        if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+        if(widget.listPaljaData[i] != 30){  //시간모름 아니면
           listOhengText0[i] = style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
         }
         else{ //시간모름이면
@@ -708,13 +708,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       while(widget.listPaljaData.length > listOhengBoxColor0.length){
         if(i % 2 == 0){ //천간이면
           listOhengBoxColor0.add(style.SetOhengColor(true, widget.listPaljaData[i]));
-          if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == -2){
+          if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == 30){
             listOhengTextColor0.add(style.colorBlack);
           }
           else{
             listOhengTextColor0.add(Colors.white);
           }
-          if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          if(widget.listPaljaData[i] != 30){  //시간모름 아니면
             listOhengText0.add(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]]);
           }
           else{ //시간모름이면
@@ -723,13 +723,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         }
         else{ //지지면
           listOhengBoxColor0.add(style.SetOhengColor(false, widget.listPaljaData[i]));
-          if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == -2){
+          if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == 30){
             listOhengTextColor0.add(style.colorBlack);
           }
           else{
             listOhengTextColor0.add(Colors.white);
           }
-          if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          if(widget.listPaljaData[i] != 30){  //시간모름 아니면
             listOhengText0.add(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]]);
           }
           else{ //시간모름이면
@@ -749,13 +749,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       while(i < listOhengBoxColor0.length){
         if(i % 2 == 0){ //천간이면
           listOhengBoxColor0[i] = style.SetOhengColor(true, widget.listPaljaData[i]);
-          if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == -2){
+          if(widget.listPaljaData[i] == 6 || widget.listPaljaData[i] == 7 || widget.listPaljaData[i] == 30){
             listOhengTextColor0[i] = style.colorBlack;
           }
           else{
             listOhengTextColor0[i] = Colors.white;
           }
-          if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          if(widget.listPaljaData[i] != 30){  //시간모름 아니면
             listOhengText0[i] = style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
           }
           else{ //시간모름이면
@@ -764,13 +764,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         }
         else{ //지지면
           listOhengBoxColor0[i] = style.SetOhengColor(false, widget.listPaljaData[i]);
-          if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == -2){
+          if(widget.listPaljaData[i] == 8 || widget.listPaljaData[i] == 9 || widget.listPaljaData[i] == 30){
             listOhengTextColor0[i] = style.colorBlack;
           }
           else{
             listOhengTextColor0[i] = Colors.white;
           }
-          if(widget.listPaljaData[i] != -2){  //시간모름 아니면
+          if(widget.listPaljaData[i] != 30){  //시간모름 아니면
             listOhengText0[i] = style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[i]];
           }
           else{ //시간모름이면

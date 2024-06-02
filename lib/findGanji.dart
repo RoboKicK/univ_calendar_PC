@@ -155,7 +155,7 @@
     int targetMonth = _targetMonth;
     int targetDay = _targetDay;
     int targetHour, targetMin;
-    if(_targetHour != -2){  //시간 모름이 아니면
+    if(_targetHour != 30){  //시간 모름이 아니면
       targetHour = _targetHour;
       targetMin = _targetMin;
     }
@@ -281,11 +281,11 @@
     //  siGan = siGan+2;
     int siJi = editedTime % listJijiString.length;
 
-    if(_targetHour != -2){  //시간모름이 아니면
+    if(_targetHour != 30){  //시간모름이 아니면
       ganji = [yeonGan, yeonJi, wolGan, wolJi, ilGan, ilJi, siGan, siJi];
     }
     else{
-      ganji = [yeonGan, yeonJi, wolGan, wolJi, ilGan, ilJi, -2, -2];
+      ganji = [yeonGan, yeonJi, wolGan, wolJi, ilGan, ilJi, 30, 30];
     }
     return ganji;
   }
@@ -297,7 +297,7 @@
     int targetMonth = _targetMonth;
     int targetDay = _targetDay;
     int targetHour, targetMin;
-    if(_targetHour != -2){  //시간 모름이 아니면
+    if(_targetHour != 30){  //시간 모름이 아니면
       targetHour = _targetHour;
       targetMin = _targetMin;
     }

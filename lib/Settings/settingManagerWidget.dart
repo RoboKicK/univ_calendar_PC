@@ -12,6 +12,7 @@ import 'sinsalSettingWidget.dart' as sinsalSettingWidget;
 import 'deunSeunSettingWidget.dart' as deunSeunSettingWidget;
 import 'etcSettingWidget.dart' as etcSettingWidget;
 import 'themeSettingWidget.dart' as themeSettingWidget;
+import 'dataManageWidget.dart' as dataManageWidget;
 
 class SettingManagerWidget extends StatefulWidget {
   const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting});
@@ -89,7 +90,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         uemYangText = '(음력 윤달)';
       }
       String birthTimeText = '';
-      if (personalDataManager.mapUserData['birthHour'] == -2) {
+      if (personalDataManager.mapUserData['birthHour'] == 30) {
         birthTimeText = '시간 모름';
       } else {
         if (personalDataManager.mapUserData['birthHour'] < 10) {
@@ -174,6 +175,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         }
         case 7: {
           nextPage = themeSettingWidget.ThemeSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+        }
+        case 8: {
+          nextPage = dataManageWidget.DataManageWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
       }
       if(num == 0){
@@ -441,17 +445,19 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                 height: settingTextContainerHeight,
                 width: widgetWidth,
                 margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                child: Text("데이터 전송",
+                child: Text("데이터 관리",
                     style: style.settingInfoText0),
               ),
-              Container(
+              Container(  //저장 목록 버튼
                 height: settingButtonContainerHeight,
                 width: widgetWidth,
-                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo, left: style.UIMarginLeft),
                 child: Stack(
                   children: [
                     OutlinedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        SetNextPageWidget(8);
+                      },
                       style: OutlinedButton.styleFrom(
                           foregroundColor: style.colorBackGround,
                           side: BorderSide(color: Colors.transparent),
@@ -460,7 +466,31 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                               MediaQuery.of(context).size.width -
                                   (style.UIMarginLeft * 2)),
                           alignment: Alignment.centerLeft),
-                      child: Text('저장 목록 전송',
+                      child: Text('저장 목록',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
+              Container(  //설정 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('설정 공유',
                           style: style.settingText0),
                     ),
                   ],

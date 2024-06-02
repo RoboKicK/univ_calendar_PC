@@ -252,8 +252,8 @@ class _UserDataState extends State<UserDataWidget> {
     if (hourController.text.length == 0) {
       //시간모름일 때
       if (popUpSelect == popUpVal[0]) {
-        targetBirthHour = -2; //시간 모름일 때는 -2로 정함
-        targetBirthMin = -2; //분도 -2로 정함
+        targetBirthHour = 30; //시간 모름일 때는 30로 정함
+        targetBirthMin = 30; //분도 30로 정함
       } else {
         targetBirthHour = GanjiSelect();
         targetBirthMin = 30;
@@ -326,7 +326,7 @@ class _UserDataState extends State<UserDataWidget> {
       birthController.text = birthYear + ' ' + birthMonth + ' ' + birthDay;
 
       String birthHour = '';
-      if (personalDataManager.mapUserData['birthHour'] == -2) {
+      if (personalDataManager.mapUserData['birthHour'] == 30) {
         hourController.text = '';
       } else {
         if (personalDataManager.mapUserData['birthHour'] < 10) {
@@ -379,7 +379,7 @@ class _UserDataState extends State<UserDataWidget> {
               width: style.UIButtonWidth,
               height: style.fullSizeButtonHeight,
               alignment: Alignment.center,
-              child:Text('사용자 설정', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
+              child:Text('사용자 등록', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
             ),
             Container(
               //이름

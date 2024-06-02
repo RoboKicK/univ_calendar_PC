@@ -32,7 +32,7 @@ class Gongmang{//공망 계산해주는 클래스
 
     //록공망 찾기
     List<int> listRocGongmangNum = [];
-    if(_listPaljaData[6] != -2){
+    if(_listPaljaData[6] != 30){
       count = _listPaljaData.length - 1;
     }
     else{

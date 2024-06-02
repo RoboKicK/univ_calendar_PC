@@ -49,7 +49,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
       partition = '.';
     }
 
-    if(birthHour == -2){
+    if(birthHour == 30){
       return birthTimeText = '시간 모름';
     }
     else {

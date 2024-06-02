@@ -49,7 +49,7 @@ class Store extends ChangeNotifier {
   }
 
   Map personInquireInfo = {'targetName':'-1234'};
-  SetPersonInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo, String saveDataNum){
+  SetPersonInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo, DateTime saveDate){
     personInquireInfo['targetName'] = name;
     personInquireInfo['genderVal'] = gender;
     personInquireInfo['uemYangType'] = uemYang;
@@ -59,7 +59,8 @@ class Store extends ChangeNotifier {
     personInquireInfo['targetBirthHour'] = birthHour;
     personInquireInfo['targetBirthMin'] = birthMin;
     personInquireInfo['personMemo'] = memo;
-    personInquireInfo['personDataNum'] = saveDataNum;
+    personInquireInfo['personSaveDate'] = saveDate;
+
 
     notifyListeners();
   }
@@ -231,7 +232,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   //페이지 비우기
   SetClearPageNum(int num){
-    if (num == -2) {  //모두 지우기
+    if (num == 30) {  //모두 지우기
       setState(() {
         listPageWidget.clear();
         listCalendarButtonColor.clear();
@@ -541,7 +542,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                           margin: EdgeInsets.only(left: 00),
                           child: ElevatedButton(
                             onPressed: (){
-                              SetClearPageNum(-2);
+                              SetClearPageNum(30);
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
