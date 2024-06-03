@@ -18,7 +18,7 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001, 단체명식 g001
 int saveDataLimitCount = 3000; //단일,궁합 공용
-int recentDataLimitCount = 30;//1000;  //최근목록
+int recentDataLimitCount = 300;//1000;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
 int groupDataLimitCount = 1000; //단체명식
 
@@ -346,7 +346,7 @@ late var snackBar;
   }
 
   //명식을 최초 저장할 때 사용2 - mapPerson에 명식을 추가
-  SavePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, {String memo = ''}) {
+  SavePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, {String memo = ''}) {
     //int genderVal = genderInt * 10000000000000;
     //int uemYangVal = uemYang * 1000000000000;
     //int birthYearVal = birthYear * 100000000;
@@ -532,6 +532,24 @@ late var snackBar;
       }
       case 'birthMin':{
         return mapPerson[index]['birthData'] % 100;
+      }
+    }
+  }
+
+  //명식 리스트 정렬
+  SortMapPerson(int num){
+    switch(num){
+      case 0:{
+        mapPerson.sort((a, b) => a['saveDate'].compareTo(b['saveDate']));
+      }
+      case 1:{
+        mapPerson.sort((a, b) => b['saveDate'].compareTo(a['saveDate']));
+      }
+      case 2:{
+        mapPerson.sort((a, b) => a['name'].compareTo(b['name']));
+      }
+      case 3:{
+        mapPerson.sort((a, b) => b['name'].compareTo(a['name']));
       }
     }
   }

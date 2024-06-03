@@ -910,9 +910,11 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
             if(isSamePerson == true){
-              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
-              isSaved = 0;
-              personSaveDate = saveDataManager.mapPerson.last['saveDate'];
+              personSaveDate = DateTime.now();
+              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate);
+              setState(() {
+                isSaved = 0;
+              });
               return;
               int mapPersonLength = saveDataManager.mapPerson.length;
               if(mapPersonLength < 10){ //단일 저장은 a로 시작 궁합은 b로 시작
@@ -925,7 +927,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 //personDataNum = 'p${mapPersonLength}';
               }
 
-              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+              saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, DateTime.now());
               setState(() {
                 isSaved = 0;
                 SetWidgetMarkButton();
@@ -1035,10 +1037,10 @@ class _CalendarWidget extends State<CalendarWidget> {
             ElevatedButton(
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
-                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                  personSaveDate = DateTime.now();
+                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate);
                   setState(() {
                     isSaved = 0;
-                    personSaveDate = DateTime.now();
                   });
                   Navigator.pop(context);
                 },
@@ -1340,6 +1342,10 @@ class _CalendarWidget extends State<CalendarWidget> {
         SetCalendarResultWidget();
 
         context.watch<Store>().ResetPersonInquireInfo();
+
+        if(personSaveDate != DateTime.utc(3000)){
+          isSaved = 0;
+        }
       }
 
     super.didChangeDependencies();
@@ -1764,15 +1770,16 @@ class _CalendarWidget extends State<CalendarWidget> {
                           ),
                           onPressed: () {
                             if (InqureChecker(true) == true) {
-                              if(memoController.text != ''){
+                              if(memoController.text != ''){  //메모 입력했으면
                                 bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
 
                                 if(isSamePerson == true){
-                                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                                  personSaveDate = DateTime.now();
+                                  saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate, memo: memoController.text);
                                   SetCalendarResultWidget(isWithSave: true);
                                 }
                               } else {
-                                findGanji.SolarToLunar(targetBirthYear, targetBirthMonth, targetBirthDay);
+                                //findGanji.SolarToLunar(targetBirthYear, targetBirthMonth, targetBirthDay);
                                 SetCalendarResultWidget();
                             }
                           }
