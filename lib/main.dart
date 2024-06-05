@@ -338,8 +338,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       setState(() {
         AddPage(false);
         SetNowCalendarNum(nowPageCount - 1);
-        listPageNameController[nowPageNum] = saveDataManager.listMapGroup[groupIndex].last['groupName'];
-        SetNowPageName(saveDataManager.listMapGroup[groupIndex].last['groupName']);
+        listPageNameController[nowPageNum] = saveDataManager.listMapGroup[groupIndex][0]['groupName'];
+        SetNowPageName(saveDataManager.listMapGroup[groupIndex][0]['groupName']);
         context.read<Store>().SetTargetGroupLoadIndex(groupIndex);
         context.read<Store>().SetTargetGroupLoadPageNum(uniquePageNum);
       });
@@ -573,6 +573,34 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                                 SetNowPageName(value);
                               });
                             },
+                          ),
+                        ),
+                        Container(  //테스트 버튼
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+
+                              saveDataManager.LoadSavedGroup();
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
+                          ),
+                        ),
+                        Container(  //테스트 버튼
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+
+                              saveDataManager.ClearListMapGroup();
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
                           ),
                         ),
                       ],

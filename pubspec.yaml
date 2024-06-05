@@ -66,7 +66,7 @@ dev_dependencies:
 
 msix_config:
   display_name: Lucia One Calendar
-  publisher_display_name: WuNeulByeol
+  publisher_display_name: WujuHaneulByeol
   identity_name: company.suite.flutterapp
   msix_version: 1.0.0.0
   #logo_path: C:\path\to\logo.png
@@ -101,6 +101,10 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
+  fonts:
+    - family: NotoSansKR
+      fonts:
+        - asset: assets/fonts/NotoSansKR-Regular.ttf
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

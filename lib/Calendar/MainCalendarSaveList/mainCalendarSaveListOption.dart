@@ -534,7 +534,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                         ),Container(  //생년월일
                           width: style.UIButtonWidth * 0.9,
                           height: style.saveDataMemoLineHeight,
-                          padding: EdgeInsets.only(top:4),
+                          //padding: EdgeInsets.only(top:4),
                           child:Row(
                             children: GetPersonBirthText(),
                           ),

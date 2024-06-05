@@ -281,10 +281,13 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                         passVal = true;
                       }
                       else{
-                        //String data = "${saveDataManager.mapPersonSortedMark[i]['name']}(${saveDataManager.mapPersonSortedMark[i]['gender']?'남':'여'}) ${saveDataManager.mapPersonSortedMark[i]['birthYear']}.${saveDataManager.mapPersonSortedMark[i]['birthMonth']}.${saveDataManager.mapPersonSortedMark[i]['birthDay']} ${GetUemYangText(saveDataManager.mapPersonSortedMark[i]['uemYang'])} ${GetBirthTimeText(saveDataManager.mapPersonSortedMark[i]['birthHour'], saveDataManager.mapPersonSortedMark[i]['birthMin'], false)}";
-                        //if(data.toLowerCase().contains(searchText.toLowerCase()) || saveDataManager.mapPersonSortedMark[i]['memo'].toLowerCase().contains(searchText.toLowerCase())){
-                        //  passVal = true;
-                        //}
+                        String data = "${saveDataManager.listMapGroup[i][0]['groupName']} ${saveDataManager.mapPersonSortedMark[i][0]['memo']} ";
+                        for(int j = 0; j < saveDataManager.listMapGroup[i].length; j++){
+                          data = data + "${saveDataManager.listMapGroup[i][j]['name']}(${saveDataManager.GetSelectedBirthDataFromGroup('gender', i, j) == true?'남':'여'}) ${saveDataManager.GetSelectedBirthDataFromGroup('birthYear',i,j)}년 ${saveDataManager.GetSelectedBirthDataFromGroup('birthMonth', i,j)}월 ${saveDataManager.GetSelectedBirthDataFromGroup('birthDay',i,j)}일 ${GetUemYangText(saveDataManager.GetSelectedBirthDataFromGroup('uemYang', i,j))} ${GetBirthTimeText(saveDataManager.GetSelectedBirthDataFromGroup('birthHour',i,j), saveDataManager.GetSelectedBirthDataFromGroup('birthMin', i,j), false)}";
+                        }
+                        if(data.toLowerCase().contains(searchText.toLowerCase())){
+                          passVal = true;
+                        }
                       }
                       //리스트뷰
                       if(passVal == true){
@@ -310,7 +313,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                       child: Container(
                                           height: style.saveDataNameTextLineHeight,
                                           //color:Colors.green,
-                                          child:Text(saveDataManager.listMapGroup[i].last['groupName'], style: Theme.of(context).textTheme.titleLarge)
+                                          child:Text(saveDataManager.listMapGroup[i][0]['groupName'], style: Theme.of(context).textTheme.titleLarge)
                                       ),
                                     ),
                                     Container(
@@ -318,23 +321,11 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                       height: style.saveDataMemoLineHeight,
                                       padding: EdgeInsets.only(top:4),
                                       //color:Colors.yellow,
-                                      child: Text('메모'),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                      child: Text(saveDataManager.listMapGroup[i][0]['memo'], style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
                                     ),
                                   ],
                                 ),
                               ),
-                              //Container(  //즐겨찾기 버튼
-                              //  width: style.UIButtonWidth * 0.1,
-                              //  height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                              //  child: IconButton(
-                              //    onPressed: () {
-                              //      setState(() {
-                              //        //saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
-                              //      });
-                              //    },
-                              //    icon: Icon(Icons.ac_unit),//saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
-                              //  ),
-                              //),
                               Container(  //옵션 버튼
                                 width: style.UIButtonWidth * 0.1,
                                 height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,

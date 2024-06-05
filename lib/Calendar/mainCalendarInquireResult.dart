@@ -521,7 +521,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
         alignment: Alignment.topCenter,
         children:[
           Container(
-          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 46,
           color: style.colorBackGround,
           child: ScrollConfiguration(
             behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -590,13 +590,13 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
           alignment: Alignment.topCenter,
         children: [
           Container(
-          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 38,
           color: style.colorBackGround,
           alignment: Alignment.topCenter,
           child: Row(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50,
+                height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 38,
                 width: widgetWidth,
                 child: ScrollConfiguration(
                   behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -1155,8 +1155,9 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
       SetChooseDayMode();
     }
 
-    return Stack(
-          alignment: Alignment.topCenter,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+          //alignment: Alignment.topCenter,
             children: [
           GetPaljaResult(),
           GetMemoScreen(),

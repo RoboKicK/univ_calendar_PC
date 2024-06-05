@@ -181,11 +181,16 @@ class _CalendarMainState extends State<CalendarMain> {
                     controller: pageNameController,
                     onEditingComplete: () {
                       Navigator.of(context).pop();
-                      //widget.setNowPageName(pageNameController.text);
-                      //setState(() {
-                      //  listGroupMap.add({'groupName':context.watch<Store>().nowPageName});
-                      //  saveDataManager.SaveGroupData(listGroupMap);
-                      //});
+                      String groupName = pageNameController.text;
+                      if(groupName == ''){
+                        groupName = '이름 없음';
+                      }
+                      widget.setNowPageName(groupName);
+                      setState(() {
+                        DateTime groupSaveDate = DateTime.now();
+                        listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                        saveDataManager.SaveGroupData2(listGroupMap);
+                      });
                     },
                     decoration: InputDecoration(
                       labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
@@ -211,7 +216,8 @@ class _CalendarMainState extends State<CalendarMain> {
                   }
                   widget.setNowPageName(groupName);
                   setState(() {
-                    listGroupMap.insert(0,{'groupName':groupName});
+                    DateTime groupSaveDate = DateTime.now();
+                    listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
                     saveDataManager.SaveGroupData2(listGroupMap);
                   });
                 },
@@ -248,8 +254,8 @@ class _CalendarMainState extends State<CalendarMain> {
       List<dynamic> listGroupMap = [];
       listGroupMap = saveDataManager.listMapGroup[context.watch<Store>().targetGroupLoadIndex];
 
-     for (int i = 0; i < listGroupMap.length - 1; i++) {
-       if (listKey.length - 1 < i) {
+     for (int i = 1; i < listGroupMap.length; i++) {
+       if (listKey.length < i) {
          AddCalendarWidget(false, listGroupMap[i]);
        }
      }
@@ -791,12 +797,15 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   bool isChangeUemYangBirthType = false;
 
-  double appBarHeight = 50;
+  double appBarHeight = 40;
 
   //그룹 저장할 때 명식 정보 보냄
   Map ReportPersonData(){
-    Map personData = {'name': targetName, 'gender':genderVal, 'uemYang': uemYangType, 'birthYear':targetBirthYear, 'birthMonth':targetBirthMonth,
-      'birthDay':targetBirthDay, 'birthHour':targetBirthHour, 'birthMin':targetBirthMin, 'saveDate':DateTime.now(), 'memo':personMemo, 'mark':false};
+    //Map personData = {'name': targetName, 'gender':genderVal, 'uemYang': uemYangType, 'birthYear':targetBirthYear, 'birthMonth':targetBirthMonth,
+    //  'birthDay':targetBirthDay, 'birthHour':targetBirthHour, 'birthMin':targetBirthMin, 'memo':personMemo};
+
+    Map personData = {'name': targetName, 'birthData': saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin),
+      'memo':personMemo};
 
     return personData;
   }
@@ -862,7 +871,7 @@ class _CalendarWidget extends State<CalendarWidget> {
       closeButtonWidget = Container(
         width: 40,
         height: appBarHeight,
-        margin: EdgeInsets.only(top:0, right:10),
+        margin: EdgeInsets.only(top:0, right:4),
         child:
         ElevatedButton(
           onPressed: (){
@@ -883,7 +892,7 @@ class _CalendarWidget extends State<CalendarWidget> {
       backButtonWidget = Container(
         width: 40,
         height: appBarHeight,
-        margin: EdgeInsets.only(top:0, left:10),
+        margin: EdgeInsets.only(top:0, left:4),
         alignment: Alignment.center,
         child:
         ElevatedButton(
@@ -1312,14 +1321,14 @@ class _CalendarWidget extends State<CalendarWidget> {
       if (widget.loadPersonData.length != 0) {
         SetInquireInfo(
             widget.loadPersonData['name'],
-            widget.loadPersonData['gender'],
-            widget.loadPersonData['uemYang'],
-            widget.loadPersonData['birthYear'],
-            widget.loadPersonData['birthMonth'],
-            widget.loadPersonData['birthDay'],
-            widget.loadPersonData['birthHour'],
-            widget.loadPersonData['birthMin'],
-            widget.loadPersonData['memo'],
+            ((widget.loadPersonData['birthData'] / 10000000000000) % 10).floor() == 1? true:false,
+            ((widget.loadPersonData['birthData'] / 1000000000000) % 10).floor(),
+            ((widget.loadPersonData['birthData'] / 100000000) % 10000).floor(),
+            ((widget.loadPersonData['birthData'] / 1000000 ) % 100).floor(),
+            ((widget.loadPersonData['birthData'] / 10000 ) % 100).floor(),
+            ((widget.loadPersonData['birthData'] / 100 ) % 100).floor(),
+            widget.loadPersonData['birthData'] % 100,
+            widget.loadPersonData['memo']??'',
         );
         SetCalendarResultWidget();
       } else {}
@@ -1394,19 +1403,19 @@ class _CalendarWidget extends State<CalendarWidget> {
                 //color: Colors.yellow,
                 alignment: Alignment.bottomRight,
                 child: Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(  //생년월일
-                      //color:Colors.green,
-                      width: widgetWidth - 180,
-                      height: 50,
-                      margin: EdgeInsets.only(left:50),
-                      child: calendarBirthTextWidget,
-                    ),
+                    //Container(  //생년월일
+                    //  //color:Colors.green,
+                    //  width: widgetWidth - 180,
+                    //  height: 50,
+                    //  margin: EdgeInsets.only(left:50),
+                    //  child: calendarBirthTextWidget,
+                    //),
                     chooseDayButtonWidget,
                     //markButtonWidget,
                     [
-                      Container(
+                      Container(  //메모 버튼
                         width: 40,
                         height: appBarHeight,
                         padding: EdgeInsets.only(top:4),
@@ -1435,6 +1444,9 @@ class _CalendarWidget extends State<CalendarWidget> {
                       ),
                       saveButtonWidget,
                     ][isSaved], //저장버튼
+                    SizedBox(
+                      width:42,
+                    ),
                   ],
                 ),
               ),
@@ -1502,7 +1514,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                     });
                                   }),
                               Container(
-                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
                                 margin: EdgeInsets.only(left: 4, right: 4),
                                 child: Text("남자 ", style: Theme.of(context).textTheme.labelMedium),
                               ),
@@ -1528,7 +1540,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                     });
                                   }),
                               Container(
-                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
                                 margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
                                 child: Text("여자 ", style: Theme.of(context).textTheme.labelMedium),
                               ),
@@ -1602,7 +1614,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
                                 //margin: EdgeInsets.only(right: marginVal),
                                 child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
                               ),
@@ -1620,7 +1632,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                 ),
                               ),
                               Container(
-                                padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
                                 margin: EdgeInsets.only(right: style.UIMarginLeft),
                                 child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
                               ),
@@ -1681,7 +1693,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Container(
-                                  padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                  padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
                                   margin: EdgeInsets.only(right: style.UIMarginLeft - 6),
                                   child: DropdownButton<String>(
                                       value: popUpSelect,
@@ -1734,7 +1746,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                           style: Theme.of(context).textTheme.labelLarge,
                           decoration:InputDecoration(
                             isDense: true,
-                            contentPadding: EdgeInsets.only(top: 18, left: 18, bottom:18),
+                            contentPadding: EdgeInsets.only(top: 18, left: 14, bottom:18),
                             counterText:"",
                             hintText: '메모를 입력하시면\n조회 시 명식이 자동으로 저장됩니다',
                             hintStyle: Theme.of(context).textTheme.labelSmall,
@@ -1831,7 +1843,12 @@ class _CalendarWidget extends State<CalendarWidget> {
                   ),
                 ],
               ),
-              calendarResultWidget
+              Column(
+                children: [
+                  calendarBirthTextWidget,  //생년월일
+                  calendarResultWidget,
+                ],
+              )
             ]
           ),
         ],

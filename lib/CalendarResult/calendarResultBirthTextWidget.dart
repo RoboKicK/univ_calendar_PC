@@ -102,12 +102,12 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       //썸머타임 조회
       if(widget.uemYang == 0) {
         if (findGanji.CheckSummerTime(widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin) == true) {
-          birthTimeText = birthTimeText + ' (-60분)';
+          birthTimeText = birthTimeText + ' (서머타임 -60분)';
         }
       } else {
         List<int> listYangBirth = findGanji.LunarToSolar(widget.birthYear, widget.birthMonth, widget.birthDay, widget.uemYang == 1? false:true);
         if(findGanji.CheckSummerTime(listYangBirth[0], listYangBirth[1], listYangBirth[2], widget.birthHour, widget.birthMin) == true)
-          birthTimeText = birthTimeText + ' (-60분)';
+          birthTimeText = birthTimeText + ' (서머타임 -60분)';
       }
 
       return Text(birthTimeText, style: textStyle);
@@ -294,15 +294,15 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       );
     }
     else {
-      textStyle = TextStyle(color : Colors.white, fontSize: 14, fontWeight: FontWeight.w500);
+      textStyle = TextStyle(color : Colors.white, fontSize: 18, fontWeight: FontWeight.w500);
       return Container(
         width: widget.widgetWidth,
         //height: containerHeight,
         child: Container(
           width: widget.widgetWidth,
           //height: containerHeight,
-          margin: EdgeInsets.only(top: 6),
-          //color: Colors.blue,
+          margin: EdgeInsets.only(top: 0, left: style.UIMarginLeft),
+          color: style.colorBackGround,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -311,7 +311,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                 children: [
                   //Text(GetName(), style: textStyle),
                   Container(
-                    height: 20,
+                    height: 26,
                     child: TextButton(
                         onPressed: (){
                           ChangePersonName();
@@ -319,12 +319,18 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                         style: TextButton.styleFrom(padding: EdgeInsets.all(0), minimumSize: Size(0, 20)),
                         child: Text(GetName(), style: textStyle)),
                   ),
-                  GetGenderTextButtonWidget(),
-                  Text('${GetOld()} ', style: textStyle),
+                  Container(
+                    height: 26,
+                    child: GetGenderTextButtonWidget(),
+                  ),
+                  Container(
+                    height: 26,
+                    child: Text('${GetOld()} ', style: textStyle),
+                  ),
                 ],
               ),
               Container(
-                height: 20,
+                height: 24,
                 child: ElevatedButton(
                     onPressed: (){
                       widget.setUemYangBirthType();
@@ -333,6 +339,11 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                         foregroundColor: Colors.transparent, surfaceTintColor: Colors.transparent),
                     child: GetBirthText()
                 ),
+              ),
+              Container(
+                width: widget.widgetWidth,
+                height: 6,
+                color:style.colorBackGround,
               ),
               //Row(
               //  mainAxisAlignment: MainAxisAlignment.start,

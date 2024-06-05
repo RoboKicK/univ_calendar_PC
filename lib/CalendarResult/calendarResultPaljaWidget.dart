@@ -39,6 +39,8 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
   double ganjiBoxMarginBigger = 10;
   double ganjiBoxMarginSmaller = 6;
 
+  double ganjiBoxPaddingBottom = 6;
+
   String themeTitle = '';
   bool isSpriteTheme = false;
 
@@ -49,6 +51,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           width: paljaBoxSize,
           height: paljaBoxSize,
           margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+          padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
           decoration: BoxDecoration(
             boxShadow: [style.uiOhengShadow],
             color: listOhengBoxColor0[paljaIndex],
@@ -83,6 +86,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           width: paljaBoxSize,
           height: paljaBoxSize,
           margin: EdgeInsets.only(top: ganjiBoxMarginSmaller,bottom: ganjiBoxMarginBigger),//,
+          padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
           decoration: BoxDecoration(
             boxShadow: [style.uiOhengShadow],
             color: listOhengBoxColor0[paljaIndex],
@@ -154,8 +158,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           child: Stack(
               children:[
                 Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[paljaIndex], themeTitle)),
-                Align(
+                Container(
                       alignment: Alignment.center,
+                    padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                       child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
                 GetUemYangSign(paljaNum, true),
               ]
@@ -170,8 +175,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
           child: Stack(
               children:[
                 Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[paljaIndex], themeTitle)),
-                Align(
+                Container(
                       alignment: Alignment.center,
+                    padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                       child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][paljaNum], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[paljaIndex]))),
                 GetUemYangSign(paljaNum, false),
               ]
@@ -265,6 +271,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         decoration: BoxDecoration(
           boxShadow: [style.uiOhengShadow],
           color: listOhengBoxColor0[10],
@@ -298,6 +305,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         decoration: BoxDecoration(
           boxShadow: [style.uiOhengShadow],
           color: listOhengBoxColor0[8],
@@ -331,6 +339,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     width: paljaBoxSize,
     height: paljaBoxSize,
     margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+      padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
     decoration: BoxDecoration(
     boxShadow: [style.uiOhengShadow],
     color: listOhengBoxColor0[4],
@@ -361,6 +370,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     width: paljaBoxSize,
     height: paljaBoxSize,
     margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+      padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
     decoration: BoxDecoration(
     boxShadow: [style.uiOhengShadow],
     color: listOhengBoxColor0[2],
@@ -401,6 +411,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         decoration: BoxDecoration(
           boxShadow: [style.uiOhengShadow],
           color: listOhengBoxColor0[11],
@@ -434,6 +445,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         decoration: BoxDecoration(
           boxShadow: [style.uiOhengShadow],
           color: listOhengBoxColor0[9],
@@ -467,6 +479,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     width: paljaBoxSize,
     height: paljaBoxSize,
     margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+      padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
     decoration: BoxDecoration(
     boxShadow: [style.uiOhengShadow],
     color: listOhengBoxColor0[5],
@@ -497,6 +510,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
     width: paljaBoxSize,
     height: paljaBoxSize,
     margin: EdgeInsets.only(bottom: ganjiBoxMarginBigger, top: ganjiBoxMarginSmaller),
+      padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
     decoration: BoxDecoration(
     boxShadow: [style.uiOhengShadow],
     color: listOhengBoxColor0[3],
@@ -536,11 +550,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[10], themeTitle)),
-            Align(
+            Container(
               alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
               child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[10]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[10]))),
             GetUemYangSign(widget.listPaljaData[10], true),
           ] ,
@@ -553,11 +569,13 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
+        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[8], themeTitle)),
-            Align(
+            Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                 child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[8]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[8]))),
             GetUemYangSign(widget.listPaljaData[8], true),
           ] ,
@@ -573,8 +591,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[4], themeTitle),),
-            Align(
+            Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                 child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[4]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[4]))),
             GetUemYangSign(widget.listPaljaData[4], true),
           ]
@@ -587,8 +606,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       child: Stack(
         children:[
           Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[2], themeTitle)),
-          Align(
+          Container(
               alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
               child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][widget.listPaljaData[2]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[2]))),
           GetUemYangSign(widget.listPaljaData[2], true),
         ] ,
@@ -609,8 +629,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[11], themeTitle)),
-            Align(
+            Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                 child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[11]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[11]))),
             GetUemYangSign(widget.listPaljaData[11], false),
           ] ,
@@ -626,8 +647,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[9], themeTitle)),
-            Align(
+            Container(
                 alignment: Alignment.center,
+                padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
                 child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[9]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[9]))),
             GetUemYangSign(widget.listPaljaData[9], false),
           ] ,
@@ -643,8 +665,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       child: Stack(
         children:[
           Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[5], themeTitle)),
-          Align(
+          Container(
               alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
               child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[5]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[5]))),
           GetUemYangSign(widget.listPaljaData[5], false),
         ],
@@ -657,8 +680,9 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
       child: Stack(
         children: [
           Image.asset('assets/' + style.SetOhengSpriteString(false, widget.listPaljaData[3], themeTitle)),
-          Align(
+          Container(
               alignment: Alignment.center,
+              padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
               child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][widget.listPaljaData[3]], style:TextStyle(fontSize: ohengFontSize, fontWeight: style.UIOhengFontWeight, color: listOhengTextColor0[3]))),
           GetUemYangSign(widget.listPaljaData[3], false),
         ],
@@ -815,12 +839,14 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         unknownTextFontSize = 44;
         ganjiBoxMarginBigger = 5;
         ganjiBoxMarginSmaller = 3;
+        ganjiBoxPaddingBottom = 6;
       } else {
         paljaBoxSize = style.fullSizeButtonHeight * 1.2;//52
         ohengFontSize = 25;
         unknownTextFontSize = 36;
         ganjiBoxMarginBigger = 8;
         ganjiBoxMarginSmaller = 5;
+        ganjiBoxPaddingBottom = 2;
       }
     } else {
       if(widget.listPaljaData.length < 11){
@@ -829,12 +855,14 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         unknownTextFontSize = 44;
         ganjiBoxMarginBigger = 10;
         ganjiBoxMarginSmaller = 6;
+        ganjiBoxPaddingBottom = 6;
       } else {
         paljaBoxSize = style.fullSizeButtonHeight * 1.083;//52
         ohengFontSize = 25;
         unknownTextFontSize = 36;
         ganjiBoxMarginBigger = 16;
         ganjiBoxMarginSmaller = 8;
+        ganjiBoxPaddingBottom = 2;
       }
     }
 

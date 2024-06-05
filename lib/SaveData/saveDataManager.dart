@@ -223,22 +223,152 @@ late var snackBar;
   if(listMapGroup.length != 0)
     return;
 
-  for(int i = 0; i <= groupDataLimitCount; i++){
-    if(i < 10){
-      try {
-        listMapGroup.add(
-            jsonDecode(await File('${fileDirPath}/g00${i}').readAsString()));
-      } catch(e){break;}
+  String saveDataString = '';
+
+  try { //저장 데이터 확인 및 불러오기
+    saveDataString = jsonDecode(await File('${fileDirPath}/groupData').readAsString());
+
+    if(saveDataString.isNotEmpty) {
+
+      int startNum = 0;
+      int endNum = 3;
+
+      String groupName = '';
+      String personName = '';
+      int birthData = 0;
+      late DateTime saveDate;
+      String groupMemo = '';
+      String personMemo = '';
+
+      while (true) {
+        if (saveDataString.length < endNum + 2) {
+          break;
+        }
+
+        if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+
+          List<dynamic> groupMap = [];
+
+          while(true){
+            groupName = saveDataString.substring(startNum, endNum - 2);
+            startNum = endNum;
+            saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
+            startNum = startNum + 28;
+            endNum = startNum + 2;
+            while(true){  //그룹 메모
+              if (saveDataString.substring(endNum - 2, endNum) == '{{'){
+                groupMemo = saveDataString.substring(startNum, endNum - 2);
+                startNum = endNum;
+                endNum = startNum + 2;
+
+                break;
+              } else {
+                endNum++;
+              }
+            }
+
+            groupMap.add({'groupName':groupName, 'saveDate':saveDate, 'memo':groupMemo});
+
+            while(true) {
+              if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+                personName = saveDataString.substring(startNum, endNum - 2);
+                startNum = endNum;
+                birthData = int.parse(saveDataString.substring(startNum, startNum + 14));
+                startNum = startNum + 16;
+                endNum = startNum + 2;
+
+                while(true){
+                  if (saveDataString.substring(endNum - 2, endNum) == '{{' || saveDataString.substring(endNum - 2, endNum) == '}}'){
+                    personMemo = saveDataString.substring(startNum, endNum - 2);
+                    startNum = endNum;
+                    endNum = startNum + 2;
+
+                    break;
+                  } else {
+                    endNum++;
+                  }
+                }
+
+                groupMap.add({'name': personName, 'birthData': birthData, 'memo': personMemo});
+                if(saveDataString.substring(endNum - 4, endNum - 2) == '}}'){
+                  listMapGroup.add(groupMap);
+
+                  break;
+                }
+              } else {
+                endNum++;
+              }
+            }
+
+            if(saveDataString.substring(endNum - 4, endNum - 2) == '}}'){
+              break;
+            }
+          }
+        } else {
+          endNum++;
+        }
+      }
     }
-    else if(i < 100){
-      try{listMapGroup.add(jsonDecode(await File('${fileDirPath}/g0${i}').readAsString()));}
-      catch(e){break;}
+  } catch(e) {};
+
+  try{  //초기 버전 저장데이터 확인
+    List<dynamic> mapTemp = jsonDecode(await File('${fileDirPath}/g000').readAsString());
+
+    if(mapTemp.isNotEmpty){
+      for(int i = 0; i <= saveDataLimitCount; i++){
+        if(i < 10){
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/g00${i}').readAsString());
+            await File('${fileDirPath}/g00${i}').delete();
+          } catch(e){break;}
+        }
+        else if(i < 100){
+          try{
+            mapTemp = jsonDecode(await File('${fileDirPath}/g0${i}').readAsString());
+            await File('${fileDirPath}/g0${i}').delete();
+          } catch(e){break;}
+        }
+        else{
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/g${i}').readAsString());
+            await File('${fileDirPath}/g${i}').delete();
+          } catch(e){break;}
+        }
+
+        List<Map<dynamic, dynamic>> groupMap = [];
+
+        groupMap.add({'groupName':mapTemp.last['groupName'], 'saveDate':DateTime.now(), 'memo':''});
+        for(int j = 0; j < mapTemp.length - 1; j++){
+          print('0');
+
+          int birthHour = mapTemp[j]['birthHour'];
+          int birthMin = mapTemp[j]['birthMin'];
+          if(birthHour == -2){
+            birthHour = 30;
+          }
+          if(birthMin == -2){
+            birthMin = 0;
+          }
+
+
+          int birthData = (((mapTemp[j]['gender'] == true? 1 : 2) * 10000000000000) + (mapTemp[j]['uemYang'] * 1000000000000) + (mapTemp[j]['birthYear'] * 100000000) +
+              (mapTemp[j]['birthMonth'] * 1000000) + (mapTemp[j]['birthDay'] * 10000) + (birthHour * 100) + birthMin).toInt();
+
+          Map personData = {'name':mapTemp[j]['name'], 'birthData':birthData, 'memo':''};
+
+          groupMap.add(personData);
+        }
+
+        listMapGroup.add(groupMap);
+      }
+
+      SaveGroupFile();
     }
-    else{
-      try{listMapGroup.add(jsonDecode(await File('${fileDirPath}/g${i}').readAsString()));}
-      catch(e){break;}
-    }
-  }
+  } catch(e) {};
+}
+ClearListMapGroup(){
+  listMapGroup.clear();
+  print('clearsuccese');
 }
   LoadSavedDiary() async {
   if(mapDiary.length != 0)
@@ -286,20 +416,14 @@ late var snackBar;
   }
 
   //그룹을 최초 저장할 때 사용
-  SaveGroupData2(List<Map> groupData) {
-    String groupMemoString = '';
-
-    if(groupData[0]['memo'] == null){
-      groupMemoString == '';
-    } else {
-      groupMemoString = groupData[0]['memo'];
-    }
-
-    groupData[0]['saveDate'] = DateTime.now();
+  SaveGroupData2(List<Map> groupData, {String memo = ''}) {
+    groupData[0]['memo'] = memo;
 
     listMapGroup.add(groupData);
 
     SaveGroupFile();
+
+    snackBar('그룹 명식이 저장되었습니다');
   }
 
   Future<void> SaveGroupFile() async {
@@ -307,7 +431,9 @@ late var snackBar;
     String personMemoString = '';
 
     for(int i = 0; i < listMapGroup.length; i++){
-      jsonString = jsonString + listMapGroup[i][0]['groupName'] + '{{' + listMapGroup[i][0]['saveDate'] + '{{' + listMapGroup[i][0]['saveDate'] + '{{';
+      jsonString = jsonString + listMapGroup[i][0]['groupName'] + '{{' +
+          listMapGroup[i][0]['saveDate'].toString() + '{{' +
+          listMapGroup[i][0]['memo'] + '{{';
       for(int j = 1; j < listMapGroup[i].length; j++){
         if(listMapGroup[i][j]['memo'] == null){
           personMemoString == '';
@@ -315,7 +441,7 @@ late var snackBar;
           personMemoString = listMapGroup[i][j]['memo'];
         }
 
-        jsonString = jsonString + listMapGroup[i][j]['name'] + '{{' + listMapGroup[i][j]['birthData'].toString() + '{{' + listMapGroup[i][j]['saveDate'].toString() + '{{' + personMemoString;
+        jsonString = jsonString + listMapGroup[i][j]['name'] + '{{' + listMapGroup[i][j]['birthData'].toString() + '{{' + personMemoString;
 
         if(j < listMapGroup[i].length - 1){
           jsonString = jsonString + '{{';
@@ -330,6 +456,37 @@ late var snackBar;
 
     await file.writeAsString(jsonEncode(jsonString));
   }
+
+  //그룹 명식에서 출생 정보를 선택하여 반환
+  GetSelectedBirthDataFromGroup(String type, int groupIndex, int personIndex){
+  switch(type){
+    case 'gender':{
+      if(((listMapGroup[groupIndex][personIndex]['birthData'] / 10000000000000) % 10).floor() == 1){
+        return true;
+      } else {
+        return false;
+      }
+    }
+    case 'uemYang':{
+      return ((listMapGroup[groupIndex][personIndex]['birthData'] / 1000000000000) % 10).floor();
+    }
+    case 'birthYear':{
+      return ((listMapGroup[groupIndex][personIndex]['birthData'] / 100000000) % 10000).floor();
+    }
+    case 'birthMonth':{
+      return ((listMapGroup[groupIndex][personIndex]['birthData'] / 1000000 ) % 100).floor();
+    }
+    case 'birthDay':{
+      return ((listMapGroup[groupIndex][personIndex]['birthData'] / 10000 ) % 100).floor();
+    }
+    case 'birthHour':{
+      return ((listMapGroup[groupIndex][personIndex]['birthData'] / 100 ) % 100).floor();
+    }
+    case 'birthMin':{
+      return listMapGroup[groupIndex][personIndex]['birthData'] % 100;
+    }
+  }
+}
 
   //-- 여기부터 단일 명식 저장
   //명식을 최초 저장할 때 사용
@@ -559,6 +716,21 @@ late var snackBar;
   int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
 
   Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now()};
+
+  bool isSameData = false;
+  int sameDataCheckCount = 9;
+  if((mapRecentPerson.length - 1) < sameDataCheckCount){
+    sameDataCheckCount = (mapRecentPerson.length - 1);
+  }
+  for(int i = 0; i < sameDataCheckCount; i++){
+    if(mapRecentPerson.isNotEmpty && mapRecentPerson[i]['name'] == name && mapRecentPerson[i]['birthData'] == birthData){
+      isSameData = true;
+    }
+  }
+  if(isSameData == true){
+    return;
+  }
+
   mapRecentPerson.insert(0, personData);
 
   while(true){

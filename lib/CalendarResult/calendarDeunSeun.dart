@@ -88,6 +88,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
   List<String> listWolunGongmangString = ['','','','','','','','','','','',''];
   int wolunGongmangTopCount = 0;
   double wolunGongmangContainerHeight = style.UIBoxLineHeight;
+  ScrollController wolunRowController = ScrollController();
 
   double buttonPaddingVal = 4;
 
@@ -356,8 +357,9 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: listCheonganBoxColor0[deunNum], elevation:0.0, foregroundColor: listCheonganBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
-              child:Align(
+              child:Container(
                   alignment: Alignment.center,
+                  padding: EdgeInsets.only(bottom:2),
                   child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listDeunCheongan0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listCheonganTextColor0[deunNum]))),
             )
         );
@@ -386,7 +388,10 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: listJijiBoxColor0[deunNum], elevation:0.0, foregroundColor: listJijiBoxColor0[deunNum], surfaceTintColor: Colors.transparent),
-              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))),
+              child:Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(bottom:2),
+                  child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listDeunJiji0[deunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listJijiTextColor0[deunNum]))),
             )
         );
       }
@@ -711,7 +716,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: listSeunCheonganBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunCheonganBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
-              child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum]))),
+              child:Container(alignment: Alignment.center,padding: EdgeInsets.only(bottom:2),child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listSeunCheongan0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunCheonganTextColor0[seunNum]))),
             )
         );
       }
@@ -741,7 +746,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: listSeunJijiBoxColor0[seunNum], elevation:0.0, foregroundColor: listSeunJijiBoxColor0[seunNum], surfaceTintColor: Colors.transparent),
-              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]))),
+              child:Container(alignment: Alignment.center,padding: EdgeInsets.only(bottom:2),child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][listSeunJiji0[seunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listSeunJijiTextColor0[seunNum]))),
             )
         );
       }
@@ -1030,7 +1035,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: listWolunCheonganBoxColor0[wolunNum], elevation:0.0, foregroundColor: listWolunCheonganBoxColor0[wolunNum], surfaceTintColor: Colors.transparent),
-              child:Align(alignment: Alignment.center,child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum]))),
+              child:Container(alignment: Alignment.center,padding: EdgeInsets.only(bottom:2),child: Text(style.stringCheongan[widget.isShowDrawerKoreanGanji][listWolunCheongan0[wolunNum]], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: listWolunCheonganTextColor0[wolunNum]))),
             )
         );
       }
@@ -1055,7 +1060,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               },
               style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.only(bottom:buttonPaddingVal),
                   backgroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), elevation:0.0, foregroundColor: style.SetOhengColor(false, (wolunNum + 1) % style.stringJiji[0].length), surfaceTintColor: Colors.transparent),
-              child:Align(alignment: Alignment.center,child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),
+              child:Container(alignment: Alignment.center,padding: EdgeInsets.only(bottom:2),child: Text(style.stringJiji[widget.isShowDrawerKoreanGanji][(wolunNum + 1) % style.stringJiji[0].length], style:TextStyle(fontSize: style.UIOhengDeunFontSize, fontWeight: style.UIOhengDeunFontWeight, color: isWhiteText == true? Colors.white : style.colorBlack))),
             )
         );
       }
@@ -1897,11 +1902,13 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
 
     return wolunWidgetHeight;
   }
+
   Widget GetWolun(){
     if(((personalDataManager.deunSeunData % 10000000) / 1000000).floor() == 1){
       return SizedBox.shrink();
     } else {
       List<Widget> listWolunWidget = [];
+
       listWolunWidget.add(GetWolunWolWidget());
       listWolunWidget.add(GetWolunYugchinWidget(true));
       listWolunWidget.add(Container(  //월운 천간 버튼
@@ -2008,6 +2015,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
             child: ScrollConfiguration(
               behavior: MyCustomScrollBehavior(),
               child: SingleChildScrollView(
+                controller: wolunRowController,
                 scrollDirection: Axis.horizontal,
                 physics: ClampingScrollPhysics(),
                 child:Column(
@@ -2036,6 +2044,12 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
       if (isShowPersonalDataNum == 2 || isShowPersonalDataNum == 3 || isShowPersonalDataNum == 6 || isShowPersonalDataNum == 7) {
         isHideOld = true;
       }
+    }
+
+    if(DateTime.now().month == 1 || DateTime.now().month == 2){
+      WidgetsBinding.instance!.addPostFrameCallback((_){
+        wolunRowController.animateTo(wolunRowController.position.maxScrollExtent, duration: Duration(milliseconds:700), curve: Curves.fastOutSlowIn);
+      });
     }
   }
 

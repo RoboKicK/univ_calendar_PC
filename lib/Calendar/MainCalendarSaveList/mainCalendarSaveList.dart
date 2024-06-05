@@ -371,7 +371,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
           ),
           Column(
             children: [
-              AnimatedContainer(  //천간 합충극 옵션 버튼 열림 박스
+              AnimatedContainer(  //정렬 열림 박스
                 duration: Duration(milliseconds: 170),
                 width: style.UIButtonWidth,
                 height: sortContainerHeight,
