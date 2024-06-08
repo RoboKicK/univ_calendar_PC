@@ -418,7 +418,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                       context.read<Store>().SetPersonInquireInfo(saveDataManager.mapPerson[i]['name'], saveDataManager.GetSelectedBirthData('gender', i), saveDataManager.GetSelectedBirthData('uemYang',i),
                                           saveDataManager.GetSelectedBirthData('birthYear',i), saveDataManager.GetSelectedBirthData('birthMonth',i),
                                           saveDataManager.GetSelectedBirthData('birthDay',i), saveDataManager.GetSelectedBirthData('birthHour',i), saveDataManager.GetSelectedBirthData('birthMin',i),
-                                          saveDataManager.GetSelectedBirthData('memo',i)??'', saveDataManager.mapPerson[i]['saveDate']);
+                                          saveDataManager.mapPerson[i]['memo']??'', saveDataManager.mapPerson[i]['saveDate']);
                                     },
                                     style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                         foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
@@ -474,7 +474,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                               birthYear0: saveDataManager.GetSelectedBirthData('birthYear',i), birthMonth0: saveDataManager.GetSelectedBirthData('birthMonth',i),
                                               birthDay0: saveDataManager.GetSelectedBirthData('birthDay',i), birthHour0: saveDataManager.GetSelectedBirthData('birthHour',i), birthMin0: saveDataManager.GetSelectedBirthData('birthMin',i),
                                               memo:saveDataManager.mapPerson[i]['memo']??'', saveDate: saveDataManager.mapPerson[i]['saveDate']??DateTime.now(),
-                                              closeOption: widget.setSideOptionLayerWidget, goToEditMemo: false, key:UniqueKey()),
+                                              closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
                                         ));
                                       },
                                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

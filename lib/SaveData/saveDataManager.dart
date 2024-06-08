@@ -266,7 +266,7 @@ late var snackBar;
 
             groupMap.add({'groupName':groupName, 'saveDate':saveDate, 'memo':groupMemo});
 
-            while(true) {
+            while(true) { //명식
               if (saveDataString.substring(endNum - 2, endNum) == '{{') {
                 personName = saveDataString.substring(startNum, endNum - 2);
                 startNum = endNum;
@@ -274,7 +274,7 @@ late var snackBar;
                 startNum = startNum + 16;
                 endNum = startNum + 2;
 
-                while(true){
+                while(true){  //메모
                   if (saveDataString.substring(endNum - 2, endNum) == '{{' || saveDataString.substring(endNum - 2, endNum) == '}}'){
                     personMemo = saveDataString.substring(startNum, endNum - 2);
                     startNum = endNum;
@@ -485,8 +485,40 @@ late var snackBar;
   }
 }
 
+  //listMapGroup에서 해당 인덱스 찾기
+  int FindListMapGroupIndex(String groupName, DateTime saveDate){
+  for(int i = 0; i < listMapGroup.length; i++){
+    if(listMapGroup[i][0]['groupName'] == groupName && listMapGroup[i][0]['saveDate'] == saveDate){
+      return i;
+    }
+  }
+
+  return -1;
+}
+
+  //그룹의 메모를 수정하여 저장할 때 사용
+  SaveListMapGroupDataMemo(String groupName, DateTime saveDate, String memo){
+  int groupIndex = FindListMapGroupIndex(groupName, saveDate);
+
+  if(listMapGroup[groupIndex][0]['memo'] != memo){
+    listMapGroup[groupIndex][0]['memo'] = memo;
+    SaveGroupFile();
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      snackBar('메모가 저장되었습니다');
+    });
+  }
+}
+
+  //그룹을 삭제할 때 사용 - listMapGroup에서 명식을 삭제
+  DeleteGroupData(String groupName, DateTime saveDate) {
+
+  listMapGroup.removeAt(FindListMapGroupIndex(groupName, saveDate));
+  SaveGroupFile();
+
+  snackBar('그룹이 삭제되었습니다');
+}
+
   //-- 여기부터 단일 명식 저장
-  //명식을 최초 저장할 때 사용
 
   int ConvertToBirthData(bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
     int genderInt = 1;  //남자:1
@@ -772,6 +804,46 @@ late var snackBar;
     }
     case 'birthMin':{
       return mapRecentPerson[index]['birthData'] % 10;
+    }
+  }
+}
+
+  //birthData에서 선택한 값 추출
+  GetSelectedDataFromBirthData(String type, int birthData){
+  switch(type){
+    case 'gender':{
+      if(((birthData / 10000000000000) % 10).floor() == 1){
+        return true;
+      } else {
+        return false;
+      }
+    }
+    case 'uemYang':{
+      return ((birthData / 1000000000000) % 10).floor();
+    }
+    case 'birthYear':{
+      return ((birthData / 100000000) % 10000).floor();
+    }
+    case 'birthMonth':{
+      return ((birthData / 1000000 ) % 100).floor();
+    }
+    case 'birthDay':{
+      return ((birthData / 10000 ) % 100).floor();
+    }
+    case 'birthHour':{
+      return ((birthData / 100 ) % 100).floor();
+    }
+    case 'birthMin':{
+      return birthData % 100;
+    }
+    case 'uemYangText':{
+      if(((birthData / 1000000000000) % 10).floor() == 0){
+        return '양력';
+      } else if(((birthData / 1000000000000) % 10).floor() == 1){
+        return '음력';
+      } else {
+        return '음력 윤달';
+      }
     }
   }
 }

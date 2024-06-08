@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class MainCalendarSaveListOption extends StatefulWidget {
   const MainCalendarSaveListOption({super.key, required this.name0, required this.gender0, required this.uemYang0, required this.birthYear0, required this.birthMonth0,
     required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo,
-  required this.closeOption, required this.goToEditMemo});
+  required this.closeOption});
 
   final String name0;
   final bool gender0;
@@ -22,7 +22,6 @@ class MainCalendarSaveListOption extends StatefulWidget {
   final String memo;
 
   final closeOption;
-  final bool goToEditMemo;
 
   @override
   State<MainCalendarSaveListOption> createState() => _MainCalendarSaveListOptionState();
@@ -489,10 +488,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     uemYangText0 = GetUemYangText(widget.uemYang0);
 
     CheckPersonalDataHide();
-
-    if(widget.goToEditMemo == true){
-      SetEditingMemo();
-    }
   }
 
   @override

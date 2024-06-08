@@ -5,12 +5,16 @@ import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import 'mainCalendarSaveListOption.dart' as mainCalendarSaveListOption;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
+import 'mainCalendarGroupSaveListOption.dart' as mainCalendarGroupSaveListOption;
 
 class MainCalendarGroupSaveList extends StatefulWidget {
-  const MainCalendarGroupSaveList({super.key, required this.groupDataLoad, required this.setGroupLoadWidget});
+  const MainCalendarGroupSaveList({super.key, required this.groupDataLoad, required this.setGroupLoadWidget, required this.setSideOptionLayerWidget, required this.refreshListMapGroupLength, required this.setSideOptionWidget});
 
   final groupDataLoad;
   final setGroupLoadWidget;
+  final setSideOptionLayerWidget;
+  final setSideOptionWidget;
+  final refreshListMapGroupLength;
 
   @override
   State<MainCalendarGroupSaveList> createState() => _MainCalendarGroupSaveListState();
@@ -331,7 +335,13 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                 height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
                                 child: ElevatedButton(
                                   onPressed: () {
-
+                                    widget.setSideOptionLayerWidget(true);
+                                    widget.setSideOptionWidget(Container(
+                                      width: style.UIButtonWidth + 30,
+                                      height: MediaQuery.of(context).size.height - style.appBarHeight,
+                                      child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(listMapGroup: saveDataManager.listMapGroup[i], refreshListMapGroupLength: widget.refreshListMapGroupLength,
+                                          closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
+                                    ));
                                   },
                                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                       foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
@@ -356,7 +366,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
     );
 
 
-      /*Container(
+    /*Container(
       width: widgetWidth,
       height: widgetHeight,
       decoration: BoxDecoration(
@@ -517,36 +527,36 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
               ],
             ),
             mainCalendarSaveListOptionWidget,*/
-            //Container(
-            //  width: widgetWidth,
-            //  height: widgetHeight,
-            //  child: Container(  //끄기 버튼
-            //      width: widgetWidth,
-            //      height: style.UIMarginTopTop,
-            //      alignment: Alignment.topCenter,
-            //      child: Row(
-            //        mainAxisAlignment: MainAxisAlignment.end,
-            //        children: [
-            //          Container(
-            //            width: 24,
-            //            height: 24,
-            //            margin: EdgeInsets.only(top: 6,right:6),
-            //            child: ElevatedButton(
-            //              onPressed: () {
-            //                widget.setGroupLoadWidget(false);
-            //              },
-            //              style: ElevatedButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
-            //              child: Icon(Icons.close, color: Colors.white),
-            //            ),
-            //          ),
-            //        ],
-            //      )
-            //  ),
-            //),
-          //]
-      //),
+    //Container(
+    //  width: widgetWidth,
+    //  height: widgetHeight,
+    //  child: Container(  //끄기 버튼
+    //      width: widgetWidth,
+    //      height: style.UIMarginTopTop,
+    //      alignment: Alignment.topCenter,
+    //      child: Row(
+    //        mainAxisAlignment: MainAxisAlignment.end,
+    //        children: [
+    //          Container(
+    //            width: 24,
+    //            height: 24,
+    //            margin: EdgeInsets.only(top: 6,right:6),
+    //            child: ElevatedButton(
+    //              onPressed: () {
+    //                widget.setGroupLoadWidget(false);
+    //              },
+    //              style: ElevatedButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
+    //              child: Icon(Icons.close, color: Colors.white),
+    //            ),
+    //          ),
+    //        ],
+    //      )
+    //  ),
+    //),
+    //]
+    //),
     //)
-    ;
+        ;
   }
 }
 

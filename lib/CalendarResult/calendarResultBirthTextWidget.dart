@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 class CalendarResultBirthTextWidget extends StatefulWidget {
   const CalendarResultBirthTextWidget({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin, required this.isShowDrawerManOld, required this.isOneWidget, required this.widgetWidth, required this.isEditSetting,
-  required this.setTargetName, required this.setUemYangBirthType});
+  required this.setTargetName, required this.setUemYangBirthType, required this.refreshMapPersonLengthAndSort});
 
   final String name;
   final String gender;
@@ -20,6 +20,7 @@ class CalendarResultBirthTextWidget extends StatefulWidget {
   final bool isEditSetting;
   final setTargetName;
   final setUemYangBirthType;
+  final refreshMapPersonLengthAndSort;
 
   @override
   State<CalendarResultBirthTextWidget> createState() => _CalendarResultBirthTextWidgetState();
@@ -173,6 +174,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
               setState(() {
                 nameText = nameTextController.text;
                 widget.setTargetName(nameText);
+                widget.refreshMapPersonLengthAndSort();
               });
             },
             child: Text('저장'),

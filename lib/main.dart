@@ -160,7 +160,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
     storeNowPageName = listPageNameController[nowPageNum];
     nowPageName = storeNowPageName;
-    //pageNameController.text = storeNowPageName;
     context.read<Store>().SetNowPageName(storeNowPageName);
   }
 
@@ -352,6 +351,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         SetNowCalendarNum(nowPageCount - 1);
         listPageNameController[nowPageNum] = saveDataManager.listMapGroup[groupIndex][0]['groupName'];
         SetNowPageName(saveDataManager.listMapGroup[groupIndex][0]['groupName']);
+        SetNowCalendarNum(nowPageNum);
         context.read<Store>().SetTargetGroupLoadIndex(groupIndex);
         context.read<Store>().SetTargetGroupLoadPageNum(uniquePageNum);
       });
@@ -375,7 +375,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           height: MediaQuery.of(context).size.height - 6,
           alignment: Alignment.center,
           color: Colors.grey.withOpacity(0.1),
-          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget),
+          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength,),
         ),
       );
     } else {
@@ -507,7 +507,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       Container(
         width: style.UIButtonWidth+38,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget),
+        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength,),
       ),
       Container(
         width: style.UIButtonWidth+2,

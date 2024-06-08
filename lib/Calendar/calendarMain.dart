@@ -998,7 +998,10 @@ class _CalendarWidget extends State<CalendarWidget> {
 
       if(calendarMemoWidgetHeight == 0){
         calendarMemoWidget = SizedBox.shrink();
-        saveDataManager.SavePersonDataMemo2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate, calendarMemoController.text);
+        if(personSaveDate != DateTime.utc(3000)) {
+          saveDataManager.SavePersonDataMemo2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin,
+              personSaveDate, calendarMemoController.text);
+        }
       } else {
         calendarMemoWidget = Container(
           width: (widgetWidth - (style.UIMarginLeft * 2)),
@@ -1207,6 +1210,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         isEditSetting: isEditSetting,
         setTargetName: SetTargetName,
         setUemYangBirthType: SetUemYangBirthType,
+        refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
       );//isShowDrawerManOld);
     }
   }
@@ -1236,6 +1240,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           isEditSetting: isEditSetting,
           setTargetName: SetTargetName,
         setUemYangBirthType: SetUemYangBirthType,
+        refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
       );
     });
   }
@@ -1349,6 +1354,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               isEditSetting: isEditSetting,
               setTargetName: SetTargetName,
             setUemYangBirthType: SetUemYangBirthType,
+            refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
           );
         });
       } else {
@@ -1370,6 +1376,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               isEditSetting: isEditSetting,
               setTargetName: SetTargetName,
             setUemYangBirthType: SetUemYangBirthType,
+            refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
           );
         });
       }
@@ -1389,7 +1396,8 @@ class _CalendarWidget extends State<CalendarWidget> {
             isOneWidget: (widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false,
             isEditSetting: isEditSetting,
             setTargetName: SetTargetName,
-            setUemYangBirthType: SetUemYangBirthType
+            setUemYangBirthType: SetUemYangBirthType,
+          refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
         );
       });
     }
