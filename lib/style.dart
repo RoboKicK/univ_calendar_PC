@@ -31,6 +31,11 @@ var theme = ThemeData(
     hoverColor: Colors.transparent,
 
   ),
+  scrollbarTheme: ScrollbarThemeData(
+    thickness: MaterialStateProperty.all(8),
+    thumbColor: MaterialStateProperty.all(colorDarkGrey),
+    radius: Radius.circular(10),
+  ),
   dialogTheme: DialogTheme(
     titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: colorBlack),
     contentTextStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorBlack),

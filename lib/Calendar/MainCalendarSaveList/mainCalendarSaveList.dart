@@ -9,9 +9,10 @@ import '../../Settings/personalDataManager.dart' as personalDataManager;
 import 'package:provider/provider.dart';
 
 class MainCalendarSaveList extends StatefulWidget {
-  const MainCalendarSaveList({super.key, required this.setSideOptionLayerWidget, required this.setSideOptionWidget});
+  const MainCalendarSaveList({super.key, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.mapPersonLength});
 
   final setSideOptionLayerWidget, setSideOptionWidget;
+  final int mapPersonLength;
 
   @override
   State<MainCalendarSaveList> createState() => _MainCalendarSaveListState();
@@ -386,9 +387,9 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                   behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
                   child: RawScrollbar(
                     controller: scrollController,
-                    thumbColor: style.colorDarkGrey,
-                    thickness: 8,
-                    radius: Radius.circular(10),
+                    //thumbColor: style.colorDarkGrey,
+                    //thickness: 8,
+                    //radius: Radius.circular(10),
                     child: ListView.separated(
                         scrollDirection: Axis.vertical,
                         controller: scrollController,

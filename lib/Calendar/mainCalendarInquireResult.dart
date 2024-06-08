@@ -21,19 +21,21 @@ import 'package:provider/provider.dart';
 
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
-    required this.memo, required this.saveDate, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType});
+    required this.saveDate, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType,
+  required this.refreshMapRecentPersonLength, required this.calendarMemoWidgetHeight});
 
   final String name;
   final bool gender;
   final int uemYang; //0: 양력, 1:음력 평달, 2:음력 윤달
   final int birthYear, birthMonth, birthDay, birthHour, birthMin;
-  final String memo;
   final DateTime saveDate;
   final double widgetWidth;
   final bool isEditSetting;
   final bool isShowChooseDayButtons;
   final setWidgetCalendarResultBirthTextFromChooseDayMode;
   final setUemYangBirthType;
+  final refreshMapRecentPersonLength;
+  final double calendarMemoWidgetHeight;
 
   @override
   State<MainCalendarInquireResult> createState() => _MainCalendarInquireResultState();
@@ -56,8 +58,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   late DateTime saveDate;
 
   bool showMemo = false;
-  String prefixMemo = '', editingMemo = '';
-  TextEditingController memoController = TextEditingController();
 
   GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -210,22 +210,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
       if(listRoc.isNotEmpty){
         listRocGongmangNum = listRoc;
       }
-  }
-
-  ShowMemo(){
-    setState(() {
-      if(showMemo == false){  // 메모 시작
-        showMemo = true;
-        editingMemo = prefixMemo;
-        memoController.text = editingMemo;
-      }
-      else{ //메모 저장
-        showMemo = false;
-        saveDataManager.SavePersonDataMemo2(widget.name, widget.gender, widget.uemYang, listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4], saveDate, editingMemo);
-        prefixMemo = editingMemo;
-        editingMemo = '';
-      }
-    });
   }
 
   FindLastWidgetNum(){
@@ -521,7 +505,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
         alignment: Alignment.topCenter,
         children:[
           Container(
-          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 46,
+          height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 46 - widget.calendarMemoWidgetHeight,
           color: style.colorBackGround,
           child: ScrollConfiguration(
             behavior: MyCustomScrollBehavior().copyWith(scrollbars: false),
@@ -672,82 +656,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
             ),
           ),
         ]
-      );
-    }
-  }
-
-  Widget GetMemoScreen(){
-    if(showMemo == false){
-      return Container();
-    }
-    else{
-      return AnimatedOpacity(
-        opacity: showMemo? 1.0 : 0.0,
-        duration: Duration(milliseconds: 130),
-        child: Column(
-          children: [
-            Expanded(child: SizedBox.shrink()),
-            Stack(
-              alignment: Alignment.topRight,
-              children: [
-                Container(
-                width: widget.widgetWidth,
-                height: (MediaQuery.of(context).size.height) * 0.5,
-                color: Color(0xff111111).withOpacity(0.8),
-                child: ScrollConfiguration(
-                  behavior: ScrollBehavior().copyWith(overscroll: false),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child:
-                      Container( //메모 본문 수정
-                        width: widget.widgetWidth,
-                        height:600,
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          width: (widget.widgetWidth - (style.UIMarginLeft * 2)),
-                          padding: EdgeInsets.only(top:style.UIMarginTop),
-                          child: TextField(
-                            autofocus: true,
-                            controller: memoController,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            style: Theme.of(context).textTheme.displayMedium,
-                            focusNode: memoFocusNode,
-                            onTapOutside: (event) {
-                              memoFocusNode.requestFocus();
-                            },
-                            decoration:InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(vertical: 0),
-                              counterText:"",
-                              border: InputBorder.none,),
-                            onChanged: (text){
-                              setState(() {
-                                editingMemo = text;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                  ),
-                ),
-                ),
-                Container(  //메모 저장 버튼
-                  width: (widget.widgetWidth - (style.UIMarginLeft * 2)) * 0.1,
-                  height: style.saveDataMemoLineHeight,
-                  child: IconButton(
-                    onPressed: (){
-                      setState(() {
-                        ShowMemo();
-                      });
-                    },
-                    icon: Icon(Icons.check_circle_outline),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       );
     }
   }
@@ -1052,6 +960,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
     saveDate = widget.saveDate;
     saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
+    widget.refreshMapRecentPersonLength();
     gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
 
     calendarData = personalDataManager.calendarData;
@@ -1082,8 +991,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     optionDataNum = ((personalDataManager.sinsalData % 100) / 10).floor();
     if(optionDataNum == 2 || personalDataManager.etcSinsalData != personalDataManager.etcSinsalDataAllOff){
       isShowDrawerSinsal = 1; }
-
-    prefixMemo = widget.memo;
 
     FindLastWidgetNum();
 
@@ -1160,7 +1067,6 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
           //alignment: Alignment.topCenter,
             children: [
           GetPaljaResult(),
-          GetMemoScreen(),
         ]);
   }
 }

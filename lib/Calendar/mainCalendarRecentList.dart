@@ -181,7 +181,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
             ElevatedButton(
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: (){
-                  saveDataManager.SavePersonData2(name, gender, uemYangType, birthYear, birthMonth, birthDay, birthHour, birthMin, DateTime.now());
+                  saveDataManager.SavePersonData2(name, gender, uemYangType, birthYear, birthMonth, birthDay, birthHour, birthMin, DateTime.now(), '');
 
                   Navigator.pop(context);
                 },
@@ -347,7 +347,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                       saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
                                           saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
                                           saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
-                                          saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now());                                         ;}
+                                          saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now(), '');                                         ;}
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

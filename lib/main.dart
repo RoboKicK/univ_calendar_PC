@@ -139,6 +139,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   bool isLoadPersonData = false;
 
+  int mapPersonLength = 0;
+  int mapRecentPersonLength = 0;
+  int listMapGroupLength = 0;
+
   //설정 페이지 온오프
   ShowSettingPage(){
     setState(() {
@@ -189,7 +193,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.insert(0,Colors.white);
           listCalendarButtonSize.insert(0,16);
           listUniquePageNum.insert(0, uniquePageNum);
-          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
+          listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
+              setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
             if(listPageNameController[i - 1] != ''){
@@ -202,7 +208,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           listCalendarButtonColor.add(Colors.white);
           listCalendarButtonSize.add(16);
           listUniquePageNum.add(uniquePageNum);
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
+              setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
         }
         nowPageCount++;
       } else {
@@ -242,7 +250,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         listCalendarButtonSize = [20,16,16];
         listUniquePageNum = [0,1,2];
         for(int i = 0; i < firstPageCount; i++){
-          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
+          listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
+              setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
@@ -262,7 +272,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
         if(nowPageCount == 3){  //페이지 3개뿐일 때
           uniquePageNum++;
           listUniquePageNum.insert(num, uniquePageNum);
-          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
+          listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
+              setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
           for(int i = 0; i < 3; i++){
             listPageNameController[i] = '';
           }
@@ -431,6 +443,30 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     (context as Element).visitChildren(rebuild);
   }
 
+  //저장목록 실시간 갱신
+  RefreshMapPersonLengthAndSort(){
+    setState(() {
+      mapPersonLength = saveDataManager.mapPerson.length;
+      saveDataManager.SortMapPerson(-1);
+    });
+  }
+
+  //최근목록 실시간 갱신
+  RefreshRecentPersonLength(){
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      setState(() {
+        mapRecentPersonLength = saveDataManager.mapRecentPerson.length;
+      });
+    });
+  }
+
+  //그룹목록 실시간 갱신
+  RefreshListMapGroupLength(){
+    setState(() {
+      listMapGroupLength = saveDataManager.listMapGroup.length;
+    });
+  }
+
   @override initState(){
     super.initState();
     findGangi.FindGanjiData();
@@ -438,7 +474,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     personalDataManager.SetFileDirectoryPath();
 
     for(int i = 0; i < firstPageCount; i++) {
-      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum, setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget));
+      listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
+          setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+          refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength,));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
@@ -448,6 +486,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
     listCalendarTexts.add(Text(calendarHeadLineTitle[2], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[2]), ));
     listCalendarTexts.add(Text(calendarHeadLineTitle[3], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[3]), ));
 
+    mapPersonLength = saveDataManager.mapPerson.length;
+    mapRecentPersonLength = saveDataManager.mapRecentPerson.length;
   }
 
   @override
@@ -457,7 +497,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
       Container(
         width: style.UIButtonWidth+38,//2,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget),
+        child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, mapPersonLength: mapPersonLength,),
       ),
       Container(
         width: style.UIButtonWidth+38,
@@ -581,8 +621,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                           margin: EdgeInsets.only(left: 00),
                           child: ElevatedButton(
                             onPressed: (){
-
-                              saveDataManager.LoadSavedGroup();
+                              RefreshMapPersonLengthAndSort();
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),

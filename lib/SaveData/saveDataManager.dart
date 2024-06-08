@@ -31,6 +31,8 @@ List<Map> mapGroupSortedMark = []; //즐겨찾기로 정렬된 리스트
 List<Map> mapRecentPerson = [];
 List<Map> mapDiary = [];  //일진일기
 
+int sortNumMapPerson = 0;
+
 late var snackBar;
 
   //최초 어플 켰을 때 저장되어 있는 명식들을 로드함
@@ -47,7 +49,6 @@ late var snackBar;
 
         int startNum = 0;
         int endNum = 3;
-        int parsingStep = 0;
 
         String personName = '';
         int birthData = 0;
@@ -55,37 +56,33 @@ late var snackBar;
         String personMemo = '';
 
         while (true) {
-          if (saveDataString.length < endNum + 2) {
-            break;
-          }
 
           if (saveDataString.substring(endNum - 2, endNum) == '{{') {
-            switch (parsingStep) {
-              case 0:
-                {
-                  //이름 불러오기
-                  personName = saveDataString.substring(startNum, endNum - 2);
-                  startNum = endNum;
-                  birthData = int.parse(saveDataString.substring(startNum, startNum + 14));
-                  startNum = startNum + 16;
-                  saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
-                  startNum = startNum + 28;
-                  endNum = startNum + 2;
+            personName = saveDataString.substring(startNum, endNum - 2);
+            startNum = endNum;
+            birthData = int.parse(saveDataString.substring(startNum, startNum + 14));
+            startNum = startNum + 16;
+            saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
+            startNum = startNum + 28;
+            endNum = startNum + 2;
 
-                  parsingStep++;
-                }
-              case 1:
-                {
-                  personMemo = saveDataString.substring(startNum, endNum - 2);
-                  startNum = endNum;
-                  endNum = startNum + 2;
+            while(true) {
+              if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+                personMemo = saveDataString.substring(startNum, endNum - 2);
+                startNum = endNum;
+                endNum = startNum + 2;
 
-                  mapPerson.add({'name': personName, 'birthData': birthData, 'saveDate': saveDate, 'memo': personMemo});
-                  parsingStep = 0;
-                }
+                mapPerson.add({'name': personName, 'birthData': birthData, 'saveDate': saveDate, 'memo': personMemo});
+                break;
+              } else {
+                endNum++;
+              }
             }
           } else {
             endNum++;
+          }
+          if (saveDataString.length < endNum + 2) {
+            break;
           }
         }
       }
@@ -366,7 +363,7 @@ late var snackBar;
     }
   } catch(e) {};
 }
-ClearListMapGroup(){
+  ClearListMapGroup(){
   listMapGroup.clear();
   print('clearsuccese');
 }
@@ -503,7 +500,7 @@ ClearListMapGroup(){
   }
 
   //명식을 최초 저장할 때 사용2 - mapPerson에 명식을 추가
-  SavePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, {String memo = ''}) {
+  SavePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo) {
     //int genderVal = genderInt * 10000000000000;
     //int uemYangVal = uemYang * 1000000000000;
     //int birthYearVal = birthYear * 100000000;
@@ -695,7 +692,11 @@ ClearListMapGroup(){
 
   //명식 리스트 정렬
   SortMapPerson(int num){
-    switch(num){
+    if(num != -1) {
+      sortNumMapPerson = num;
+    }
+
+  switch(sortNumMapPerson){
       case 0:{
         mapPerson.sort((a, b) => a['saveDate'].compareTo(b['saveDate']));
       }
