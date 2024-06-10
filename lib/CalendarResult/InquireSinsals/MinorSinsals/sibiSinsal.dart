@@ -30,7 +30,11 @@ class SibiSinsal{//12신살 계산해주는 클래스
       }
     }
     for(int i = count-1; i > -1; i--){
-      listMinorSinsalString[i] = listMinorSinsalString[i] + list12SinsalText[(_listPaljaData[(i * 2) + 1] - startNum + list12SinsalText.length) % list12SinsalText.length];
+      if(_listPaljaData[(i * 2) + 1] == 30){
+        listMinorSinsalString[i] = 'ㅡ';
+      } else {
+        listMinorSinsalString[i] = listMinorSinsalString[i] + list12SinsalText[(_listPaljaData[(i * 2) + 1] - startNum + list12SinsalText.length) % list12SinsalText.length];
+      }
     }
     
     if(topCount > 0){

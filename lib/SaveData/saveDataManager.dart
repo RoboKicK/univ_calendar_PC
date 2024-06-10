@@ -666,16 +666,18 @@ late var snackBar;
   }
 
   //명식의 메모를 수정하여 저장할 때 사용
-  SavePersonDataMemo2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo){
+  SavePersonDataMemo2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo, {bool withoutSaveFile = false}){
     int personIndex = FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate);
 
     if(mapPerson[personIndex]['memo'] != memo){
       mapPerson[personIndex]['memo'] = memo;
-      SavePersonFile();
-      WidgetsBinding.instance!.addPostFrameCallback((_){
-        snackBar('메모가 저장되었습니다');
-      });
-    }
+      if(withoutSaveFile == false) {
+        SavePersonFile();
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          snackBar('메모가 저장되었습니다');
+        });
+      }
+  }
   }
 
   //명식의 정보를 수정하여 저장

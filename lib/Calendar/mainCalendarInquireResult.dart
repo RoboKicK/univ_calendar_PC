@@ -959,7 +959,9 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     }
 
     saveDate = widget.saveDate;
-    saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
+    if(widget.name != '오늘') {
+      saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
+    }
     widget.refreshMapRecentPersonLength();
     gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
 

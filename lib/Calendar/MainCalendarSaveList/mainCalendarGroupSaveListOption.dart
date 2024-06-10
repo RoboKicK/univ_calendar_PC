@@ -222,7 +222,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     return Container( //저장일자 정보
       width: style.UIButtonWidth,
       alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(top:6),
+      margin: EdgeInsets.only(top:8),
       child: ListView.builder(
         itemCount: listPersonWidget.length,
         shrinkWrap: true,
@@ -295,7 +295,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
               Container(  //그룹 이름
                 width: style.UIButtonWidth * 0.9,
                 height: style.saveDataNameLineHeight,
-                child: Text(groupName, style: Theme.of(context).textTheme.titleLarge),
+                child: Text(groupName, style: Theme.of(context).textTheme.headlineSmall),
               ),
               Container(  //닫기 버튼
                 width: style.UIButtonWidth * 0.1,

@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 
 class BodyWidgetManager extends StatefulWidget {
   const BodyWidgetManager({super.key, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum, required this.setNowPageName,
-    required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort, required this.refreshMapRecentPersonLength, required this.refreshListMapGroupLength});
+    required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort, required this.refreshMapRecentPersonLength,
+    required this.refreshListMapGroupLength});
 
   final int pageNum;
   final saveSuccess, loadSuccess;
@@ -47,6 +48,6 @@ class _BodyWidgetManagerState extends State<BodyWidgetManager> {
 
     return  calendarMain.CalendarMain(isEditSetting: isEditSetting, pageNum: widget.pageNum, saveSuccess: widget.saveSuccess, loadSuccess: widget.loadSuccess, getNowPageNum: widget.getNowPageNum,
         setNowPageName: widget.setNowPageName, setSideOptionLayerWidget: widget.setSideOptionLayerWidget, setSideOptionWidget: widget.setSideOptionWidget, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
-    refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, refreshListMapGroupLength: widget.refreshListMapGroupLength,);
+    refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, refreshListMapGroupLength: widget.refreshListMapGroupLength);
   }
 }

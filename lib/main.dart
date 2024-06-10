@@ -79,6 +79,12 @@ void main() async {
     //setWindowMaxSize(const Size(max_width, max_height));
     setWindowMinSize(Size(1280, 720));
   }
+
+  //windowManager.waitUntilReadyToShow(windowOptions, () async {
+  //  await windowManager.show();
+  //  await windowManager.focus();
+  //});
+
   runApp(
       ChangeNotifierProvider(
         create: (c) => Store(),
@@ -97,7 +103,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   var appBarTitle = ['  루시아 원 만세력', '  일진일기'];
   int _nowMainTap = 0;  //만세력, 일진일기 구분
@@ -491,6 +497,11 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
   }
 
   @override
+  void dispose(){
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     listSideLayerWidget = [ //사이드 목록 위젯
@@ -615,33 +626,32 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                             },
                           ),
                         ),
-                        Container(  //테스트 버튼
-                          width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
-                          child: ElevatedButton(
-                            onPressed: (){
-                              RefreshMapPersonLengthAndSort();
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
-                          ),
-                        ),
-                        Container(  //테스트 버튼
-                          width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
-                          child: ElevatedButton(
-                            onPressed: (){
-
-                              saveDataManager.ClearListMapGroup();
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
-                          ),
-                        ),
+                        //Container(  //테스트 버튼1
+                        //  width: 40,
+                        //  height: style.appBarHeight,
+                        //  margin: EdgeInsets.only(left: 00),
+                        //  child: ElevatedButton(
+                        //    onPressed: (){
+                        //      RefreshMapPersonLengthAndSort();
+                        //    },
+                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        //    child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
+                        //  ),
+                        //),
+                        //Container(  //테스트 버튼2
+                        //  width: 40,
+                        //  height: style.appBarHeight,
+                        //  margin: EdgeInsets.only(left: 00),
+                        //  child: ElevatedButton(
+                        //    onPressed: (){
+                        //      saveDataManager.ClearListMapGroup();
+                        //    },
+                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        //    child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
+                        //  ),
+                        //),
                       ],
                     ),
                     Row(
