@@ -8,15 +8,17 @@ import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import '../../findGanji.dart' as findGanji;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
 import 'package:provider/provider.dart';
+import '../../findGanji.dart' as findGanji;
 
 class MainCalendarGroupSaveListOption extends StatefulWidget {
-  const MainCalendarGroupSaveListOption({super.key, required this.listMapGroup, required this.refreshListMapGroupLength, required this.closeOption});
+  const MainCalendarGroupSaveListOption({super.key, required this.listMapGroup, required this.refreshListMapGroupLength, required this.closeOption, required this.refreshGroupName});
 
   final List<dynamic> listMapGroup;
 
   final refreshListMapGroupLength;
 
   final closeOption;
+  final refreshGroupName;
 
   @override
   State<MainCalendarGroupSaveListOption> createState() => _MainCalendarGroupSaveListOptionState();
@@ -81,6 +83,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   }
 
   TextEditingController memoController = TextEditingController();
+  TextEditingController groupNameController = TextEditingController();
 
   String groupName = '';
   late DateTime saveDate;
@@ -95,11 +98,13 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
 
   late FocusNode memoFocusNode;
 
+  bool isEditWorldGroupName = false;
+
   SetMemo(String memo){
     editingMemo = memo;
   }
 
-  bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true;
+  bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true, isShowPersonalOld = true;
 
   ShowDialogMessage(String message){
     showDialog<void>(
@@ -151,6 +156,31 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     }
     return firstLineText;
   }
+  String GetOld(int uemYang, int birthYear, int birthMonth, int birthDay) {
+    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){  //인적사항 숨김
+      if(isShowPersonalOld == false){
+        return '';
+      }
+    }
+    if(uemYang != 0){
+      birthYear = findGanji.LunarToSolar(birthYear, birthMonth, birthDay, uemYang == 1? false:true)[0];//listSolBirth[0];
+    }
+    int old = DateTime.now().year - birthYear + 1;//widget.birthYear + 1;
+    if((personalDataManager.etcData % 10) == 2){ //만으로 표시
+      old--;
+      if(DateTime.now().month < birthMonth || (DateTime.now().month == birthMonth && DateTime.now().day < birthDay)){
+        old--;
+      }
+      if (old >= 0) {
+        return '${old}세(만 나이)';
+      }
+    } else {
+      if (old > 0) {
+        return '${old}세';
+      }
+    }
+    return '';
+  }
 
   List<Widget> GetPersonNameText(String name, int birthData){
     List<Widget> listPersonalTextData = [];
@@ -158,7 +188,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight + 4,
-              child:Text("${saveDataManager.GetSelectedDataFromBirthData('gender', birthData) == 1 ? '남성' : '여성'}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.GetSelectedDataFromBirthData('gender', birthData) == 1 ? '남성' : '여성'} ${GetOld(saveDataManager.GetSelectedDataFromBirthData('uemYang', birthData), saveDataManager.GetSelectedDataFromBirthData('birthYear', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMonth', birthData), saveDataManager.GetSelectedDataFromBirthData('birthDay', birthData))}", style: Theme.of(context).textTheme.titleLarge)));
     }
     else {
       listPersonalTextData.add(
@@ -168,7 +198,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight + 4,
-              child:Text("(${saveDataManager.GetSelectedDataFromBirthData('gender', birthData) == 1 ?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${saveDataManager.GetSelectedDataFromBirthData('gender', birthData) == 1 ?'남':'여'}) ${GetOld(saveDataManager.GetSelectedDataFromBirthData('uemYang', birthData), saveDataManager.GetSelectedDataFromBirthData('birthYear', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMonth', birthData), saveDataManager.GetSelectedDataFromBirthData('birthDay', birthData))}", style: Theme.of(context).textTheme.titleLarge)));
     }
 
     return listPersonalTextData;
@@ -206,17 +236,40 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
 
     for(int i = 1; i < widget.listMapGroup.length; i++){
 
-      listPersonWidget.add(GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']));
+      listPersonWidget.add(
+          GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData'])
+      );
       listPersonWidget.add(GetPersonBirthText(widget.listMapGroup[i]['birthData']));
+    }
 
-      //List<Widget> personNameWidget = GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']);
-      //for(int j = 0; j < personNameWidget.length; j++){
-      //  listPersonWidget.add(personNameWidget[j]);
-      //}
-      //List<Widget> personBirthWidget = GetPersonBirthText(widget.listMapGroup[i]['birthData']);
-      //for(int j = 0; j < personBirthWidget.length; j++){
-      //  listPersonWidget.add(personBirthWidget[j]);
-      //}
+    List<Widget> listPersonWidget0 = [];
+
+    for(int i = 1; i < widget.listMapGroup.length; i++){
+      listPersonWidget0.add(
+        Container(
+          height: (style.saveDataNameTextLineHeight + 4) * 2,
+          child: ElevatedButton(
+            onPressed: (){
+              context.read<Store>().SetPersonInquireInfo(widget.listMapGroup[i]['name'], saveDataManager.GetSelectedDataFromBirthData('gender', widget.listMapGroup[i]['birthData']),
+                  saveDataManager.GetSelectedDataFromBirthData('uemYang',widget.listMapGroup[i]['birthData']),saveDataManager.GetSelectedDataFromBirthData('birthYear',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthMonth',widget.listMapGroup[i]['birthData']),
+                  saveDataManager.GetSelectedDataFromBirthData('birthDay',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthHour',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthMin',widget.listMapGroup[i]['birthData']),
+                  widget.listMapGroup[i]['memo']??'', DateTime.utc(3000));
+            },
+            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+            child: Column(
+              children: [
+                Row(
+                  children: GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']),
+                ),
+                Row(
+                  children: GetPersonBirthText(widget.listMapGroup[i]['birthData']),
+                ),
+              ],
+            ),
+          ),
+        )
+      );
     }
 
     return Container( //저장일자 정보
@@ -224,12 +277,13 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       alignment: Alignment.centerLeft,
       margin: EdgeInsets.only(top:8),
       child: ListView.builder(
-        itemCount: listPersonWidget.length,
+        itemCount: listPersonWidget0.length,
         shrinkWrap: true,
         itemBuilder: (context, i){
-          return Row(
-              children:listPersonWidget[i]
-          );
+          //return Row(
+          //    children:listPersonWidget[i]
+          //);
+          return listPersonWidget0[i];
         },
       )
     );
@@ -249,6 +303,72 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       isShowPersonalDataAll = true;
     }
   }
+
+  EditGroupName(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.center,
+        //title: Text('성별을 선택해 주세요'),
+        content: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
+                maxLength: 10,
+                cursorColor: style.colorBlack,
+                autofocus: true,
+                controller: groupNameController,
+                onEditingComplete: () {
+                  Navigator.of(context).pop();
+
+                  setState(() {
+                    saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
+                    widget.refreshListMapGroupLength();
+                  });
+
+                  groupName = groupNameController.text;
+                  widget.refreshGroupName(saveDate, groupName);
+                },
+                decoration: InputDecoration(
+                  labelText: '묶음 이름을 수정합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                  hintText: groupName, hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                  counterText:'',
+                  focusedBorder:UnderlineInputBorder(
+                    borderSide: BorderSide(width:2, color:style.colorDarkGrey),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              setState(() {
+                saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
+                widget.refreshListMapGroupLength();
+              });
+
+              groupName = groupNameController.text;
+              widget.refreshGroupName(saveDate, groupName);
+            },
+            child: Text('저장'),
+          ),
+          ElevatedButton(
+              style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소')),
+        ],
+      ),
+    );
+  }
+
 
   @override
   void initState() {
@@ -283,6 +403,13 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   Widget build(BuildContext context) {
 
     CheckPersonalDataHide();
+
+    if(isEditWorldGroupName != context.watch<Store>().isEditWorldGroupName){
+      if(saveDate == context.watch<Store>().groupNameSaveDate){
+        groupName = saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndexWithoutGroupName(saveDate)][0]['groupName'];
+      }
+      isEditWorldGroupName = context.watch<Store>().isEditWorldGroupName;
+    }
 
     return Container(
       width: style.UIButtonWidth + 30,
@@ -397,8 +524,25 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                     Row(  //수정 삭제 버튼
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Container(  //수정 버튼
+                        width: style.UIButtonWidth * 0.32,
+                        height: style.fullSizeButtonHeight,
+                        margin: EdgeInsets.only(top:style.UIMarginTop),
+                        child:ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                EditGroupName();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(foregroundColor: style.colorBlack, padding:EdgeInsets.only(left:0), backgroundColor: style.colorNavy, elevation:0.0, shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(style.textFiledRadius))),
+                            child: Text('수정', style: Theme.of(context).textTheme.headlineSmall)
+                        ),
+                      ),
+                        Container(  //여백
+                          width: style.UIButtonWidth * 0.02,
+                        ),
                         Container(  //메모 버튼
-                          width: style.UIButtonWidth * 0.49,
+                          width: style.UIButtonWidth * 0.32,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(top:style.UIMarginTop),
                           child:ElevatedButton(
@@ -415,7 +559,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                           width: style.UIButtonWidth * 0.02,
                         ),
                         Container(  //삭제 버튼
-                          width: style.UIButtonWidth * 0.49,
+                          width: style.UIButtonWidth * 0.32,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(top:style.UIMarginTop),
                           child:ElevatedButton(

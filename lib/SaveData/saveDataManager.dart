@@ -495,6 +495,16 @@ late var snackBar;
 
   return -1;
 }
+  //listMapGroup에서 해당 인덱스 찾기
+  int FindListMapGroupIndexWithoutGroupName(DateTime saveDate){
+    for(int i = 0; i < listMapGroup.length; i++){
+    if(listMapGroup[i][0]['saveDate'] == saveDate){
+      return i;
+    }
+  }
+
+    return -1;
+  }
 
   //그룹의 메모를 수정하여 저장할 때 사용
   SaveListMapGroupDataMemo(String groupName, DateTime saveDate, String memo){
@@ -507,6 +517,26 @@ late var snackBar;
       snackBar('메모가 저장되었습니다');
     });
   }
+}
+
+  //그룹의 이름을 수정하여 저장할 때 사용
+  SaveEditedGroupName(String prevGroupName, DateTime saveDate, String nowGroupName){
+    int groupIndex = FindListMapGroupIndex(prevGroupName, saveDate);
+    listMapGroup[groupIndex][0]['groupName'] = nowGroupName;
+
+    SaveGroupFile();
+
+    snackBar('묶음 이름이 수정되었습니다');
+  }
+
+  //그룹의 이름을 수정하여 저장할 때 사용
+  SaveEditedGroupNameWithoutPrevGroupName(DateTime saveDate, String nowGroupName){
+  int groupIndex = FindListMapGroupIndexWithoutGroupName(saveDate);
+  listMapGroup[groupIndex][0]['groupName'] = nowGroupName;
+
+  SaveGroupFile();
+
+  snackBar('묶음 이름이 수정되었습니다');
 }
 
   //그룹을 삭제할 때 사용 - listMapGroup에서 명식을 삭제

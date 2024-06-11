@@ -405,7 +405,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 class CalendarWidget extends StatefulWidget {
   const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount, required this.isEditSetting, required this.getCalendarWidgetCount,
     required this.loadPersonData, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort,
-    required this.refreshMapRecentPersonLength
+    required this.refreshMapRecentPersonLength,
 });
 
   final int widgetNum, nowWidgetCount;
@@ -782,7 +782,8 @@ class _CalendarWidget extends State<CalendarWidget> {
   TextEditingController calendarMemoController = TextEditingController();
   double calendarMemoWidgetHeight = 0;
   ScrollController calendarMemoScrollController = ScrollController();
-  bool isChangedCalendarMemo = false;
+  bool isChangedCalendarMemo = false; //단일 명식에서 메모 변동
+  bool isEditWorldCalendarMemo = false;  //프로젝트 전체에서 메모 변동
 
   int nowState = 0; //0:만세력 입력화면, 1:만세력 조회화면
   int prevState = 0;
@@ -809,6 +810,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   bool isChangeUemYangBirthType = false;
 
   double appBarHeight = 40;
+
 
   //그룹 저장할 때 명식 정보 보냄
   Map ReportPersonData(){
@@ -1000,6 +1002,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               saveDataManager.SavePersonDataMemo2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin,
                   personSaveDate, calendarMemoController.text);
               isChangedCalendarMemo = false;
+              context.read<Store>().SetEditWorldCalendarMemo();
             }
           },
           child: Container(
@@ -1306,6 +1309,8 @@ class _CalendarWidget extends State<CalendarWidget> {
       saveDataManager.SaveEditedPersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate,
         name, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
 
+      widget.refreshMapRecentPersonLength();
+
       SnackBar snackBar = SnackBar(
         content: Text('이름이 수정되었습니다', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
         backgroundColor: style.colorMainBlue,//Colors.white,
@@ -1472,6 +1477,16 @@ class _CalendarWidget extends State<CalendarWidget> {
 
     nowWidgetCount = widget.getCalendarWidgetCount();
 
+    if(isEditWorldCalendarMemo != context.watch<Store>().isEditWorldCalendarMemo){  //명식 메모 변동 시 실시간 동기화
+      if(personSaveDate != DateTime.utc(3000)){
+        int personIndex = saveDataManager.FindMapPersonIndex(targetName, saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), personSaveDate);
+        if(calendarMemoController.text != saveDataManager.mapPerson[personIndex]['memo']){
+          calendarMemoController.text = saveDataManager.mapPerson[personIndex]['memo'];
+        }
+      }
+      isEditWorldCalendarMemo = context.watch<Store>().isEditWorldCalendarMemo;
+    }
+
     return Container(
       width: widgetWidth,
       margin: EdgeInsets.only(left:4, right:4, top: 8, bottom: 8),
@@ -1516,6 +1531,9 @@ class _CalendarWidget extends State<CalendarWidget> {
                     saveButtonWidget,
                     memoButtonWidget,
                     chooseDayButtonWidget,
+                    //Container(  //테스트 버튼
+                    //  width:10, height:10, child:ElevatedButton(onPressed: (){}, child:Text('X'),),
+                    //),
                     //markButtonWidget,
                     //[
                     //  Container(  //메모 버튼

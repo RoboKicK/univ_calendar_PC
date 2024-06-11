@@ -8,13 +8,15 @@ import '../../Settings/personalDataManager.dart' as personalDataManager;
 import 'mainCalendarGroupSaveListOption.dart' as mainCalendarGroupSaveListOption;
 
 class MainCalendarGroupSaveList extends StatefulWidget {
-  const MainCalendarGroupSaveList({super.key, required this.groupDataLoad, required this.setGroupLoadWidget, required this.setSideOptionLayerWidget, required this.refreshListMapGroupLength, required this.setSideOptionWidget});
+  const MainCalendarGroupSaveList({super.key, required this.groupDataLoad, required this.setGroupLoadWidget, required this.setSideOptionLayerWidget, required this.refreshListMapGroupLength, required this.setSideOptionWidget,
+  required this.refreshGroupName});
 
   final groupDataLoad;
   final setGroupLoadWidget;
   final setSideOptionLayerWidget;
   final setSideOptionWidget;
   final refreshListMapGroupLength;
+  final refreshGroupName;
 
   @override
   State<MainCalendarGroupSaveList> createState() => _MainCalendarGroupSaveListState();
@@ -108,6 +110,11 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
       nameText = nameText + text.substring(i, i+1);
     }
     return nameText;
+  }
+  String GetInquireDateText(DateTime saveDateString){
+    String saveDateText = "${saveDateString.year}년 ${saveDateString.month}월 ${saveDateString.day}일";
+
+    return saveDateText;
   }
 
   List<Widget> GetPersonalDataText(int num){
@@ -325,7 +332,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                       height: style.saveDataMemoLineHeight,
                                       padding: EdgeInsets.only(top:4),
                                       //color:Colors.yellow,
-                                      child: Text(saveDataManager.listMapGroup[i][0]['memo'], style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                      child: Text(GetInquireDateText(saveDataManager.listMapGroup[i][0]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
                                     ),
                                   ],
                                 ),
@@ -340,7 +347,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                       width: style.UIButtonWidth + 30,
                                       height: MediaQuery.of(context).size.height - style.appBarHeight,
                                       child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(listMapGroup: saveDataManager.listMapGroup[i], refreshListMapGroupLength: widget.refreshListMapGroupLength,
-                                          closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
+                                          closeOption: widget.setSideOptionLayerWidget, refreshGroupName: widget.refreshGroupName, key:UniqueKey()),
                                     ));
                                   },
                                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

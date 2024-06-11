@@ -134,6 +134,8 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   String seasonMessageDate = '';  //절입시간 안내할 때 중복 방지용 변수
 
   bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true;
+
+  bool isEditWorldCalendarMemo = false;  //프로젝트 전체에서 메모 변동
   
   ShowDialogMessage(String message){
     showDialog<void>(
@@ -293,6 +295,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       editingMemo = '';
       isEditingMemo = 0;
       buttonMode = 0;
+      context.read<Store>().SetEditWorldCalendarMemo();
     }
   }
 
@@ -423,7 +426,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
       isShowPersonalDataAll = true;
     }
   }
-
+  
   @override
   void initState() {
     super.initState();
@@ -509,6 +512,16 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   Widget build(BuildContext context) {
 
     CheckPersonalDataHide();
+
+    if(isEditWorldCalendarMemo != context.watch<Store>().isEditWorldCalendarMemo){
+      int personIndex = saveDataManager.FindMapPersonIndex(editingName0, saveDataManager.ConvertToBirthData(gender0, uemYangType0, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), widget.saveDate);
+      if(memoController.text != saveDataManager.mapPerson[personIndex]['memo'] || prefixMemo != saveDataManager.mapPerson[personIndex]['memo'] || editingMemo != saveDataManager.mapPerson[personIndex]['memo']){
+        memoController.text = saveDataManager.mapPerson[personIndex]['memo'];
+        prefixMemo = saveDataManager.mapPerson[personIndex]['memo'];
+        editingMemo = saveDataManager.mapPerson[personIndex]['memo'];
+      }
+      isEditWorldCalendarMemo = context.watch<Store>().isEditWorldCalendarMemo;
+    }
 
     return Container(
       width: style.UIButtonWidth + 30,

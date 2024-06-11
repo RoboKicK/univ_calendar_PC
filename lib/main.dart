@@ -22,10 +22,27 @@ import 'package:window_size/window_size.dart';
 class Store extends ChangeNotifier {
   bool isEditSetting = false;
   bool isGroupLoad = false;
+  bool isEditWorldCalendarMemo = false;
+  bool isEditWorldGroupName = false;
+  DateTime groupNameSaveDate = DateTime.utc(3000);
 
   SetEditSetting(){
     isEditSetting = !isEditSetting;
     notifyListeners();
+  }
+
+  SetEditWorldCalendarMemo(){
+    isEditWorldCalendarMemo = !isEditWorldCalendarMemo;
+    notifyListeners();
+  }
+
+  SetEditWorldGroupName(DateTime groupSaveDate){
+    isEditWorldGroupName = !isEditWorldGroupName;
+    groupNameSaveDate = groupSaveDate;
+    notifyListeners();
+  }
+  ResetEditWorldGroupName(){
+    groupNameSaveDate = DateTime.utc(3000);
   }
 
   int targetGroupSavePageNum = -1;
@@ -123,6 +140,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   List<int> listUniquePageNum = [0,1,2];
   List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];  //페이지 이름
   List<String> listPageNameController = ['','','','','','','','',''];
+  List<DateTime> listPageSaveDate = [DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000)];
   TextEditingController pageNameController = TextEditingController();
   String nowPageName = '';
   int uniquePageNum = 2;
@@ -137,7 +155,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   var nowCalendarHeadLine = 0;
   List<Text> listCalendarTexts = [];
   var underLineOpacity = [1.0,0.0,0.0,0.0];
-  List<String> calendarHeadLineTitle = ['저장목록', '최근목록', '그룹목록', '간지변환'];
+  List<String> calendarHeadLineTitle = ['저장목록', '최근목록', '묶음목록', '간지변환'];
   List<Color> listCalendarTextColor = [Colors.white, style.colorGrey, style.colorGrey, style.colorGrey];
 
   List<Widget> listSideLayerWidget = [];
@@ -207,6 +225,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
               listPageNameController[i] = listPageNameController[i - 1];
               listPageNameController[i - 1] = '';
             }
+            if(listPageSaveDate[i - 1] != DateTime.utc(3000)){
+              listPageSaveDate[i] = listPageSaveDate[i - 1];
+              listPageSaveDate[i - 1] = DateTime.utc(3000);
+            }
           }
           SetNowPageName(listPageName[nowPageNum]);
         } else {
@@ -264,6 +286,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
         for(int i = 0; i < listPageNameController.length; i++){
           listPageNameController[i] = '';
+          listPageSaveDate[i] = DateTime.utc(3000);
         }
 
         SetNowCalendarNum(0);
@@ -282,6 +305,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
           for(int i = 0; i < 3; i++){
             listPageNameController[i] = '';
+            listPageSaveDate[i] = DateTime.utc(3000);
           }
           SetNowPageName(listPageName[num]);
         } else {
@@ -296,8 +320,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
           for(int i = num; i < listPageNameController.length - 1; i++){
             listPageNameController[i] = listPageNameController[i+1];
+            listPageSaveDate[i] = listPageSaveDate[i+1];
           }
           listPageNameController.last = '';
+          listPageSaveDate.last = DateTime.utc(3000);
           SetNowPageName(listPageName[num]);
           nowPageCount--;
         }
@@ -337,6 +363,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
     });
   }
 
+  //메모 바뀜 감시자
+  ReloadWorldMemo(){
+    setState(() {
+      context.read<Store>().SetEditWorldCalendarMemo();
+    });
+  }
+
   //그룹 저장 신호 주기
   GroupDataSave(){
     setState(() {
@@ -358,6 +391,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         listPageNameController[nowPageNum] = saveDataManager.listMapGroup[groupIndex][0]['groupName'];
         SetNowPageName(saveDataManager.listMapGroup[groupIndex][0]['groupName']);
         SetNowCalendarNum(nowPageNum);
+        listPageSaveDate[nowPageNum] = saveDataManager.listMapGroup[groupIndex][0]['saveDate'];
         context.read<Store>().SetTargetGroupLoadIndex(groupIndex);
         context.read<Store>().SetTargetGroupLoadPageNum(uniquePageNum);
       });
@@ -381,13 +415,24 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           height: MediaQuery.of(context).size.height - 6,
           alignment: Alignment.center,
           color: Colors.grey.withOpacity(0.1),
-          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength,),
+          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName),
         ),
       );
     } else {
       setState(() {
         groupLoadWidget = SizedBox.shrink();
       });
+    }
+  }
+  //그룹 이름 수정 반영하기
+  RefreshGroupName(DateTime saveDate, String groupName){
+    for(int i = 0; i < listPageSaveDate.length; i++){
+      if(listPageSaveDate[i] == saveDate){
+        listPageNameController[i] = groupName;
+        if(i == nowPageNum){
+          pageNameController.text = groupName;
+        }
+      }
     }
   }
 
@@ -518,7 +563,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
       Container(
         width: style.UIButtonWidth+38,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength,),
+        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName),
       ),
       Container(
         width: style.UIButtonWidth+2,
@@ -623,6 +668,17 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                                 listPageNameController[nowPageNum] = value;
                                 SetNowPageName(value);
                               });
+                            },
+                            onEditingComplete: (){
+                              setState(() {
+                                saveDataManager.SaveEditedGroupNameWithoutPrevGroupName(listPageSaveDate[nowPageNum], pageNameController.text);
+                                RefreshListMapGroupLength();
+                              });
+
+                              nowPageName = pageNameController.text;
+                              listPageNameController[nowPageNum] = pageNameController.text;
+                              RefreshGroupName(listPageSaveDate[nowPageNum], listPageNameController[nowPageNum]);
+                              context.read<Store>().SetEditWorldGroupName(listPageSaveDate[nowPageNum]);
                             },
                           ),
                         ),

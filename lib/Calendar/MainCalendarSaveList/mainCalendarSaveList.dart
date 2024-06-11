@@ -7,6 +7,7 @@ import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import 'mainCalendarSaveListOption.dart' as mainCalendarSaveListOption;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
 import 'package:provider/provider.dart';
+import '../../findGanji.dart' as findGanji;
 
 class MainCalendarSaveList extends StatefulWidget {
   const MainCalendarSaveList({super.key, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.mapPersonLength});
@@ -20,7 +21,7 @@ class MainCalendarSaveList extends StatefulWidget {
 
 class _MainCalendarSaveListState extends State<MainCalendarSaveList> with TickerProviderStateMixin{
 
-  bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true;
+  bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true, isShowPersonalOld = true;
 
   Widget mainCalendarSaveListOptionWidget = SizedBox.shrink();
 
@@ -94,6 +95,31 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
     }
     return nameText;
   }
+  String GetOld(int uemYang, int birthYear, int birthMonth, int birthDay) {
+    if(((personalDataManager.etcData % 10000) / 1000).floor() == 3){  //인적사항 숨김
+      if(isShowPersonalOld == false){
+        return '';
+      }
+    }
+    if(uemYang != 0){
+      birthYear = findGanji.LunarToSolar(birthYear, birthMonth, birthDay, uemYang == 1? false:true)[0];//listSolBirth[0];
+    }
+    int old = DateTime.now().year - birthYear + 1;//widget.birthYear + 1;
+    if((personalDataManager.etcData % 10) == 2){ //만으로 표시
+      old--;
+      if(DateTime.now().month < birthMonth || (DateTime.now().month == birthMonth && DateTime.now().day < birthDay)){
+        old--;
+      }
+      if (old >= 0) {
+        return '${old}세(만 나이)';
+      }
+    } else {
+      if (old > 0) {
+        return '${old}세';
+      }
+    }
+    return '';
+  }
 
   //SetSaveListOptionWidget(bool onOff, int i){
   //  setState(() {
@@ -120,7 +146,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("${saveDataManager.GetSelectedBirthData('gender',num) == true?'남성':'여성'}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("${saveDataManager.GetSelectedBirthData('gender',num) == true?'남성':'여성'} ${GetOld(saveDataManager.GetSelectedBirthData('uemYang', num), saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
     }
     else {
       listPersonalTextData.add(
@@ -130,7 +156,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataNameTextLineHeight,
-              child:Text("(${saveDataManager.GetSelectedBirthData('gender', num) == true?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${saveDataManager.GetSelectedBirthData('gender', num) == true?'남':'여'}) ${GetOld(saveDataManager.GetSelectedBirthData('uemYang', num), saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
     }
 
     return listPersonalTextData;
@@ -171,6 +197,12 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
     } else {
       isShowPersonalDataAll = true;
     }
+
+    int personalDataNum = ((personalDataManager.etcData % 100000) / 10000).floor();
+
+    if(personalDataNum == 2 || personalDataNum == 3 || personalDataNum == 6 || personalDataNum == 7){
+      isShowPersonalOld = false;
+    }else {isShowPersonalOld = true;}
   }
 
   SetSortContainerHeight(){

@@ -542,31 +542,31 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
                 listContainerHeightCount[b]++;
               }
             }
-            if ((_listPaljaData[(a * 2) + 1] == 10 && _listPaljaData[(b * 2) + 1] == 6) ||
-                (_listPaljaData[(a * 2) + 1] == 6 && _listPaljaData[(b * 2) + 1] == 10)) { //오술귀문
-              if (listHabChungString[a].length > 4) {
-                if (listHabChungString[a].substring(listHabChungString[a].length - 5, listHabChungString[a].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n') {
-                  listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n';
-                  listContainerHeightCount[a]++;
-                }
-              }
-              else {
-                listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n';
-                listContainerHeightCount[a]++;
-              }
-              if (listHabChungString[b].length > 4) {
-                if (listHabChungString[b].substring(listHabChungString[b].length - 5, listHabChungString[b].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n') {
-                  listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n';
-                  listContainerHeightCount[b]++;
-                }
-              }
-              else {
-                listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n';
-                listContainerHeightCount[b]++;
-              }
-            }
+            //if ((_listPaljaData[(a * 2) + 1] == 10 && _listPaljaData[(b * 2) + 1] == 6) ||
+            //    (_listPaljaData[(a * 2) + 1] == 6 && _listPaljaData[(b * 2) + 1] == 10)) { //오술귀문
+            //  if (listHabChungString[a].length > 4) {
+            //    if (listHabChungString[a].substring(listHabChungString[a].length - 5, listHabChungString[a].length) !=
+            //        '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n') {
+            //      listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n';
+            //      listContainerHeightCount[a]++;
+            //    }
+            //  }
+            //  else {
+            //    listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 귀문\n';
+            //    listContainerHeightCount[a]++;
+            //  }
+            //  if (listHabChungString[b].length > 4) {
+            //    if (listHabChungString[b].substring(listHabChungString[b].length - 5, listHabChungString[b].length) !=
+            //        '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n') {
+            //      listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n';
+            //      listContainerHeightCount[b]++;
+            //    }
+            //  }
+            //  else {
+            //    listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 귀문\n';
+            //    listContainerHeightCount[b]++;
+            //  }
+            //}
             if ((_listPaljaData[(a * 2) + 1] == 2 && _listPaljaData[(b * 2) + 1] == 7) ||
                 (_listPaljaData[(a * 2) + 1] == 7 && _listPaljaData[(b * 2) + 1] == 2)) { //인미귀문
               if (listHabChungString[a].length > 4) {
