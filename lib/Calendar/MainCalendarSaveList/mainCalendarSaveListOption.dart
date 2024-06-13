@@ -12,7 +12,7 @@ import 'package:provider/provider.dart';
 class MainCalendarSaveListOption extends StatefulWidget {
   const MainCalendarSaveListOption({super.key, required this.name0, required this.gender0, required this.uemYang0, required this.birthYear0, required this.birthMonth0,
     required this.birthDay0, required this.birthHour0, required this.birthMin0, required this.saveDate, required this.memo,
-  required this.closeOption});
+  required this.closeOption, required this.refreshMapPersonLengthAndSort});
 
   final String name0;
   final bool gender0;
@@ -20,6 +20,7 @@ class MainCalendarSaveListOption extends StatefulWidget {
   final int birthYear0, birthMonth0, birthDay0, birthHour0, birthMin0;
   final DateTime saveDate;
   final String memo;
+  final refreshMapPersonLengthAndSort;
 
   final closeOption;
 
@@ -598,7 +599,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                               Container( //메모 본문
                                 width: style.UIButtonWidth,
                                 alignment: Alignment.topLeft,
-                                child:Text(prefixMemo, style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                                child:Text(prefixMemo, style: style.memoTextStyle),//Theme.of(context).textTheme.displayMedium),
                               ),
                               Container( //메모 본문 수정
                                 width: style.UIButtonWidth,
@@ -615,8 +616,9 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                     onTapOutside: (event) {
                                       memoFocusNode.requestFocus();
                                     },
-                                    style: Theme.of(context).textTheme.displayMedium,
+                                    style: style.memoTextStyle,
                                     decoration:InputDecoration(
+
                                       isDense: true,
                                       contentPadding: EdgeInsets.only(top: 5),
                                       counterText:"",
@@ -696,7 +698,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                         }
                                     ),
                                     Container(
-                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       margin: EdgeInsets.only(left: 4, right: 4),
                                       child:Text("남자 ", style: Theme.of(context).textTheme.labelMedium),),
                                     Radio<Gender>(
@@ -718,7 +720,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                         }
                                     ),
                                     Container(
-                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
                                       child:Text("여자 ", style: Theme.of(context).textTheme.labelMedium),),
                                   ],
@@ -743,6 +745,9 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                 width: style.UIButtonWidth*0.55,//MediaQuery.of(context).size.width * 0.4,
                                 height: 50,
                                 child: TextField(
+                                  obscureText: isShowPersonalBirth == false? true : false,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
                                   controller: birthController,
                                   focusNode: birthTextFocusNode,
                                   keyboardType: TextInputType.number,
@@ -751,7 +756,8 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                   ],
                                   cursorColor: Colors.white,
                                   maxLength: 10,
-                                  style: Theme.of(context).textTheme.labelLarge,onEditingComplete: () {
+                                  style: Theme.of(context).textTheme.labelLarge,
+                                  onEditingComplete: () {
                                   FocusScope.of(context).requestFocus(birthHourTextFocusNode);
                                 },
                                   decoration:InputDecoration(
@@ -787,7 +793,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       //margin: EdgeInsets.only(right: marginVal),
                                       child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
                                     ),
@@ -805,7 +811,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                       ),
                                     ),
                                     Container(
-                                      padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                      padding: EdgeInsets.only(bottom: 4),
                                       margin: EdgeInsets.only(right: style.UIMarginLeft),
                                       child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
                                     ),
@@ -830,6 +836,9 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                 height: 50,
                                 child: TextField(
                                   focusNode: birthHourTextFocusNode,
+                                  obscureText: isShowPersonalBirth == false? true : false,
+                                  enableSuggestions: false,
+                                  autocorrect: false,
                                   controller: hourController,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
@@ -859,7 +868,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children:[
                                     Container(
-                                        padding: EdgeInsets.only(bottom: style.UIPaddingBottom),
+                                        padding: EdgeInsets.only(bottom: 4),
                                         margin: EdgeInsets.only(right: style.UIMarginLeft-6),
                                         child:
                                         DropdownButton<String>(
@@ -1100,6 +1109,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                               gender0 = genderVal;
                               GetBirthTimeText(targetBirthHour, targetBirthMin);
                               SetEditingPersonData();
+                              widget.refreshMapPersonLengthAndSort();
                             });
                           },
                         ),

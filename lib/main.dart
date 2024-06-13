@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bodyWidgetManager.dart';
 import 'style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -11,6 +12,7 @@ import 'SaveData/saveDataManager.dart' as saveDataManager;
 import 'Settings/personalDataManager.dart' as personalDataManager;
 import 'Settings/settingManagerWidget.dart' as settingManagerWidget;
 import 'Calendar/MainCalendarSaveList/mainCalendarGroupSaveList.dart' as mainCalendarGroupSaveList;
+import 'Calendar/MainCalendarSaveList/mainCalendarGroupSaveListOption.dart' as mainCalendarGroupSaveListOption;
 import 'Calendar/MainCalendarChange/mainCalendarChange.dart' as mainCalendarChange;
 import 'Calendar/MainCalendarSaveList/mainCalendarSaveList.dart' as mainCalendarSaveList;
 import 'Calendar/mainCalendarRecentList.dart' as mainCalendarRecentList;
@@ -23,8 +25,6 @@ class Store extends ChangeNotifier {
   bool isEditSetting = false;
   bool isGroupLoad = false;
   bool isEditWorldCalendarMemo = false;
-  bool isEditWorldGroupName = false;
-  DateTime groupNameSaveDate = DateTime.utc(3000);
 
   SetEditSetting(){
     isEditSetting = !isEditSetting;
@@ -36,6 +36,8 @@ class Store extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isEditWorldGroupName = false;
+  DateTime groupNameSaveDate = DateTime.utc(3000);
   SetEditWorldGroupName(DateTime groupSaveDate){
     isEditWorldGroupName = !isEditWorldGroupName;
     groupNameSaveDate = groupSaveDate;
@@ -43,6 +45,20 @@ class Store extends ChangeNotifier {
   }
   ResetEditWorldGroupName(){
     groupNameSaveDate = DateTime.utc(3000);
+  }
+
+  bool isEditWorldGroupMemo = false;
+  DateTime groupMemoSaveDate = DateTime.utc(3000);
+  int targetGroupMemoPageNum = -1;
+  SetEditWorldGroupMemo(DateTime groupSaveDate, int num){
+    isEditWorldGroupMemo = !isEditWorldGroupMemo;
+    groupMemoSaveDate = groupSaveDate;
+    targetGroupMemoPageNum = num;
+    notifyListeners();
+  }
+  ResetEditWorldGroupMemo(){
+    groupMemoSaveDate = DateTime.utc(3000);
+    targetGroupMemoPageNum = -1;
   }
 
   int targetGroupSavePageNum = -1;
@@ -140,6 +156,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   List<int> listUniquePageNum = [0,1,2];
   List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];  //페이지 이름
   List<String> listPageNameController = ['','','','','','','','',''];
+  List<String> listPageMemo = ['','','','','','','','',''];
   List<DateTime> listPageSaveDate = [DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000)];
   TextEditingController pageNameController = TextEditingController();
   String nowPageName = '';
@@ -147,6 +164,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   Widget settingWidget = SizedBox.shrink();
   Widget groupLoadWidget = SizedBox.shrink();
+  String groupTempMemo = '';
 
   bool isShowSideLayer = false;
   bool isShowSideOptionLayer = false;
@@ -167,6 +185,25 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   int mapRecentPersonLength = 0;
   int listMapGroupLength = 0;
 
+  ShowSnackBar(String text){
+    SnackBar snackBar = SnackBar(
+      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+      backgroundColor: style.colorMainBlue,//Colors.white,
+      //style.colorMainBlue,
+      shape: StadiumBorder(),
+      duration: Duration(milliseconds: style.snackBarDuration),
+      dismissDirection: DismissDirection.down,
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          bottom: 20,
+          left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+          right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+    );
+
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   //설정 페이지 온오프
   ShowSettingPage(){
     setState(() {
@@ -178,11 +215,18 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //페이지 이름 편집 및 저장
-  SetNowPageName(String text){
+  SetNowPageName(String text, {bool isFromCalendarMain = false}){  //페이지 이름 텍스트 필드로 바꿀 때 사용
     //nowPageName = listPageName[nowPageNum];
     String storeNowPageName = '';
 
-    storeNowPageName = listPageNameController[nowPageNum];
+    if(isFromCalendarMain == false) {
+      storeNowPageName = listPageNameController[nowPageNum];
+    } else {
+      storeNowPageName = text;
+      setState(() {
+        pageNameController.text = text;
+      });
+    }
     nowPageName = storeNowPageName;
     context.read<Store>().SetNowPageName(storeNowPageName);
   }
@@ -218,7 +262,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listUniquePageNum.insert(0, uniquePageNum);
           listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
-              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
             if(listPageNameController[i - 1] != ''){
@@ -237,32 +282,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listUniquePageNum.add(uniquePageNum);
           listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
-              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
         }
         nowPageCount++;
       } else {
         ShowSnackBar('페이지는 9개까지 사용 가능합니다');
       }
     });
-  }
-
-  ShowSnackBar(String text){
-    SnackBar snackBar = SnackBar(
-      content: Text(text, style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
-      backgroundColor: style.colorMainBlue,//Colors.white,
-      //style.colorMainBlue,
-      shape: StadiumBorder(),
-      duration: Duration(milliseconds: style.snackBarDuration),
-      dismissDirection: DismissDirection.down,
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.only(
-          bottom: 20,
-          left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
-          right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
-    );
-
-    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   //페이지 비우기
@@ -279,11 +306,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         for(int i = 0; i < firstPageCount; i++){
           listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
-              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
-
+        pageNameController.text = '';
         for(int i = 0; i < listPageNameController.length; i++){
           listPageNameController[i] = '';
           listPageSaveDate[i] = DateTime.utc(3000);
@@ -302,7 +330,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listUniquePageNum.insert(num, uniquePageNum);
           listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
-              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength));
+              refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
           for(int i = 0; i < 3; i++){
             listPageNameController[i] = '';
             listPageSaveDate[i] = DateTime.utc(3000);
@@ -415,7 +444,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           height: MediaQuery.of(context).size.height - 6,
           alignment: Alignment.center,
           color: Colors.grey.withOpacity(0.1),
-          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName),
+          child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget,
+              setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName, saveGroupTempMemo: SaveGroupTempMemo),
         ),
       );
     } else {
@@ -434,6 +464,41 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         }
       }
     }
+  }
+  //그룹 메모 작동
+  SetGroupMemoWidget(List<dynamic> listGroupPerson, bool isTempMemoNote){
+
+    if(isTempMemoNote == false){
+      listGroupPerson.insert(0, {'groupName':nowPageName, 'saveDate':listPageSaveDate[nowPageNum], 'memo':saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndex(nowPageName, listPageSaveDate[nowPageNum])][0]['memo']});
+    } else {
+      listGroupPerson.insert(0, {'groupName': '묶음 메모장', 'saveDate':DateTime.utc(3000), 'memo':groupTempMemo});
+    }
+
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      SetSideOptionLayerWidget(true);
+      SetSideOptionWidget(Container(
+        width: style.UIButtonWidth + 30,
+        height: MediaQuery.of(context).size.height - style.appBarHeight,
+        child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(
+            listMapGroup: listGroupPerson,
+            refreshListMapGroupLength: RefreshListMapGroupLength,
+            closeOption: SetSideOptionLayerWidget,
+            refreshGroupName: RefreshGroupName, isMemoOpen: true, saveGroupTempMemo: SaveGroupTempMemo,
+            key: UniqueKey()),
+      ));
+    });
+  }
+  //그룹 메모 저장
+  SaveGroupTempMemo(String text){
+    groupTempMemo = text;
+  }
+  //그룹 메모 반환
+  GetGroupTempMemo(){
+    return groupTempMemo;
+  }
+  //그룹 저장 후 저장일자 적용
+  SetGroupSaveDateAfterSave(DateTime groupSaveDate){
+    listPageSaveDate[nowPageNum] = groupSaveDate;
   }
 
   //사이드 레이어 온오프
@@ -513,8 +578,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   //그룹목록 실시간 갱신
   RefreshListMapGroupLength(){
-    setState(() {
-      listMapGroupLength = saveDataManager.listMapGroup.length;
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      setState(() {
+        listMapGroupLength = saveDataManager.listMapGroup.length;
+      });
     });
   }
 
@@ -527,7 +594,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
     for(int i = 0; i < firstPageCount; i++) {
       listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
           setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
-          refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength,));
+          refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
+        setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave,));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
@@ -553,7 +621,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
       Container(
         width: style.UIButtonWidth+38,//2,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, mapPersonLength: mapPersonLength,),
+        child: mainCalendarSaveList.MainCalendarSaveList(setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, mapPersonLength: mapPersonLength, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,),
       ),
       Container(
         width: style.UIButtonWidth+38,
@@ -563,7 +631,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
       Container(
         width: style.UIButtonWidth+38,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName),
+        child: mainCalendarGroupSaveList.MainCalendarGroupSaveList(groupDataLoad: GroupDataLoad, setGroupLoadWidget: SetGroupLoadWidget, setSideOptionLayerWidget: SetSideOptionLayerWidget,
+            setSideOptionWidget: SetSideOptionWidget, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName, saveGroupTempMemo: SaveGroupTempMemo,),
       ),
       Container(
         width: style.UIButtonWidth+2,
@@ -585,7 +654,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                 Row(  //페이지버튼들, 설정 버튼
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(  //페이지 버튼
+                    Row(  //묶음, 페이지 버튼
                       children: [
                         Container(  //묶음(group) 저장
                           width: 40,
@@ -598,27 +667,30 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                                 rebuildAllChildren(context);
                               });
                             },
-
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                             child: Icon(Icons.save, size: 20, color:Colors.white),
                           ),
                         ),
-                        //Container(  //묶음(group) 불러오기
-                        //  width: 40,
-                        //  height: style.appBarHeight,
-                        //  margin: EdgeInsets.only(left: 00),
-                        //  child: ElevatedButton(
-                        //    onPressed: (){
-                        //      setState(() {
-                        //        SetGroupLoadWidget(true);
-                        //      });
-                        //    },
-                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        //    child: Icon(Icons.save, size: 20, color:Colors.white),
-                        //  ),
-                        //),
+                        Container(  //묶음(group) 메모
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                if(listPageSaveDate[nowPageNum] != DateTime.utc(3000)){
+                                  context.read<Store>().SetEditWorldGroupMemo(listPageSaveDate[nowPageNum], listUniquePageNum[nowPageNum]);  //calendarMain에서 읽는다
+                                } else {
+                                  ShowSnackBar('묶음 메모를 사용하려면\n명식 묶음을 먼저 불러와야 합니다');
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.chat, size: 20, color:Colors.white),
+                          ),
+                        ),
                         Container(  //한 페이지 비우기
                           width: 40,
                           height: style.appBarHeight,
@@ -727,6 +799,22 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         //    child: Icon(Icons.settings, size: 20, color:Colors.white),
                         //  ),
                         //),
+                        Container(  //묶음(group) 메모장
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              setState(() {
+                                  List<dynamic> listPerson = [];
+                                  SetGroupMemoWidget(listPerson, true);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.chat, size: 20, color:Colors.white),
+                          ),
+                        ),
                         Container(  //저장목록들, 간지변환 버튼
                           width: 40,
                           height: style.appBarHeight,

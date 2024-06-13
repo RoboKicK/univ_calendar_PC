@@ -134,9 +134,9 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               height: style.saveDataNameTextLineHeight,
               //color:Colors.green,
               //padding:EdgeInsets.only(top:7),
-              child:Text("(${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남':'여'}) ${GetOld(saveDataManager.GetSelectedBirthData('uemYang', num), saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
+              child:Text("(${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남':'여'}) ${GetOld(saveDataManager.GetSelectedRecentBirthData('uemYang', num), saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
     } else {
-       listPersonalTextData.add(Text("${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남성':'여성'} ${GetOld(saveDataManager.GetSelectedBirthData('uemYang', num), saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge));
+       listPersonalTextData.add(Text("${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남성':'여성'} ${GetOld(saveDataManager.GetSelectedRecentBirthData('uemYang', num), saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge));
     }
     return listPersonalTextData;
   }

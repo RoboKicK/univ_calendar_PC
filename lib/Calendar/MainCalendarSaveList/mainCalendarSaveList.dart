@@ -10,10 +10,11 @@ import 'package:provider/provider.dart';
 import '../../findGanji.dart' as findGanji;
 
 class MainCalendarSaveList extends StatefulWidget {
-  const MainCalendarSaveList({super.key, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.mapPersonLength});
+  const MainCalendarSaveList({super.key, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.mapPersonLength, required this.refreshMapPersonLengthAndSort});
 
   final setSideOptionLayerWidget, setSideOptionWidget;
   final int mapPersonLength;
+  final refreshMapPersonLengthAndSort;
 
   @override
   State<MainCalendarSaveList> createState() => _MainCalendarSaveListState();
@@ -506,7 +507,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                               birthYear0: saveDataManager.GetSelectedBirthData('birthYear',i), birthMonth0: saveDataManager.GetSelectedBirthData('birthMonth',i),
                                               birthDay0: saveDataManager.GetSelectedBirthData('birthDay',i), birthHour0: saveDataManager.GetSelectedBirthData('birthHour',i), birthMin0: saveDataManager.GetSelectedBirthData('birthMin',i),
                                               memo:saveDataManager.mapPerson[i]['memo']??'', saveDate: saveDataManager.mapPerson[i]['saveDate']??DateTime.now(),
-                                              closeOption: widget.setSideOptionLayerWidget, key:UniqueKey()),
+                                              closeOption: widget.setSideOptionLayerWidget, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort, key:UniqueKey()),
                                         ));
                                       },
                                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

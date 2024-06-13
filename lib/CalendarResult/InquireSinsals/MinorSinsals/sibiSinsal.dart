@@ -568,6 +568,9 @@ class SibiSinsal{//12신살 계산해주는 클래스
       }
     }
 
+    if(topCount == 0){
+      topCount = 1;
+    }
     if(topCount > 0){
       int val = 0;
       if(((personalDataManager.sinsalData % 100) / 10).floor() == 2 || isShowDrawerSinsal == 2) {
@@ -594,7 +597,7 @@ class SibiSinsal{//12신살 계산해주는 클래스
       list12Sinsal = FindSinsal(_listPaljaData, stanYeonjiNum);
     }
 
-    //기타 신살 추기
+    //기타 신살 추가
     if(isManseroc == true && ((isShowDrawerSinsal == 1 && (personalDataManager.etcSinsalData /10 ).floor() != (personalDataManager.etcSinsalDataAllOff/10).floor()) || isShowDrawerSinsal == 2)){
       List<String> listMinorSinsal = [];
 

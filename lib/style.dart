@@ -29,7 +29,6 @@ var theme = ThemeData(
   ),
   buttonTheme: ButtonThemeData(
     hoverColor: Colors.transparent,
-
   ),
   scrollbarTheme: ScrollbarThemeData(
     thickness: MaterialStateProperty.all(8),
@@ -58,17 +57,17 @@ var theme = ThemeData(
     headlineMedium: TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500), //사주창 성별
     headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white),//헤드라인, 풀사이즈 버튼
     labelSmall: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: colorGrey), //입력창 힌트텍스트,
-    labelMedium: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.white), //사주창 양력,
-    labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white), //입력창 입력텍스트, 사주창 생년월일, 저장목록 이름, 저장목록 생년월일시간
+    labelMedium: TextStyle(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.white, decorationThickness: 0), //사주창 양력,
+    labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white, decorationThickness: 0), //입력창 입력텍스트, 사주창 생년월일, 저장목록 이름, 저장목록 생년월일시간
     titleSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.white),  //사주 타이틀 - 연주 월주 일주 시주, 저장목록 성별, 저장목록 음양
     titleMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.white),
     titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white), //저장목록 이름
     bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: Colors.white), //팔자 오행
     bodyMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: colorBlack), //팔자 오행 금
-    bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xff111111), height: 1.54), //팔자 오행 금,  신살
+    bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Color(0xff111111), height: 1.54, fontFamily: 'NotoSansKR-Medium'), //팔자 오행 금,  신살
     displaySmall: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorBlack), //다이알로그 메세지
-    displayMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorGrey), //메모 내용, 안내문
-    displayLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorBlack), //메모 내용 편집 중
+    displayMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorGrey, decorationThickness: 0), //메모 내용, 안내문
+    displayLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorBlack, decorationThickness: 0), //메모 내용 편집 중
 
   ),
   scaffoldBackgroundColor: Color.fromARGB(255, 21, 21, 21), //Colors.black,//어플 배경색
@@ -76,6 +75,7 @@ var theme = ThemeData(
 TextStyle settingText0 = TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white);  //설정 기본 텍스트
 TextStyle settingInfoText0 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorGrey);  //설정 설명 텍스트
 TextStyle settingButtonTextStyle0 = TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: colorGrey);//헤드라인, 풀사이즈 버튼
+TextStyle memoTextStyle = TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: colorGrey, height: 1.5, decorationThickness: 0);
 
 double marginContainerWidth = 30;
 double UIButtonWidth = 340;

@@ -550,344 +550,128 @@ class _DataManageWidgetState extends State<DataManageWidget> {
             alignment: Alignment.center,
             child:Text('저장 목록', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),),
           ),
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
+          Column(
+            children: [
+              Container(  //정렬용 컨테이너
+                width: widgetWidth,
+                height: 1,
+              ),
+              Container(  //데이터 추출 설명
+                height: style.saveDataMemoLineHeight * 0.6,
+                width: (widgetWidth - (style.UIMarginLeft * 2)),
+                margin: EdgeInsets.only(top: style.UIMarginTop),
+                child:  Text("선택한 데이터를 추출합니다", style: style.settingInfoText0,),
+              ),
+              Container(  //데이터 추출 옵션 버튼들
+                width: (widgetWidth - (style.UIMarginLeft * 2)),
+                height: style.saveDataMemoLineHeight,
+                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo1),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(  //천간 합충극
-                      height: style.saveDataMemoLineHeight,
-                      width: (widgetWidth - (style.UIMarginLeft * 2)),
-                      margin: EdgeInsets.only(top: style.UIMarginTopTop),
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: style.saveDataMemoLineHeight,
-                            width: (widgetWidth - (style.UIMarginLeft * 2)),
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              height: style.saveDataMemoLineHeight,
-                              width: 32,
-                              child: Stack( //천간 합충극 스위치
-                                alignment: Alignment.center,
-                                children: [
-                                  AnimatedCrossFade(  //천간 합충극 스위치 배경
-                                    duration: Duration(milliseconds: 130),
-                                    firstChild: Container(
-                                      width: 32,
-                                      height: 20,
-                                      child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
-                                    ),
-                                    secondChild: Container(
-                                      width: 32,
-                                      height: 20,
-                                      child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
-                                    ),
-                                    crossFadeState: isShowCheongan == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                    alignment: Alignment.center,
-                                    firstCurve: Curves.easeIn,
-                                    secondCurve: Curves.easeIn,
-                                  ),
-                                  Container(  //천간 합충극 스위치 버튼
-                                    width: 26,
-                                    child: AnimatedAlign(
-                                      alignment: cheonganHabAlign,
-                                      duration: Duration(milliseconds: 130),
-                                      curve: Curves.easeIn,
-                                      child: Container(
-                                        width: 16,
-                                        height: 16,
-                                        child: cheonganHabChungButtonImage,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Text("천간 합, 충, 극", style: style.settingText0),
-                          ElevatedButton( //천간 합충극 스위치 버튼
-                            onPressed: (){SetCheonganHabChung(); SaveCheonganHabChungData();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                            style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
-                        ],
-                      ),
+                    Text("단일 명식 ", style: style.settingText0,),
+                    Checkbox(
+                      value: isShowCheonganHab,
+                      onChanged: (value) {
+                        setState(() {
+                          isShowCheonganHab = value!;widget.reloadSetting();
+                        });
+                        SaveCheonganHabChungData();
+                      },
                     ),
-                    Stack(
-                      children: [
-                        AnimatedOpacity(  //천간 합충극 옵션들
-                          opacity: isShowCheongan == 1 ? 1.0 : 0.0,
-                          duration: Duration(milliseconds: 130),
-                          child: Column(
-                            children: [
-                              Container(  //정렬용 컨테이너
-                                width: widgetWidth,
-                                height: 1,
-                              ),
-                              Container(  //천간 합충극 옵션 버튼들
-                                width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                height: style.saveDataMemoLineHeight,
-                                margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: style.UIMarginLeft,
-                                      height: 1,
-                                    ),
-                                    Text("합 ", style: style.settingText0,),
-                                    Checkbox(
-                                      value: isShowCheonganHab,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isShowCheonganHab = value!;widget.reloadSetting();
-                                        });
-                                        SaveCheonganHabChungData();
-                                      },
-                                    ),
-                                    SizedBox(width:20),
-                                    Text("충 ", style: style.settingText0,),
-                                    Checkbox(
-                                      value: isShowCheonganChung,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isShowCheonganChung = value!;widget.reloadSetting();
-                                        });
-                                        SaveCheonganHabChungData();
-                                      },
-                                    ),
-                                    SizedBox(width:20),
-                                    Text("극 ", style: style.settingText0,),
-                                    Checkbox(
-                                      value: isShowCheonganGeuc,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isShowCheonganGeuc = value!;widget.reloadSetting();
-                                        });
-                                        SaveCheonganHabChungData();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(  //천간 합충극 설명
-                                width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                height: style.saveDataMemoLineHeight,
-                                child: Row(
-                                  children: [
-                                    SizedBox(
-                                      width: style.UIMarginLeft,
-                                      height: 1,
-                                    ),
-                                    Text("천간에 표시할 합, 충, 극을 선택해 주세요", style: style.settingInfoText0,),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            AnimatedContainer(  //천간 합충극 옵션 버튼 열림 박스
-                              duration: Duration(milliseconds: 170),
-                              width: widgetWidth,
-                              height: cheonganHabChungContainerHeight,
-                              curve: Curves.fastOutSlowIn,
-                            ),
-                            Container(  //방합
-                              height: style.saveDataMemoLineHeight,
-                              width: (widgetWidth - (style.UIMarginLeft * 2)),
-                              margin: EdgeInsets.only(top: style.UIMarginTop),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: style.saveDataMemoLineHeight,
-                                    width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      height: style.saveDataMemoLineHeight,
-                                      width: 40,
-                                      child: Stack( //천간 합충극 스위치
-                                        alignment: Alignment.center,
-                                        children: [
-                                          AnimatedCrossFade(  //천간 합충극 스위치 배경
-                                            duration: Duration(milliseconds: 130),
-                                            firstChild: Container(
-                                              width: 40,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchGray1.png', width: 40, height: 20),
-                                            ),
-                                            secondChild: Container(
-                                              width: 40,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchWhite1.png', width: 40, height: 20),
-                                            ),
-                                            crossFadeState: isShowBanguiHabNum == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            alignment: Alignment.center,
-                                            firstCurve: Curves.easeIn,
-                                            secondCurve: Curves.easeIn,
-                                          ),
-                                          Container(  //천간 합충극 스위치 버튼
-                                            width: 34,
-                                            child: AnimatedAlign(
-                                              alignment: banguiHabAlign,
-                                              duration: Duration(milliseconds: 130),
-                                              curve: Curves.easeIn,
-                                              child: Container(
-                                                width: 16,
-                                                height: 16,
-                                                child: banguiHabButtonImage,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Text("방합", style: style.settingText0),
-                                  ElevatedButton( //천간 합충극 스위치 버튼
-                                    onPressed: (){SetBanguiHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                    style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
-                                ],
-                              ),
-                            ),
-                            Container(  //방합 설명
-                              width: (widgetWidth - (style.UIMarginLeft * 2)),
-                              height: style.saveDataMemoLineHeight,
-                              margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo1),
-                              child: Text(listBanguiHabInfoString[isShowBanguiHabNum], style: style.settingInfoText0, key: ValueKey<int>(isShowBanguiHabNum),
-                              ),
-                            ),
-                            Container(  //삼합
-                              height: style.saveDataMemoLineHeight,
-                              width: (widgetWidth - (style.UIMarginLeft * 2)),
-                              margin: EdgeInsets.only(top: style.UIMarginTop),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: style.saveDataMemoLineHeight,
-                                    width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      height: style.saveDataMemoLineHeight,
-                                      width: 40,
-                                      child: Stack( //천간 합충극 스위치
-                                        alignment: Alignment.center,
-                                        children: [
-                                          AnimatedCrossFade(  //천간 합충극 스위치 배경
-                                            duration: Duration(milliseconds: 130),
-                                            firstChild: Container(
-                                              width: 40,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchGray1.png', width: 40, height: 20),
-                                            ),
-                                            secondChild: Container(
-                                              width: 40,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchWhite1.png', width: 40, height: 20),
-                                            ),
-                                            crossFadeState: isShowSamHabNum == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            alignment: Alignment.center,
-                                            firstCurve: Curves.easeIn,
-                                            secondCurve: Curves.easeIn,
-                                          ),
-                                          Container(  //천간 합충극 스위치 버튼
-                                            width: 34,
-                                            child: AnimatedAlign(
-                                              alignment: samHabAlign,
-                                              duration: Duration(milliseconds: 130),
-                                              curve: Curves.easeIn,
-                                              child: Container(
-                                                width: 16,
-                                                height: 16,
-                                                child: samHabButtonImage,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Text("삼합 또는 계절합", style: style.settingText0),
-                                  ElevatedButton( //천간 합충극 스위치 버튼
-                                    onPressed: (){SetSamHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                    style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
-                                ],
-                              ),
-                            ),
-                            Container(  //삼합 설명
-                              width: (widgetWidth - (style.UIMarginLeft * 2)),
-                              height: style.saveDataMemoLineHeight,
-                              margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo1),
-                              child: Text(listSamHabInfoString[isShowSamHabNum], style: style.settingInfoText0, key: ValueKey<int>(isShowBanguiHabNum),
-                              ),
-                            ),
-                            Container(  //육합
-                              height: style.saveDataMemoLineHeight,
-                              width: (widgetWidth - (style.UIMarginLeft * 2)),
-                              margin: EdgeInsets.only(top: style.UIMarginTop),
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    height: style.saveDataMemoLineHeight,
-                                    width: (widgetWidth - (style.UIMarginLeft * 2)),
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      height: style.saveDataMemoLineHeight,
-                                      width: 32,
-                                      child: Stack( //육합 스위치
-                                        alignment: Alignment.center,
-                                        children: [
-                                          AnimatedCrossFade(  //천간 합충극 스위치 배경
-                                            duration: Duration(milliseconds: 130),
-                                            firstChild: Container(
-                                              width: 32,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
-                                            ),
-                                            secondChild: Container(
-                                              width: 32,
-                                              height: 20,
-                                              child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
-                                            ),
-                                            crossFadeState: isShowYucHab == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                                            alignment: Alignment.center,
-                                            firstCurve: Curves.easeIn,
-                                            secondCurve: Curves.easeIn,
-                                          ),
-                                          Container(  //천간 합충극 스위치 버튼
-                                            width: 26,
-                                            child: AnimatedAlign(
-                                              alignment: yucHabAlign,
-                                              duration: Duration(milliseconds: 130),
-                                              curve: Curves.easeIn,
-                                              child: Container(
-                                                width: 16,
-                                                height: 16,
-                                                child: yucHabButtonImage,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Text("육합", style: style.settingText0),
-                                  ElevatedButton( //천간 합충극 스위치 버튼
-                                    onPressed: (){SetYucHab();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
-                                    style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                    SizedBox(width:20),
+                    Text("그룹 명식 ", style: style.settingText0,),
+                    Checkbox(
+                      value: isShowCheonganChung,
+                      onChanged: (value) {
+                        setState(() {
+                          isShowCheonganChung = value!;widget.reloadSetting();
+                        });
+                        SaveCheonganHabChungData();
+                      },
+                    ),
+                    SizedBox(width:20),
+                    Text("일진 일기 ", style: style.settingText0,),
+                    Checkbox(
+                      value: isShowCheonganGeuc,
+                      onChanged: (value) {
+                        setState(() {
+                          isShowCheonganGeuc = value!;widget.reloadSetting();
+                        });
+                        SaveCheonganHabChungData();
+                      },
                     ),
                   ],
                 ),
               ),
-            ),
+              Container(
+                width: widgetWidth - (style.UIMarginLeft * 2),
+                height: style.fullSizeButtonHeight,
+                margin: EdgeInsets.only(top: style.UIMarginTop),
+                decoration: BoxDecoration(
+                  color: style.colorMainBlue,
+                  borderRadius: BorderRadius.circular(style.textFiledRadius),
+                ),
+                child: TextButton(
+                    style: ButtonStyle(
+                      //splashFactory: NoSplash.splashFactory,
+                      overlayColor: MaterialStateProperty.all(style.colorMainBlue.withOpacity(0.0)),
+                    ),
+                    child: Text(
+                      '추출',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    onPressed: () {
+                      setState(() {
+
+                      });
+                    }),
+              ),
+              Container(
+                width: widgetWidth - (style.UIMarginLeft * 2),
+                height: 1,
+                margin: EdgeInsets.only(top: 22),
+                color: style.colorGrey,
+              ),
+              Container(  //데이터 불러오기 설명
+                height: style.saveDataMemoLineHeight * 0.7,
+                width: (widgetWidth - (style.UIMarginLeft * 2)),
+                margin: EdgeInsets.only(top: style.UIMarginTop),
+                child:  Text("추출한 파일을 통해 데이터를 불러옵니다", style: style.settingInfoText0,),
+              ),
+              Container(
+                width: widgetWidth - (style.UIMarginLeft * 2),
+                height: style.fullSizeButtonHeight,
+                margin: EdgeInsets.only(top: style.UIMarginTop),
+                decoration: BoxDecoration(
+                  color: style.colorMainBlue,
+                  borderRadius: BorderRadius.circular(style.textFiledRadius),
+                ),
+                child: TextButton(
+                    style: ButtonStyle(
+                      //splashFactory: NoSplash.splashFactory,
+                      overlayColor: MaterialStateProperty.all(style.colorMainBlue.withOpacity(0.0)),
+                    ),
+                    child: Text(
+                      '불러오기',
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                    onPressed: () {
+                      setState(() {
+
+                      });
+                    }),
+              ),
+              Container(
+                width: (widgetWidth - (style.UIMarginLeft * 2)),
+                height: 268,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 2, color:style.colorDarkGrey),
+                  borderRadius: BorderRadius.circular(style.textFiledRadius),
+                ),
+                margin: EdgeInsets.only(top: 18),
+              ),
+            ],
           ),
         ],
       ),

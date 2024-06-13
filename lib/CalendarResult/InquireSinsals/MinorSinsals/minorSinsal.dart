@@ -8,7 +8,6 @@ class SibiSinsal{//신살 계산해주는 클래스
   List<int> listContainerHeightCount = [0,0,0,0];
 
   List<String> FindMinorSinsal(List<int> _listPaljaData){
-
     int count = (_listPaljaData.length / 2).floor() - 1;
     int topCount = 0;
 
@@ -475,7 +474,6 @@ class SibiSinsal{//신살 계산해주는 클래스
 
   GetMinorSinsal(BuildContext context, Color containerColor, List<int> _listPaljaData){
     List<String> listMinorSinsalString = FindMinorSinsal(_listPaljaData);
-
     return Container(
       width: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
       height: containerHeight,

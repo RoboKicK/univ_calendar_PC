@@ -550,6 +550,7 @@ late var snackBar;
 
   //-- 여기부터 단일 명식 저장
 
+  //생년월일을 birthData로 변환
   int ConvertToBirthData(bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
     int genderInt = 1;  //남자:1
     if(gender == false){
@@ -573,7 +574,7 @@ late var snackBar;
 
     int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
 
-    Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now(), 'memo':memo};
+    Map personData = {'name':name, 'birthData':birthData, 'saveDate':saveDate, 'memo':memo};
     mapPerson.add(personData);
     SavePersonFile();
 

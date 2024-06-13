@@ -9,7 +9,7 @@ import 'mainCalendarGroupSaveListOption.dart' as mainCalendarGroupSaveListOption
 
 class MainCalendarGroupSaveList extends StatefulWidget {
   const MainCalendarGroupSaveList({super.key, required this.groupDataLoad, required this.setGroupLoadWidget, required this.setSideOptionLayerWidget, required this.refreshListMapGroupLength, required this.setSideOptionWidget,
-  required this.refreshGroupName});
+  required this.refreshGroupName, required this.saveGroupTempMemo});
 
   final groupDataLoad;
   final setGroupLoadWidget;
@@ -17,6 +17,7 @@ class MainCalendarGroupSaveList extends StatefulWidget {
   final setSideOptionWidget;
   final refreshListMapGroupLength;
   final refreshGroupName;
+  final saveGroupTempMemo;
 
   @override
   State<MainCalendarGroupSaveList> createState() => _MainCalendarGroupSaveListState();
@@ -347,7 +348,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                       width: style.UIButtonWidth + 30,
                                       height: MediaQuery.of(context).size.height - style.appBarHeight,
                                       child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(listMapGroup: saveDataManager.listMapGroup[i], refreshListMapGroupLength: widget.refreshListMapGroupLength,
-                                          closeOption: widget.setSideOptionLayerWidget, refreshGroupName: widget.refreshGroupName, key:UniqueKey()),
+                                          closeOption: widget.setSideOptionLayerWidget, refreshGroupName: widget.refreshGroupName, isMemoOpen:false, saveGroupTempMemo: widget.saveGroupTempMemo, key:UniqueKey()),
                                     ));
                                   },
                                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,

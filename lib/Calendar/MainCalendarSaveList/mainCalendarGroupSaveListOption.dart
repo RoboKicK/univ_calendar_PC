@@ -11,7 +11,8 @@ import 'package:provider/provider.dart';
 import '../../findGanji.dart' as findGanji;
 
 class MainCalendarGroupSaveListOption extends StatefulWidget {
-  const MainCalendarGroupSaveListOption({super.key, required this.listMapGroup, required this.refreshListMapGroupLength, required this.closeOption, required this.refreshGroupName});
+  const MainCalendarGroupSaveListOption({super.key, required this.listMapGroup, required this.refreshListMapGroupLength, required this.closeOption, required this.refreshGroupName,
+    required this.isMemoOpen, required this.saveGroupTempMemo});
 
   final List<dynamic> listMapGroup;
 
@@ -19,6 +20,9 @@ class MainCalendarGroupSaveListOption extends StatefulWidget {
 
   final closeOption;
   final refreshGroupName;
+
+  final bool isMemoOpen;
+  final saveGroupTempMemo;
 
   @override
   State<MainCalendarGroupSaveListOption> createState() => _MainCalendarGroupSaveListOptionState();
@@ -129,12 +133,14 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       buttonMode = 1;
     }
     else{ //메모 저장 후 종료
-      saveDataManager.SaveListMapGroupDataMemo(groupName, saveDate, editingMemo);
+      if(saveDate != DateTime.utc(3000)) {
+        saveDataManager.SaveListMapGroupDataMemo(groupName, saveDate, editingMemo);
+        widget.refreshListMapGroupLength();
+      }
       prefixMemo = editingMemo;
       editingMemo = '';
       isEditingMemo = 0;
       buttonMode = 0;
-      widget.refreshListMapGroupLength();
     }
   }
 
@@ -180,6 +186,9 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
       }
     }
     return '';
+  }
+  String GetSaveDateText(DateTime saveDate){
+    return "${saveDate.year}년 ${saveDate.month}월 ${saveDate.day}일";
   }
 
   List<Widget> GetPersonNameText(String name, int birthData){
@@ -234,59 +243,66 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   GetPersonText(){
     List<List<Widget>> listPersonWidget = [];
 
-    for(int i = 1; i < widget.listMapGroup.length; i++){
-
-      listPersonWidget.add(
-          GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData'])
-      );
+    for (int i = 1; i < widget.listMapGroup.length; i++) {
+      listPersonWidget.add(GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']));
       listPersonWidget.add(GetPersonBirthText(widget.listMapGroup[i]['birthData']));
     }
 
     List<Widget> listPersonWidget0 = [];
 
-    for(int i = 1; i < widget.listMapGroup.length; i++){
-      listPersonWidget0.add(
-        Container(
-          height: (style.saveDataNameTextLineHeight + 4) * 2,
-          child: ElevatedButton(
-            onPressed: (){
-              context.read<Store>().SetPersonInquireInfo(widget.listMapGroup[i]['name'], saveDataManager.GetSelectedDataFromBirthData('gender', widget.listMapGroup[i]['birthData']),
-                  saveDataManager.GetSelectedDataFromBirthData('uemYang',widget.listMapGroup[i]['birthData']),saveDataManager.GetSelectedDataFromBirthData('birthYear',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthMonth',widget.listMapGroup[i]['birthData']),
-                  saveDataManager.GetSelectedDataFromBirthData('birthDay',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthHour',widget.listMapGroup[i]['birthData']), saveDataManager.GetSelectedDataFromBirthData('birthMin',widget.listMapGroup[i]['birthData']),
-                  widget.listMapGroup[i]['memo']??'', DateTime.utc(3000));
-            },
-            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-            child: Column(
-              children: [
-                Row(
-                  children: GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']),
-                ),
-                Row(
-                  children: GetPersonBirthText(widget.listMapGroup[i]['birthData']),
-                ),
-              ],
-            ),
+    for (int i = 1; i < widget.listMapGroup.length; i++) {
+      listPersonWidget0.add(Container(
+        height: (style.saveDataNameTextLineHeight + 4) * 2,
+        child: ElevatedButton(
+          onPressed: () {
+            context.read<Store>().SetPersonInquireInfo(
+                widget.listMapGroup[i]['name'],
+                saveDataManager.GetSelectedDataFromBirthData('gender', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('uemYang', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthYear', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthMonth', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthDay', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthHour', widget.listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthMin', widget.listMapGroup[i]['birthData']),
+                widget.listMapGroup[i]['memo'] ?? '',
+                DateTime.utc(3000));
+          },
+          style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.all(0),
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              splashFactory: NoSplash.splashFactory,
+              foregroundColor: style.colorBackGround,
+              surfaceTintColor: Colors.transparent),
+          child: Column(
+            children: [
+              Row(
+                children: GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']),
+              ),
+              Row(
+                children: GetPersonBirthText(widget.listMapGroup[i]['birthData']),
+              ),
+            ],
           ),
-        )
-      );
+        ),
+      ));
     }
 
-    return Container( //저장일자 정보
-      width: style.UIButtonWidth,
-      alignment: Alignment.centerLeft,
-      margin: EdgeInsets.only(top:8),
-      child: ListView.builder(
-        itemCount: listPersonWidget0.length,
-        shrinkWrap: true,
-        itemBuilder: (context, i){
-          //return Row(
-          //    children:listPersonWidget[i]
-          //);
-          return listPersonWidget0[i];
-        },
-      )
-    );
+      return Container(
+          //저장일자 정보
+          width: style.UIButtonWidth,
+          alignment: Alignment.centerLeft,
+          margin: EdgeInsets.only(top: 8),
+          child: ListView.builder(
+            itemCount: listPersonWidget0.length,
+            shrinkWrap: true,
+            itemBuilder: (context, i) {
+              //return Row(
+              //    children:listPersonWidget[i]
+              //);
+              return listPersonWidget0[i];
+            },
+          ));
   }
 
   CheckPersonalDataHide(){
@@ -321,14 +337,12 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                 controller: groupNameController,
                 onEditingComplete: () {
                   Navigator.of(context).pop();
-
                   setState(() {
-                    saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
-                    widget.refreshListMapGroupLength();
+                      saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
+                      widget.refreshListMapGroupLength();
+                    groupName = groupNameController.text;
+                    widget.refreshGroupName(saveDate, groupName);
                   });
-
-                  groupName = groupNameController.text;
-                  widget.refreshGroupName(saveDate, groupName);
                 },
                 decoration: InputDecoration(
                   labelText: '묶음 이름을 수정합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
@@ -349,12 +363,11 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
             onPressed: () {
               Navigator.of(context).pop();
               setState(() {
-                saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
-                widget.refreshListMapGroupLength();
+                  saveDataManager.SaveEditedGroupName(groupName, saveDate, groupNameController.text);
+                  widget.refreshListMapGroupLength();
+                groupName = groupNameController.text;
+                widget.refreshGroupName(saveDate, groupName);
               });
-
-              groupName = groupNameController.text;
-              widget.refreshGroupName(saveDate, groupName);
             },
             child: Text('저장'),
           ),
@@ -369,6 +382,11 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     );
   }
 
+  SaveGroupTempMemo(){
+    if(saveDate == DateTime.utc(3000)) {
+      widget.saveGroupTempMemo(memoController.text);
+    }
+  }
 
   @override
   void initState() {
@@ -380,8 +398,13 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     saveDate = widget.listMapGroup[0]['saveDate'];
 
     prefixMemo = widget.listMapGroup[0]['memo'];
+    editingMemo = widget.listMapGroup[0]['memo'];
 
     CheckPersonalDataHide();
+
+    if(widget.isMemoOpen == true){
+      SetEditingMemo();
+    }
   }
 
   @override
@@ -395,7 +418,16 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     super.deactivate();
 
     if(isEditingMemo == 1){
-      SetEditingMemo();
+      if(saveDate != DateTime.utc(3000)) {
+        saveDataManager.SaveListMapGroupDataMemo(groupName, saveDate, editingMemo);
+        widget.refreshListMapGroupLength();
+      } else {
+        SaveGroupTempMemo();
+      }
+      prefixMemo = editingMemo;
+      editingMemo = '';
+      isEditingMemo = 0;
+      buttonMode = 0;
     }
   }
 
@@ -444,18 +476,18 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
           Expanded( //
             child: Column(
               children:[
-                GetPersonText(),  //이름
-                Container(  //저장일자 제목
+                saveDate == DateTime.utc(3000)? SizedBox.shrink() : GetPersonText(),  //이름
+                saveDate == DateTime.utc(3000)? SizedBox.shrink() : Container(  //저장일자 제목
                   width: style.UIButtonWidth,
                   height: style.saveDataNameLineHeight,
                   margin: EdgeInsets.only(top: categoryMargin + 10),
                   padding: EdgeInsets.only(top:6),
                   child: Text("저장일자", style: Theme.of(context).textTheme.titleLarge),
                 ),
-                Container( //저장일자 정보
+                saveDate == DateTime.utc(3000)? SizedBox.shrink() : Container( //저장일자 정보
                   width: style.UIButtonWidth,
                   height: style.saveDataMemoLineHeight,
-                  child:Text("${saveDate.year}년 ${saveDate.month}월 ${saveDate.day}일", style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                  child: Text(GetSaveDateText(saveDate), style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
                 ),
                 //Container(  //이름
                 //  width: style.UIButtonWidth,
@@ -481,30 +513,35 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                         ),
                         Container( //메모 본문 수정
                           width: style.UIButtonWidth,
-                          height: 1000,
+                          height: 900,
                           color: style.colorNavy,
                           alignment: Alignment.topLeft,
                           child: Container(
-                            child: TextField(
-                              autofocus: true,
-                              controller: memoController,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              focusNode: memoFocusNode,
-                              onTapOutside: (event) {
-                                memoFocusNode.requestFocus();
+                            child: Focus(
+                              onFocusChange:(focus) {
+                                SaveGroupTempMemo();
                               },
-                              style: Theme.of(context).textTheme.displayMedium,
-                              decoration:InputDecoration(
-                                isDense: true,
-                                contentPadding: EdgeInsets.only(top: 5),
-                                counterText:"",
-                                border: InputBorder.none,),
-                              onChanged: (text){
-                                setState(() {
-                                  editingMemo = text;
-                                });
-                              },
+                              child: TextField(
+                                autofocus: true,
+                                controller: memoController,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                focusNode: memoFocusNode,
+                                onTapOutside: (event) {
+                                  memoFocusNode.requestFocus();
+                                },
+                                style: Theme.of(context).textTheme.displayMedium,
+                                decoration:InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.only(top: 5),
+                                  counterText:"",
+                                  border: InputBorder.none,),
+                                onChanged: (text){
+                                  setState(() {
+                                    editingMemo = text;
+                                  });
+                                },
+                              ),
                             ),
                           ),
                         ),
@@ -515,7 +552,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
               ],
             ),
           ),
-          Column( //옵션 버튼들
+          saveDate == DateTime.utc(3000)? SizedBox.shrink() : Column( //옵션 버튼들
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               [
@@ -575,10 +612,12 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                                         ElevatedButton(
                                             style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                                             onPressed: () async {
-                                              await saveDataManager.DeleteGroupData(groupName, saveDate);
-                                              setState(() {
-                                                print(saveDataManager.fileDirPath);
-                                              });
+                                              if(saveDate != DateTime.utc(3000)) {
+                                                await saveDataManager.DeleteGroupData(groupName, saveDate);
+                                                setState(() {
+                                                  print(saveDataManager.fileDirPath);
+                                                });
+                                              }
                                               widget.closeOption(false);//widget.closeOption(false,0);
                                               Navigator.of(context).pop(true);
                                             },

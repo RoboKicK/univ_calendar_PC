@@ -19,7 +19,7 @@ import 'MainCalendarSaveList/mainCalendarSaveListOption.dart' as mainCalendarSav
 class CalendarMain extends StatefulWidget {
   const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum,
     required this.setNowPageName, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort,
-    required this.refreshMapRecentPersonLength, required this.refreshListMapGroupLength});
+    required this.refreshMapRecentPersonLength, required this.refreshListMapGroupLength, required this.refreshGroupName, required this.setGroupMemoWidget, required this.getGroupTempMemo, required this.setGroupSaveDateAfterSave});
 
   final bool isEditSetting;
   final int pageNum;
@@ -27,7 +27,8 @@ class CalendarMain extends StatefulWidget {
   final getNowPageNum;
   final setNowPageName;
   final setSideOptionLayerWidget, setSideOptionWidget;
-  final refreshMapPersonLengthAndSort, refreshMapRecentPersonLength, refreshListMapGroupLength;
+  final refreshMapPersonLengthAndSort, refreshMapRecentPersonLength, refreshListMapGroupLength, refreshGroupName;
+  final setGroupMemoWidget, getGroupTempMemo, setGroupSaveDateAfterSave;
 
   @override
   State<CalendarMain> createState() => _CalendarMainState();
@@ -43,6 +44,7 @@ class _CalendarMainState extends State<CalendarMain> {
   ScrollController pageRowController = ScrollController();
 
   bool isEditSetting = false;
+  bool isEditWorldGroupMemo = false;
 
   Offset? newCalendarOffset;
 
@@ -188,17 +190,22 @@ class _CalendarMainState extends State<CalendarMain> {
                     controller: pageNameController,
                     onEditingComplete: () {
                       Navigator.of(context).pop();
-                      String groupName = pageNameController.text;
-                      if(groupName == ''){
-                        groupName = '이름 없음';
+                      if(widget.getGroupTempMemo() != ''){
+                        AskSaveGroupMemo(listGroupMap);
+                      } else {
+                        String groupName = pageNameController.text;
+                        if(groupName == ''){
+                          groupName = '이름 없음';
+                        }
+                        setState(() {
+                          widget.setNowPageName(groupName, isFromCalendarMain:true);
+                          DateTime groupSaveDate = DateTime.now();
+                          listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                          saveDataManager.SaveGroupData2(listGroupMap);
+                          widget.refreshListMapGroupLength();
+                          widget.setGroupSaveDateAfterSave(groupSaveDate);
+                        });
                       }
-                      widget.setNowPageName(groupName);
-                      setState(() {
-                        DateTime groupSaveDate = DateTime.now();
-                        listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
-                        saveDataManager.SaveGroupData2(listGroupMap);
-                        widget.refreshListMapGroupLength();
-                      });
                     },
                     decoration: InputDecoration(
                       labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
@@ -218,17 +225,22 @@ class _CalendarMainState extends State<CalendarMain> {
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  String groupName = pageNameController.text;
-                  if(groupName == ''){
-                    groupName = '이름 없음';
+                  if(widget.getGroupTempMemo() !=  ''){
+                    AskSaveGroupMemo(listGroupMap);
+                  } else {
+                    String groupName = pageNameController.text;
+                    if(groupName == ''){
+                      groupName = '이름 없음';
+                    }
+                    setState(() {
+                      widget.setNowPageName(groupName);
+                      DateTime groupSaveDate = DateTime.now();
+                      listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                      saveDataManager.SaveGroupData2(listGroupMap);
+                      widget.refreshListMapGroupLength();
+                      widget.setGroupSaveDateAfterSave(groupSaveDate);
+                    });
                   }
-                  widget.setNowPageName(groupName);
-                  setState(() {
-                    DateTime groupSaveDate = DateTime.now();
-                    listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
-                    saveDataManager.SaveGroupData2(listGroupMap);
-                    widget.refreshListMapGroupLength();
-                  });
                 },
                 child: Text('저장'),
               ),
@@ -247,6 +259,78 @@ class _CalendarMainState extends State<CalendarMain> {
     });
     //저장 후 정리
     widget.saveSuccess();
+  }
+  //그룹 저장할 때 메모까지 저장하기
+  AskSaveGroupMemo(List<Map> listGroupMap){
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        actionsAlignment: MainAxisAlignment.center,
+        title: Text('묶음 메모장의 내용을 저장하시겠습니까?', style:TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack)),
+        buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+        actions: [
+          ElevatedButton(
+            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              String groupName = pageNameController.text;
+              if(groupName == ''){
+                groupName = '이름 없음';
+              }
+              widget.setNowPageName(groupName);
+              setState(() {
+                DateTime groupSaveDate = DateTime.now();
+                listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                saveDataManager.SaveGroupData2(listGroupMap, memo: widget.getGroupTempMemo());
+                widget.refreshListMapGroupLength();
+                widget.setGroupSaveDateAfterSave(groupSaveDate);
+              });
+            },
+            child: Text('네'),
+          ),
+          ElevatedButton(
+            style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+            onPressed: () {
+              Navigator.of(context).pop();
+              String groupName = pageNameController.text;
+              if(groupName == ''){
+                groupName = '이름 없음';
+              }
+              widget.setNowPageName(groupName);
+              setState(() {
+                DateTime groupSaveDate = DateTime.now();
+                listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                saveDataManager.SaveGroupData2(listGroupMap);
+                widget.refreshListMapGroupLength();
+                widget.setGroupSaveDateAfterSave(groupSaveDate);
+              });
+            },
+            child: Text('아니오'),
+          ),
+          ElevatedButton(
+              style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('취소')),
+        ],
+      ),
+    );
+    });
+  }
+  //그룹 메모 열기
+  SetGroupMemoWidget(){
+    List<dynamic> listPerson = [];
+    for (int i = 0; i < listKey.length; i++) {
+      if (listKey[i]['globalKey'].currentState?.nowState == 1) {
+        listPerson.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+      }
+    }
+    if(listPerson.isNotEmpty) {
+      widget.setGroupMemoWidget(listPerson, false);
+    }
+    isEditWorldGroupMemo = context.watch<Store>().isEditWorldGroupMemo;
   }
 
   @override
@@ -311,6 +395,15 @@ class _CalendarMainState extends State<CalendarMain> {
       SaveGroupData();
     }
 
+    //그룹 메모 감시 함수
+    if(isEditWorldGroupMemo != context.watch<Store>().isEditWorldGroupMemo && context.watch<Store>().targetGroupMemoPageNum == widget.pageNum){  //그룹 메모 변동 시 온오프
+      SetGroupMemoWidget();
+    } else if(isEditWorldGroupMemo != context.watch<Store>().isEditWorldGroupMemo){
+      isEditWorldGroupMemo = context.watch<Store>().isEditWorldGroupMemo;
+    }
+
+
+
     return Container(
         height: MediaQuery.of(context).size.height - style.appBarHeight,
         color: style.colorBlack,//colorDarkGrey,
@@ -356,6 +449,17 @@ class _CalendarMainState extends State<CalendarMain> {
                     width: 20,
                     height: 40,
                     margin: EdgeInsets.only(left: 8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+                        boxShadow: <BoxShadow>[BoxShadow(
+                          color: style.colorBlack,
+                          blurRadius: 2.0,
+                          offset: Offset.zero,
+                          blurStyle: BlurStyle.normal,
+                          spreadRadius: 0.4,
+                        )
+                        ]
+                    ),
                     child: ElevatedButton(
                       onPressed: (){
                         AddCalendarWidget(true, {});
@@ -364,13 +468,25 @@ class _CalendarMainState extends State<CalendarMain> {
                       child: Text('+', style: TextStyle(color:Colors.white)),
                       style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.all(0),backgroundColor: style.colorMainBlue,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius))),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius))
+                      ),
                     ),
                   ),
                   Container(
                     width: 20,
                     height: 40,
                     margin: EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(style.deunSeunGanjiRadius),
+                        boxShadow: <BoxShadow>[BoxShadow(
+                          color: style.colorBlack,
+                          blurRadius: 2.0,
+                          offset: Offset.zero,
+                          blurStyle: BlurStyle.normal,
+                          spreadRadius: 0.4,
+                        )
+                        ]
+                    ),
                     child: ElevatedButton(
                         onPressed: (){
                           AddCalendarWidget(false, {});
@@ -1018,13 +1134,12 @@ class _CalendarWidget extends State<CalendarWidget> {
                 borderRadius: BorderRadius.circular(style.textFiledRadius),
               ),
               child: TextField(
-                obscureText: isShowPersonalBirth == false ? true : false,
+                autofocus: true,
                 controller: calendarMemoController,
                 keyboardType: TextInputType.multiline,
                 cursorColor: Colors.white,
                 maxLines: null,
                 style: Theme.of(context).textTheme.labelLarge,
-                autofocus: true,
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding: EdgeInsets.only(top: 10, left: 14, bottom: 10),
@@ -1828,7 +1943,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                         value: value,
                                         child: Container(
                                           child: Text(value),
-                                          width: style.UIButtonWidth * 0.4, //135,
+                                          width: style.UIButtonWidth * 0.4, //135
                                           alignment: Alignment.center,
                                         ),
                                       ))

@@ -569,7 +569,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
         width: paljaBoxSize,
         height: paljaBoxSize,
         margin: EdgeInsets.only(bottom: ganjiBoxMarginSmaller, top: ganjiBoxMarginBigger),
-        padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
+        //padding: EdgeInsets.only(bottom: ganjiBoxPaddingBottom),
         child: Stack(
           children:[
             Image.asset('assets/' + style.SetOhengSpriteString(true, widget.listPaljaData[8], themeTitle)),

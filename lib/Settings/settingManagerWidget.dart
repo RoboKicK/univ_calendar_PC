@@ -13,6 +13,7 @@ import 'deunSeunSettingWidget.dart' as deunSeunSettingWidget;
 import 'etcSettingWidget.dart' as etcSettingWidget;
 import 'themeSettingWidget.dart' as themeSettingWidget;
 import 'dataManageWidget.dart' as dataManageWidget;
+import 'shareSettingValWidget.dart' as shareSettingValWidget;
 
 class SettingManagerWidget extends StatefulWidget {
   const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting});
@@ -140,7 +141,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
     }
   }
 
-  double widgetWidth = 600;
+  double widgetWidth = 500;
   double widgetHeight = 560+46;
 
   Widget nextPage = SizedBox.shrink();
@@ -149,7 +150,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   Widget mainPage = SizedBox.shrink();
   Widget nowPage = SizedBox.shrink();
 
-  SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타, 7:테마
+  SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타, 7:테마, 8:저장목록, 9:설정 공유
     setState(() {
       switch(num){
         case 0: {
@@ -178,6 +179,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         }
         case 8: {
           nextPage = dataManageWidget.DataManageWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+        }
+        case 9: {
+          nextPage = shareSettingValWidget.ShareSettingValWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
       }
       if(num == 0){
@@ -480,7 +484,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   children: [
                     OutlinedButton(
                       onPressed: () {
-
+                        SetNextPageWidget(9);
                       },
                       style: OutlinedButton.styleFrom(
                           foregroundColor: style.colorBackGround,
