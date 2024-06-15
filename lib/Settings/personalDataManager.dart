@@ -51,7 +51,7 @@ LoadUserData() async{
   try{mapWordData = await jsonDecode(await File('${fileDirPath}/wordData').readAsString());
   }catch(e){    //단어 설정 파일이 없으면 생성한다
     final file = await CreateSaveFile('wordData');
-    await file.writeAsString(jsonEncode({'ilGan':0, 'yugChin':0, 'wonJin':0, 'geukChung':0}));
+    await file.writeAsString(jsonEncode({'ilGan':0, 'yugChin':0, 'wonJin':0, 'geukChung':1, 'hab':1}));
     mapWordData = {'ilGan':0, 'yugChin':0, 'wonJin':0, 'geukChung':1, 'hab':1};
   }
   try{calendarData = await jsonDecode(await File('${fileDirPath}/calendarData').readAsString());

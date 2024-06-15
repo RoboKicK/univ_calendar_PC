@@ -21,6 +21,8 @@ class ShareSettingValWidget extends StatefulWidget {
 class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
   TextEditingController codeTextController = TextEditingController();
 
+  String settingCodeString = '';
+
   int isShowCheongan = 0; //0:안보여줌, 1:보여줌
   bool isShowCheonganHab = false, isShowCheonganChung = false, isShowCheonganGeuc = false;
   double cheonganHabChungContainerHeight = 0;
@@ -410,6 +412,25 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
     personalDataManager.SaveCalendarData(0, isAllShow == false? 1 : 2, isAll:true);
   }
 
+  SetSettingCodeString(){
+    String code0 = '';
+    if(personalDataManager.mapWordData['ilGan'] == 0){
+      code0 = '3' + personalDataManager.mapWordData['yugChin'].toString() + personalDataManager.mapWordData['wonJin'].toString() + personalDataManager.mapWordData['geukChung'].toString() + personalDataManager.mapWordData['hab'].toString();
+    }
+    else {
+      code0 = personalDataManager.mapWordData['ilGan'].toString() + personalDataManager.mapWordData['yugChin'].toString() + personalDataManager.mapWordData['wonJin'].toString() + personalDataManager.mapWordData['geukChung'].toString() + personalDataManager.mapWordData['hab'].toString();
+    }
+    code0 = code0 + personalDataManager.calendarData.toString();
+    String code1 = personalDataManager.deunSeunData.toString() + personalDataManager.sinsalData.toString() + personalDataManager.etcSinsalData.toString() + personalDataManager.etcData.toString();
+print(code0);
+    BigInt codeVal = BigInt.parse(code0, radix: 8);
+  //  code0.
+//print(codeVal);
+    setState(() {
+      settingCodeString = codeVal.toString();
+    });
+  }
+
   @override
   initState() {
     super.initState();
@@ -572,7 +593,7 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
                     height: style.saveDataMemoLineHeight*1.2,
                     //width: (widgetWidth - (style.UIMarginLeft * 2)),
                     margin: EdgeInsets.only(top: style.UIMarginTop, right: style.UIMarginLeft),
-                    child:  Text("개인 설정 코드", style: style.settingText0,),
+                    child:  Text(settingCodeString, style: style.settingText0,),
                   ),
                 ],
               ),
@@ -595,7 +616,7 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
                     ),
                     onPressed: () {
                       setState(() {
-
+                        SetSettingCodeString();
                       });
                     }),
               ),
