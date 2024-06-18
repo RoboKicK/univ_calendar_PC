@@ -314,8 +314,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                           foregroundColor: style.colorBackGround,
                           padding: EdgeInsets.only(left: 0),
                           fixedSize: Size.fromWidth(
-                              MediaQuery.of(context).size.width -
-                                  (style.UIMarginLeft * 2)),
+                              MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
                           alignment: Alignment.centerLeft),
                       child: Text('단어 설정',
                           style: style.settingText0),

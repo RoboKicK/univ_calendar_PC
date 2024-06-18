@@ -274,6 +274,12 @@ late var snackBar;
                 startNum = startNum + 16;
                 endNum = startNum + 2;
 
+                if(saveDataString.substring(startNum, startNum+1) == '2'){
+                  saveDate = DateTime.parse(saveDataString.substring(startNum, startNum + 26));
+                  startNum = startNum + 28;
+                  endNum = startNum + 2;
+                }
+
                 while(true){  //메모
                   if (saveDataString.substring(endNum - 2, endNum) == '{{' || saveDataString.substring(endNum - 2, endNum) == '}}'){
                     personMemo = saveDataString.substring(startNum, endNum - 2);
@@ -286,7 +292,7 @@ late var snackBar;
                   }
                 }
 
-                groupMap.add({'name': personName, 'birthData': birthData, 'memo': personMemo});
+                groupMap.add({'name': personName, 'birthData': birthData, 'saveDate': saveDate, 'memo': personMemo});
                 if(saveDataString.substring(endNum - 4, endNum - 2) == '}}'){
                   listMapGroup.add(groupMap);
 
@@ -362,6 +368,8 @@ late var snackBar;
       SaveGroupFile();
     }
   } catch(e) {};
+
+  SaveGroupFile();
 }
   ClearListMapGroup(){
   listMapGroup.clear();
@@ -426,6 +434,7 @@ late var snackBar;
   Future<void> SaveGroupFile() async {
     String jsonString = '';
     String personMemoString = '';
+    String personSaveDate = '';
 
     for(int i = 0; i < listMapGroup.length; i++){
       jsonString = jsonString + listMapGroup[i][0]['groupName'] + '{{' +
@@ -437,8 +446,12 @@ late var snackBar;
         } else {
           personMemoString = listMapGroup[i][j]['memo'];
         }
-
-        jsonString = jsonString + listMapGroup[i][j]['name'] + '{{' + listMapGroup[i][j]['birthData'].toString() + '{{' + personMemoString;
+        if(listMapGroup[i][j]['saveDate'] == null || listMapGroup[i][j]['saveDate'] == DateTime.utc(3000)){
+          personSaveDate = listMapGroup[i][0]['saveDate'].toString();
+        } else {
+          personSaveDate = listMapGroup[i][j]['saveDate'].toString();
+        }
+        jsonString = jsonString + listMapGroup[i][j]['name'] + '{{' + listMapGroup[i][j]['birthData'].toString() + '{{' + personSaveDate + '{{' + personMemoString;
 
         if(j < listMapGroup[i].length - 1){
           jsonString = jsonString + '{{';
@@ -504,6 +517,21 @@ late var snackBar;
   }
 
     return -1;
+  }
+  //listMapGroup에서 해당 명식 찾기
+  List<List<int>> FindListMapGroupPersonIndex(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate){
+    List<List<int>> listGroupPersonIndex = [];
+    int personBirthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
+
+    for(int i = 0; i < listMapGroup.length; i++){
+      for(int j = 1; j < listMapGroup[i].length; j++){
+        if(listMapGroup[i][j]['name'] == name && listMapGroup[i][j]['birthData'] == personBirthData && listMapGroup[i][j]['saveDate'] == saveDate){
+          listGroupPersonIndex.add([i,j]);
+        }
+      }
+    }
+
+    return listGroupPersonIndex;
   }
 
   //그룹의 메모를 수정하여 저장할 때 사용
@@ -708,7 +736,18 @@ late var snackBar;
           snackBar('메모가 저장되었습니다');
         });
       }
-  }
+    }
+
+    List<List<int>> listGroupPersonIndex = FindListMapGroupPersonIndex(name, gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin, saveDate);
+
+    for(int i = 0; i < listGroupPersonIndex.length; i++){
+      if(listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['memo'] != memo){
+        listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['memo'] = memo;
+      }
+    }
+    if(withoutSaveFile == false && listGroupPersonIndex.isNotEmpty) {
+      SaveGroupFile();
+    }
   }
 
   //명식의 정보를 수정하여 저장

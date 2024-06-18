@@ -30,6 +30,8 @@ class MainCalendarGroupSaveListOption extends StatefulWidget {
 
 class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveListOption> {
 
+  List<dynamic> listMapGroup = [];
+
   String GetUemYangText(int uemYang){
     String uemYangText = '';
     if(uemYang == 0){
@@ -103,6 +105,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   late FocusNode memoFocusNode;
 
   bool isEditWorldGroupName = false;
+  bool isEditWorldGroupPersonCount = false;
 
   SetMemo(String memo){
     editingMemo = memo;
@@ -243,27 +246,27 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   GetPersonText(){
     List<List<Widget>> listPersonWidget = [];
 
-    for (int i = 1; i < widget.listMapGroup.length; i++) {
-      listPersonWidget.add(GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']));
-      listPersonWidget.add(GetPersonBirthText(widget.listMapGroup[i]['birthData']));
+    for (int i = 1; i < listMapGroup.length; i++) {
+      listPersonWidget.add(GetPersonNameText(listMapGroup[i]['name'], listMapGroup[i]['birthData']));
+      listPersonWidget.add(GetPersonBirthText(listMapGroup[i]['birthData']));
     }
 
     List<Widget> listPersonWidget0 = [];
 
-    for (int i = 1; i < widget.listMapGroup.length; i++) {
+    for (int i = 1; i < listMapGroup.length; i++) {
       listPersonWidget0.add(Container(
         height: (style.saveDataNameTextLineHeight + 4) * 2,
         child: ElevatedButton(
           onPressed: () {
             context.read<Store>().SetPersonInquireInfo(
-                widget.listMapGroup[i]['name'],
-                saveDataManager.GetSelectedDataFromBirthData('gender', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('uemYang', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('birthYear', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('birthMonth', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('birthDay', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('birthHour', widget.listMapGroup[i]['birthData']),
-                saveDataManager.GetSelectedDataFromBirthData('birthMin', widget.listMapGroup[i]['birthData']),
+                listMapGroup[i]['name'],
+                saveDataManager.GetSelectedDataFromBirthData('gender', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('uemYang', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthYear', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthMonth', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthDay', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthHour', listMapGroup[i]['birthData']),
+                saveDataManager.GetSelectedDataFromBirthData('birthMin', listMapGroup[i]['birthData']),
                 widget.listMapGroup[i]['memo'] ?? '',
                 DateTime.utc(3000));
           },
@@ -277,10 +280,10 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
           child: Column(
             children: [
               Row(
-                children: GetPersonNameText(widget.listMapGroup[i]['name'], widget.listMapGroup[i]['birthData']),
+                children: GetPersonNameText(listMapGroup[i]['name'], listMapGroup[i]['birthData']),
               ),
               Row(
-                children: GetPersonBirthText(widget.listMapGroup[i]['birthData']),
+                children: GetPersonBirthText(listMapGroup[i]['birthData']),
               ),
             ],
           ),
@@ -391,10 +394,11 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
   @override
   void initState() {
     super.initState();
+    listMapGroup = widget.listMapGroup;
 
     memoFocusNode = FocusNode();
 
-    groupName = widget.listMapGroup[0]['groupName'];
+    groupName = listMapGroup[0]['groupName'];
     saveDate = widget.listMapGroup[0]['saveDate'];
 
     prefixMemo = widget.listMapGroup[0]['memo'];
@@ -441,6 +445,12 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
         groupName = saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndexWithoutGroupName(saveDate)][0]['groupName'];
       }
       isEditWorldGroupName = context.watch<Store>().isEditWorldGroupName;
+    }
+    if(isEditWorldGroupPersonCount != context.watch<Store>().isEditWorldGroupPersonCount){
+      setState(() {
+        listMapGroup = saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndex(widget.listMapGroup[0]['groupName'], widget.listMapGroup[0]['saveDate'])];
+      });
+      isEditWorldGroupPersonCount = context.watch<Store>().isEditWorldGroupPersonCount;
     }
 
     return Container(
@@ -509,7 +519,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                         Container( //메모 본문
                           width: style.UIButtonWidth,
                           alignment: Alignment.topLeft,
-                          child:Text(prefixMemo, style: Theme.of(context).textTheme.displayMedium),//Theme.of(context).textTheme.displayMedium),
+                          child:Text(prefixMemo, style: style.memoTextStyle),//Theme.of(context).textTheme.displayMedium),
                         ),
                         Container( //메모 본문 수정
                           width: style.UIButtonWidth,
@@ -530,7 +540,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                                 onTapOutside: (event) {
                                   memoFocusNode.requestFocus();
                                 },
-                                style: Theme.of(context).textTheme.displayMedium,
+                                style: style.memoTextStyle,
                                 decoration:InputDecoration(
                                   isDense: true,
                                   contentPadding: EdgeInsets.only(top: 5),

@@ -320,7 +320,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   }
 
   Widget GetGongmangWidget(List<int> listPalja, int personNum){
-    if((sinsalData % 10 != 1 && isShowDrawerGongmang == 1) || isShowDrawerGongmang == 2){
+    if((((sinsalData % 1000)/100).floor() != 1 && isShowDrawerGongmang == 1) || isShowDrawerGongmang == 2){
       containerColorNum = (containerColorNum + 1) % 2;
       return gongmang.Gongmang().GetGongmang(context, listContainerColor[containerColorNum], listPalja, yearGongmangNum, dayGongmangNum, listRocGongmangNum, isShowDrawerGongmang == 2? true:false,lastWidgetNum == 5?true:false, widgetWidth);
     } else {
@@ -750,8 +750,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
       if(optionDataNum == 2){
         isShowDrawerSibiunseong = 1; } else {isShowDrawerSibiunseong = 0;}
 
-      optionDataNum = personalDataManager.sinsalData % 10;
-      if(optionDataNum != 9){
+      optionDataNum = ((personalDataManager.sinsalData % 1000) / 100).floor();
+      if(optionDataNum != 1){
         isShowDrawerGongmang = 1; } else {isShowDrawerGongmang = 0;}
 
       optionDataNum = ((personalDataManager.sinsalData % 100) / 10).floor();
@@ -986,8 +986,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     if(optionDataNum == 2){
       isShowDrawerSibiunseong = 1; }
 
-    optionDataNum = personalDataManager.sinsalData % 10;
-    if(optionDataNum != 9){
+    optionDataNum = ((personalDataManager.sinsalData % 1000) / 100).floor();
+    if(optionDataNum != 1){
       isShowDrawerGongmang = 1; }
 
     optionDataNum = ((personalDataManager.sinsalData % 100) / 10).floor();

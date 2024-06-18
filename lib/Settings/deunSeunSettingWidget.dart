@@ -65,8 +65,8 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
       ganjiAlign = Alignment.center;
       ganjiButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
     } else if(isShowGanjiNum == 2){
-    ganjiAlign = Alignment.centerRight;
-    ganjiButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
+      ganjiAlign = Alignment.centerRight;
+      ganjiButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
     }
   }
 

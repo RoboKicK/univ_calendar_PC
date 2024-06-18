@@ -70,7 +70,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
   }
   String GetNameText(String text){
     String nameText = '';
-    int textLengthLimit = 6;
+    int textLengthLimit = 10;
     for(int i = 0; i < text.length; i++){
       if(text.substring(i, i+1) == '\n'){
         break;
@@ -306,7 +306,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               child: RawScrollbar(
                 controller: scrollController,
                 thumbColor: style.colorDarkGrey,
-                thickness: 8,
+                thickness: 10,
                 radius: Radius.circular(10),
                 child: ListView.separated(//builder(//
                   scrollDirection: Axis.vertical,

@@ -280,7 +280,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
               child: RawScrollbar(
                 controller: scrollController,
                 thumbColor: style.colorDarkGrey,
-                thickness: 8,
+                thickness: 10,
                 radius: Radius.circular(10),
                 child: ListView.separated(
                     scrollDirection: Axis.vertical,
@@ -293,8 +293,8 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                         passVal = true;
                       }
                       else{
-                        String data = "${saveDataManager.listMapGroup[i][0]['groupName']} ${saveDataManager.mapPersonSortedMark[i][0]['memo']} ";
-                        for(int j = 0; j < saveDataManager.listMapGroup[i].length; j++){
+                        String data = "${saveDataManager.listMapGroup[i][0]['groupName']} ${saveDataManager.listMapGroup[i][0]['memo']} ${saveDataManager.listMapGroup[i][0]['saveDate'].year}년 ${saveDataManager.listMapGroup[i][0]['saveDate'].month}월 ${saveDataManager.listMapGroup[i][0]['saveDate'].day}일 ";
+                        for(int j = 1; j < saveDataManager.listMapGroup[i].length; j++){
                           data = data + "${saveDataManager.listMapGroup[i][j]['name']}(${saveDataManager.GetSelectedBirthDataFromGroup('gender', i, j) == true?'남':'여'}) ${saveDataManager.GetSelectedBirthDataFromGroup('birthYear',i,j)}년 ${saveDataManager.GetSelectedBirthDataFromGroup('birthMonth', i,j)}월 ${saveDataManager.GetSelectedBirthDataFromGroup('birthDay',i,j)}일 ${GetUemYangText(saveDataManager.GetSelectedBirthDataFromGroup('uemYang', i,j))} ${GetBirthTimeText(saveDataManager.GetSelectedBirthDataFromGroup('birthHour',i,j), saveDataManager.GetSelectedBirthDataFromGroup('birthMin', i,j), false)}";
                         }
                         if(data.toLowerCase().contains(searchText.toLowerCase())){

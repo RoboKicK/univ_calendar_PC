@@ -163,98 +163,156 @@ class _CalendarMainState extends State<CalendarMain> {
     }
   }
 
-  //그룹 저장
-  SaveGroupData(){
-    List<Map> listGroupMap = [];
-    for(int i = 0; i < listKey.length; i++){
-      if(listKey[i]['globalKey'].currentState?.nowState == 1){
-        listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
-      }
-    }
-    pageNameController.text = context.watch<Store>().nowPageName;
-    WidgetsBinding.instance!.addPostFrameCallback((_){
-      if(listGroupMap.length > 0){
+  bool GroupDataInqureChecker(){
+    int listMapGroupIndex = saveDataManager.FindListMapGroupIndex(context.watch<Store>().nowPageName, context.watch<Store>().targetGroupSaveDateTime);
+    if(listMapGroupIndex != -1){
+      WidgetsBinding.instance!.addPostFrameCallback((_){
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
             actionsAlignment: MainAxisAlignment.center,
-            //title: Text('성별을 선택해 주세요'),
-            content: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
-                    maxLength: 10,
-                    cursorColor: style.colorBlack,
-                    autofocus: true,
-                    controller: pageNameController,
-                    onEditingComplete: () {
-                      Navigator.of(context).pop();
-                      if(widget.getGroupTempMemo() != ''){
-                        AskSaveGroupMemo(listGroupMap);
-                      } else {
-                        String groupName = pageNameController.text;
-                        if(groupName == ''){
-                          groupName = '이름 없음';
-                        }
-                        setState(() {
-                          widget.setNowPageName(groupName, isFromCalendarMain:true);
-                          DateTime groupSaveDate = DateTime.now();
-                          listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
-                          saveDataManager.SaveGroupData2(listGroupMap);
-                          widget.refreshListMapGroupLength();
-                          widget.setGroupSaveDateAfterSave(groupSaveDate);
-                        });
-                      }
-                    },
-                    decoration: InputDecoration(
-                      labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
-                      hintText: '묶음 이름', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
-                      counterText:'',
-                      focusedBorder:UnderlineInputBorder(
-                        borderSide: BorderSide(width:2, color:style.colorDarkGrey),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            content: Text('이미 묶음이 저장되어 있습니다', textAlign: TextAlign.center, style: Theme.of(context).textTheme.displaySmall),
             buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
             actions: [
               ElevatedButton(
                 style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  if(widget.getGroupTempMemo() !=  ''){
-                    AskSaveGroupMemo(listGroupMap);
-                  } else {
-                    String groupName = pageNameController.text;
-                    if(groupName == ''){
-                      groupName = '이름 없음';
-                    }
-                    setState(() {
-                      widget.setNowPageName(groupName);
-                      DateTime groupSaveDate = DateTime.now();
-                      listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
-                      saveDataManager.SaveGroupData2(listGroupMap);
-                      widget.refreshListMapGroupLength();
-                      widget.setGroupSaveDateAfterSave(groupSaveDate);
-                    });
-                  }
+                  SaveGroupData(coverwrite: true, mapGroupIndex: listMapGroupIndex);
                 },
-                child: Text('저장'),
+                child: Text('덮어쓰기'),
               ),
               ElevatedButton(
                   style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    SaveGroupData();
                   },
-                  child: Text('취소')),
+                  child: Text('따로 저장')
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    widget.saveSuccess();
+                  },
+                  child: Text('취소')
+              ),
             ],
           ),
         );
-      } else {
-        ShowSnackBar('저장할 명식이 없습니다');
+      });
+
+      return false;
+    } else {
+      return true;
+    }
+  }
+  //그룹 저장
+  SaveGroupData({bool coverwrite = false, int mapGroupIndex = 0}){
+    List<Map> listGroupMap = [];
+    for(int i = 0; i < listKey.length; i++){
+      if(listKey[i]['globalKey'].currentState?.nowState == 1){
+        listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+      }
+    }
+
+    pageNameController.text = context.read<Store>().nowPageName;
+    DateTime coverwriteDateTime = context.read<Store>().targetGroupSaveDateTime;
+
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      if(listGroupMap.length > 1){
+        if(coverwrite == true){ //덮어쓰기
+          listGroupMap.insert(0,{'groupName':context.read<Store>().nowPageName, 'saveDate':coverwriteDateTime, 'memo':saveDataManager.listMapGroup[mapGroupIndex][0]['memo']});
+          saveDataManager.listMapGroup[mapGroupIndex] = listGroupMap;
+          saveDataManager.SaveGroupFile();
+          setState(() {
+            context.read<Store>().SetEditWorldGroupPersonCount();
+            widget.refreshListMapGroupLength();
+          });
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              actionsAlignment: MainAxisAlignment.center,
+              content: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack),
+                      maxLength: 10,
+                      cursorColor: style.colorBlack,
+                      autofocus: true,
+                      controller: pageNameController,
+                      onEditingComplete: () {
+                        Navigator.of(context).pop();
+                        if(widget.getGroupTempMemo() != ''){
+                          AskSaveGroupMemo(listGroupMap);
+                        } else {
+                          String groupName = pageNameController.text;
+                          if(groupName == ''){
+                            groupName = '이름 없는 묶음';
+                          }
+                          setState(() {
+                            widget.setNowPageName(groupName, isFromCalendarMain:true);
+                            DateTime groupSaveDate = DateTime.now();
+                            listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                            saveDataManager.SaveGroupData2(listGroupMap);
+                            widget.refreshListMapGroupLength();
+                            widget.setGroupSaveDateAfterSave(groupSaveDate);
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                        hintText: '묶음 이름', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
+                        counterText:'',
+                        focusedBorder:UnderlineInputBorder(
+                          borderSide: BorderSide(width:2, color:style.colorDarkGrey),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
+              actions: [
+                ElevatedButton(
+                  style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    if(widget.getGroupTempMemo() !=  ''){
+                      AskSaveGroupMemo(listGroupMap);
+                    } else {
+                      String groupName = pageNameController.text;
+                      if(groupName == ''){
+                        groupName = '이름 없는 묶음';
+                      }
+                      setState(() {
+                        widget.setNowPageName(groupName, isFromCalendarMain:true);
+                        DateTime groupSaveDate = DateTime.now();
+                        listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
+                        saveDataManager.SaveGroupData2(listGroupMap);
+                        widget.refreshListMapGroupLength();
+                        widget.setGroupSaveDateAfterSave(groupSaveDate);
+                      });
+                    }
+                  },
+                  child: Text('저장'),
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text('취소')),
+              ],
+            ),
+          );
+        }
+      }
+      else {
+        ShowSnackBar('묶음 저장은 명식이 2개 이상이어야 합니다');
       }
     });
     //저장 후 정리
@@ -267,7 +325,7 @@ class _CalendarMainState extends State<CalendarMain> {
       context: context,
       builder: (BuildContext context) => AlertDialog(
         actionsAlignment: MainAxisAlignment.center,
-        title: Text('묶음 메모장의 내용을 저장하시겠습니까?', style:TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack)),
+        title: Text('메모장의 내용을 저장하시겠습니까?', style:TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorBlack)),
         buttonPadding: EdgeInsets.only(left: 20, right: 20, top: 0),
         actions: [
           ElevatedButton(
@@ -391,8 +449,9 @@ class _CalendarMainState extends State<CalendarMain> {
 
     //그룹 저장 감시 함수
     if(context.watch<Store>().targetGroupSavePageNum == widget.pageNum){
-      //그룹 저장
-      SaveGroupData();
+      if(GroupDataInqureChecker() == true) {
+        SaveGroupData();  //그룹 저장
+      }
     }
 
     //그룹 메모 감시 함수
@@ -401,8 +460,6 @@ class _CalendarMainState extends State<CalendarMain> {
     } else if(isEditWorldGroupMemo != context.watch<Store>().isEditWorldGroupMemo){
       isEditWorldGroupMemo = context.watch<Store>().isEditWorldGroupMemo;
     }
-
-
 
     return Container(
         height: MediaQuery.of(context).size.height - style.appBarHeight,
@@ -934,6 +991,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     //  'birthDay':targetBirthDay, 'birthHour':targetBirthHour, 'birthMin':targetBirthMin, 'memo':personMemo};
 
     Map personData = {'name': targetName, 'birthData': saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin),
+      'saveDate':personSaveDate,
       'memo':calendarMemoController.text};
 
     return personData;
@@ -1406,7 +1464,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   }
 
   //다른 위젯에서 조회 정보 입력
-  SetInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, String memo){
+  SetInquireInfo(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo){
     targetName = name;
     genderVal = gender;
     uemYangType = uemYang;
@@ -1415,6 +1473,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     targetBirthDay = birthDay;
     targetBirthHour = birthHour;
     targetBirthMin = birthMin;
+    personSaveDate = saveDate;
     calendarMemoController.text = memo;
   }
 
@@ -1548,7 +1607,8 @@ class _CalendarWidget extends State<CalendarWidget> {
             ((widget.loadPersonData['birthData'] / 10000 ) % 100).floor(),
             ((widget.loadPersonData['birthData'] / 100 ) % 100).floor(),
             widget.loadPersonData['birthData'] % 100,
-            widget.loadPersonData['memo']??'',
+            widget.loadPersonData['saveDate'],
+            widget.loadPersonData['memo']??''
         );
         SetCalendarResultWidget();
       } else {}

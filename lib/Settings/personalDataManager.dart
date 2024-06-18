@@ -21,7 +21,7 @@ int calendarData = 0;  //12개 1자리:천간 합충극  -  1=합, 2=충, 4=극 
 // 100자리:삼합, 1000자리:육합, 만자리:형, 십만자리:충, 백만자리:파, 천만자리:원진, 억자리:귀문, 십억자리:격각, 백억자리:지장간 1=육친, 2=월률분야, 3=둘다, 9=안보기
 // 천억자리:십이운성, 조자리: 육친
 
-int sinsalData = 0; //1자리: 공망, 10자리: 십이신살
+int sinsalData = 0; //1자리: 공망, 10자리: 십이신살, 100자리: 공망 표시 방법
 int etcSinsalDataAllOn =  2222222;
 int etcSinsalDataAllOff = 1111111;
 int etcSinsalData = 0;  //1자리: 보기 안보기, 10자리: 천을귀인, 100자리: 문창귀인, 1000자리: 백호대살, 만자리: 괴강살, 십만자리: 현심살, 백만자리: 양인살,
@@ -63,8 +63,8 @@ LoadUserData() async{
   try{sinsalData = await jsonDecode(await File('${fileDirPath}/sinsalData').readAsString());
   }catch(e){
     final file = await CreateSaveFile('sinsalData');
-    await file.writeAsString(jsonEncode(27));
-    sinsalData = 27;
+    await file.writeAsString(jsonEncode(327));
+    sinsalData = 327;
   }
   try{etcSinsalData = await jsonDecode(await File('${fileDirPath}/etcSinsalData').readAsString());
   }catch(e){

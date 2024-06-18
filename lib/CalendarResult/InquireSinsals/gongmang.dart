@@ -233,27 +233,52 @@ class Gongmang{//공망 계산해주는 클래스
     return listGongmangString;
   }
 
-  GetGongmang(BuildContext context, Color containerColor, List<int> _listPaljaData, int yearGongmangNum, int dayGongmangNum, List<int> listRocGongmangNum, bool isAllShow, bool isLastWidget, double widgetWidth){
-    List<Widget> listGongmangWidget = GetGongmangWidget(context, _listPaljaData, yearGongmangNum, dayGongmangNum, listRocGongmangNum, isAllShow, widgetWidth);
+  String GetGongmangText(int yearGongmangNum, int dayGongmangNum){
+    int koreanGanji = ((personalDataManager.etcData % 1000)/100).floor() - 1;
+    return '연공망 : ${style.stringJiji[koreanGanji][(yearGongmangNum/100).floor()]}${style.stringJiji[koreanGanji][(yearGongmangNum % 100).floor()]}   일공망 : ${style.stringJiji[koreanGanji][(dayGongmangNum/100).floor()]}${style.stringJiji[koreanGanji][(dayGongmangNum % 100).floor()]}';
+  }
 
-    return Container(
-      width: (widgetWidth - (style.UIMarginLeft * 2)),
-      height: containerHeight,// style.UIBoxLineHeight,
-      decoration: BoxDecoration(color: containerColor,
-          //border: Border(top: BorderSide(width:1, color:style.colorDarkGrey)),
-          boxShadow: [
-            BoxShadow(
-              color: containerColor,
-              blurRadius: 0.0,
-              spreadRadius: 0.0,
-              offset: Offset(0, 0),
-            ),
-          ],
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(isLastWidget==false? 0:style.textFiledRadius), bottomRight: Radius.circular(isLastWidget==false? 0:style.textFiledRadius))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: listGongmangWidget,
-      ),
-    );
+  GetGongmang(BuildContext context, Color containerColor, List<int> _listPaljaData, int yearGongmangNum, int dayGongmangNum, List<int> listRocGongmangNum, bool isAllShow, bool isLastWidget, double widgetWidth){
+    if(((personalDataManager.sinsalData % 1000) / 100).floor() == 2){ //한줄 표시
+      return Container(
+        width: (widgetWidth - (style.UIMarginLeft * 2)),
+        height: containerHeight,// style.UIBoxLineHeight,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: containerColor,
+            //border: Border(top: BorderSide(width:1, color:style.colorDarkGrey)),
+            boxShadow: [
+              BoxShadow(
+                color: containerColor,
+                blurRadius: 0.0,
+                spreadRadius: 0.0,
+                offset: Offset(0, 0),
+              ),
+            ],
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(isLastWidget==false? 0:style.textFiledRadius), bottomRight: Radius.circular(isLastWidget==false? 0:style.textFiledRadius))),
+        child: Text(GetGongmangText(yearGongmangNum, dayGongmangNum), style: Theme.of(context).textTheme.bodySmall, textAlign: TextAlign.center, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      );
+    } else {
+      List<Widget> listGongmangWidget = GetGongmangWidget(context, _listPaljaData, yearGongmangNum, dayGongmangNum, listRocGongmangNum, isAllShow, widgetWidth);
+
+      return Container(
+        width: (widgetWidth - (style.UIMarginLeft * 2)),
+        height: containerHeight,// style.UIBoxLineHeight,
+        decoration: BoxDecoration(color: containerColor,
+            //border: Border(top: BorderSide(width:1, color:style.colorDarkGrey)),
+            boxShadow: [
+              BoxShadow(
+                color: containerColor,
+                blurRadius: 0.0,
+                spreadRadius: 0.0,
+                offset: Offset(0, 0),
+              ),
+            ],
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(isLastWidget==false? 0:style.textFiledRadius), bottomRight: Radius.circular(isLastWidget==false? 0:style.textFiledRadius))),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: listGongmangWidget,
+        ),
+      );
+    }
   }
 }

@@ -618,7 +618,6 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                     },
                                     style: style.memoTextStyle,
                                     decoration:InputDecoration(
-
                                       isDense: true,
                                       contentPadding: EdgeInsets.only(top: 5),
                                       counterText:"",

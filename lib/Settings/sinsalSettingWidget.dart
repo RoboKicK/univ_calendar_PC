@@ -18,8 +18,9 @@ class SinsalSettingWidget extends StatefulWidget {
 
 //만세력 보기 설정
 class _SinsalSettingState extends State<SinsalSettingWidget> {
-  int isShowGongmang = 0; //0:안보여줌, 1:보여줌
+  int isShowGongmangNum = 0; //0:안보여줌, 1:한 줄로 알려줌, 2:찾아줌
   bool isShowYearGongmang = false, isShowDayGongmang = false, isShowRocGongmang = false;
+  List<String> gongmangInfoString = ['공망을 표시하지 않습니다', '연공망과 일공망을 표시합니다', '선택한 공망을 해당하는 곳에 표시합니다'];
   double gongmangContainerHeight = 0;
   Image gongmangButtonImage = Image.asset('assets/EllipseGray.png', width: 16, height: 16); //스위치 동그라미 이미지
   Alignment gongmangAlign = Alignment.centerLeft;  //스위치 동그라미 정렬
@@ -38,25 +39,30 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
   double widgetHeight = 0;
 
   SetGongmang({bool isSwitch = true}){  //천간 합충극 보여줌, 애니메이션
-    if(isSwitch == true)
-    {setState(() {
-      isShowGongmang = (isShowGongmang + 1) % 2;
-    });
+    if(isSwitch == true){
+      setState(() {
+        isShowGongmangNum = (isShowGongmangNum + 1) % 3;
+        personalDataManager.SaveSinsalData(100, isShowGongmangNum + 1);
+      });
     }
 
-    if(isShowGongmang == 0){
+    if(isShowGongmangNum == 0){
       gongmangContainerHeight = 0;
       gongmangAlign = Alignment.centerLeft;
       gongmangButtonImage = Image.asset('assets/EllipseGray.png', width: 16, height: 16);
-    } else {
-      gongmangContainerHeight = style.saveDataMemoLineHeight * 2.5;
+    } else if(isShowGongmangNum == 1){
+      gongmangContainerHeight = 0;
+      gongmangAlign = Alignment.center;
+      gongmangButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
+    } else if(isShowGongmangNum == 2){
+      gongmangContainerHeight = style.saveDataMemoLineHeight * 2.3;//.5;
       gongmangAlign = Alignment.centerRight;
       gongmangButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
     }
   }
 
   SaveGongmangData(){
-    if(isShowGongmang == 0){
+    if(isShowGongmangNum == 0){
       personalDataManager.SaveSinsalData(1, 9);
     }
     else{
@@ -130,12 +136,12 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
 
   SetAllShow(bool isAllShow){
     if(isAllShow == true){  //모두 보기, 모두 끈 상태에서 애니메이션을 돌린다
-      isShowGongmang = 1; //0:안보여줌, 1:보여줌
+      isShowGongmangNum = 1; //0:안보여줌, 1:보여줌
       isShowSibisinsal = 1;
       isShowEtc = 1;
     }
     else{ //모두 끄기
-      isShowGongmang = 0; //0:안보여줌, 1:보여줌
+      isShowGongmangNum = 0; //0:안보여줌, 1:보여줌
       isShowSibisinsal = 0;
       isShowEtc = 0;
     }
@@ -163,14 +169,11 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
     //공망
     int tempNum = dataNum % 10;
     if(tempNum == 9){
-      isShowGongmang = 0;
       isShowYearGongmang = false;
       isShowDayGongmang = false;
       isShowRocGongmang = false;
     }
     else{
-      isShowGongmang = 1;
-
       if(tempNum == 1 || tempNum == 3 || tempNum == 5 || tempNum == 7){
         isShowYearGongmang = true;
       } else {
@@ -185,11 +188,14 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
         isShowRocGongmang = true;
       } else {isShowRocGongmang = false;}
     }
-    SetGongmang(isSwitch : false);
 
     tempNum = ((dataNum % 100) / 10).floor(); //십이신살
     isShowSibisinsal = tempNum - 1;
     SetSibisinsal(isSwitch : false);
+
+    tempNum = ((dataNum % 1000) / 100).floor(); //공망 표시 방법
+    isShowGongmangNum = tempNum - 1;
+    SetGongmang(isSwitch : false);
 
     dataNum = personalDataManager.etcSinsalData;
     //여기부터 기타 신살
@@ -314,29 +320,29 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                               alignment: Alignment.centerRight,
                               child: Container(
                                 height: style.saveDataMemoLineHeight,
-                                width: 32,
+                                width: 40,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
                                     AnimatedCrossFade(  //천간 합충극 스위치 배경
                                       duration: Duration(milliseconds: 130),
                                       firstChild: Container(
-                                        width: 32,
+                                        width: 40,
                                         height: 20,
-                                        child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
+                                        child: Image.asset('assets/SwitchWhite1.png', width: 40, height: 20),
                                       ),
                                       secondChild: Container(
-                                        width: 32,
+                                        width: 40,
                                         height: 20,
-                                        child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
+                                        child: Image.asset('assets/SwitchGray1.png', width: 40, height: 20),
                                       ),
-                                      crossFadeState: isShowGongmang == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      crossFadeState: isShowGongmangNum == 0? CrossFadeState.showSecond : CrossFadeState.showFirst,
                                       alignment: Alignment.center,
                                       firstCurve: Curves.easeIn,
                                       secondCurve: Curves.easeIn,
                                     ),
                                     Container(  //천간 합충극 스위치 버튼
-                                      width: 26,
+                                      width: 34,
                                       child: AnimatedAlign(
                                         alignment: gongmangAlign,
                                         duration: Duration(milliseconds: 130),
@@ -359,10 +365,16 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                           ],
                         ),
                       ),
+                      Container(
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo1),
+                        child: Text(gongmangInfoString[isShowGongmangNum], style: style.settingInfoText0,),
+                      ),
                       Stack(
                         children: [
-                          AnimatedOpacity(  //천간 합충극 옵션들
-                            opacity: isShowGongmang == 1 ? 1.0 : 0.0,
+                          AnimatedOpacity(  //공망 옵션들
+                            opacity: isShowGongmangNum == 2 ? 1.0 : 0.0,
                             duration: Duration(milliseconds: 130),
                             child: Column(
                               children: [
@@ -373,7 +385,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                 Container(  //천간 합충극 옵션 버튼들
                                   width: (widgetWidth - (style.UIMarginLeft * 2)),
                                   height: style.saveDataMemoLineHeight,
-                                  margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo),
+                                  //margin: EdgeInsets.only(top: style.SettingMarginTopWithInfo),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [

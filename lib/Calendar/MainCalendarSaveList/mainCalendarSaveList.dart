@@ -420,9 +420,9 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                   behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
                   child: RawScrollbar(
                     controller: scrollController,
-                    //thumbColor: style.colorDarkGrey,
-                    //thickness: 8,
-                    //radius: Radius.circular(10),
+                    thumbColor: style.colorDarkGrey,
+                    thickness: 10,
+                    radius: Radius.circular(10),
                     child: ListView.separated(
                         scrollDirection: Axis.vertical,
                         controller: scrollController,
@@ -479,20 +479,6 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                       ],
                                     ),
                                   ),
-                                  //Container(  //즐겨찾기 버튼
-                                  //  width: style.UIButtonWidth * 0.1,
-                                  //  height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                                  //  child: ElevatedButton(
-                                  //    onPressed: () {
-                                  //      setState(() {
-                                  //        saveDataManager.SavePersonMark(saveDataManager.mapPersonSortedMark[i]['num']);
-                                  //      });
-                                  //    },
-                                  //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                  //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                  //    child: Icon(saveDataManager.mapPersonSortedMark[i]['mark']? Icons.check_circle : Icons.check_circle_outline, size:style.UIButtonWidth * 0.06, color:Colors.white),//Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
-                                  //  ),
-                                  //),
                                   Container(  //옵션 버튼
                                     width: style.UIButtonWidth * 0.1,
                                     height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,

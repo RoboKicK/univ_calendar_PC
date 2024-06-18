@@ -25,6 +25,7 @@ class Store extends ChangeNotifier {
   bool isEditSetting = false;
   bool isGroupLoad = false;
   bool isEditWorldCalendarMemo = false;
+  bool isEditWorldGroupPersonCount = false;
 
   SetEditSetting(){
     isEditSetting = !isEditSetting;
@@ -33,6 +34,10 @@ class Store extends ChangeNotifier {
 
   SetEditWorldCalendarMemo(){
     isEditWorldCalendarMemo = !isEditWorldCalendarMemo;
+    notifyListeners();
+  }
+  SetEditWorldGroupPersonCount(){
+    isEditWorldGroupPersonCount = !isEditWorldGroupPersonCount;
     notifyListeners();
   }
 
@@ -62,8 +67,10 @@ class Store extends ChangeNotifier {
   }
 
   int targetGroupSavePageNum = -1;
-  SetTargetGroupSavePageNum(int num){
+  DateTime targetGroupSaveDateTime = DateTime.utc(3000);
+  SetTargetGroupSavePageNum(int num, DateTime saveDate){
     targetGroupSavePageNum = num;
+    targetGroupSaveDateTime = saveDate;
   }
 
   int targetGroupLoadPageNum = -1;
@@ -168,6 +175,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   bool isShowSideLayer = false;
   bool isShowSideOptionLayer = false;
+  bool isShowTempMemoNote = false;
 
   int nowUnderLine = 0;
   var nowCalendarHeadLine = 0;
@@ -402,12 +410,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   //그룹 저장 신호 주기
   GroupDataSave(){
     setState(() {
-      context.read<Store>().SetTargetGroupSavePageNum(listUniquePageNum[nowPageNum]);
+      context.read<Store>().SetTargetGroupSavePageNum(listUniquePageNum[nowPageNum], listPageSaveDate[nowPageNum]);
     });
   }
   //그룹 저장 후 정리
   GroupSaveSuccess(){
-    context.read<Store>().SetTargetGroupSavePageNum(-1);
+    context.read<Store>().SetTargetGroupSavePageNum(-1, DateTime.utc(3000));
   }
   //그룹 불러오기
   GroupDataLoad(int groupIndex){
@@ -467,26 +475,77 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
   //그룹 메모 작동
   SetGroupMemoWidget(List<dynamic> listGroupPerson, bool isTempMemoNote){
-
     if(isTempMemoNote == false){
-      listGroupPerson.insert(0, {'groupName':nowPageName, 'saveDate':listPageSaveDate[nowPageNum], 'memo':saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndex(nowPageName, listPageSaveDate[nowPageNum])][0]['memo']});
+      if(isShowSideOptionLayer == true && isShowTempMemoNote == false){
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          SetSideOptionLayerWidget(false);
+        });
+      } else {
+        listGroupPerson.insert(0, {'groupName':nowPageName, 'saveDate':listPageSaveDate[nowPageNum], 'memo':saveDataManager.listMapGroup[saveDataManager.FindListMapGroupIndex(nowPageName, listPageSaveDate[nowPageNum])][0]['memo']});
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          SetSideOptionLayerWidget(true);
+          SetSideOptionWidget(Container(
+            width: style.UIButtonWidth + 30,
+            height: MediaQuery.of(context).size.height - style.appBarHeight,
+            child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(
+                listMapGroup: listGroupPerson,
+                refreshListMapGroupLength: RefreshListMapGroupLength,
+                closeOption: SetSideOptionLayerWidget,
+                refreshGroupName: RefreshGroupName,
+                isMemoOpen: true,
+                saveGroupTempMemo: SaveGroupTempMemo,
+                key: UniqueKey()),
+          ));
+        });
+      }
     } else {
-      listGroupPerson.insert(0, {'groupName': '묶음 메모장', 'saveDate':DateTime.utc(3000), 'memo':groupTempMemo});
+
+      if(listGroupPerson.length == 0 && isShowTempMemoNote == true){
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          SetSideOptionLayerWidget(false);
+        });
+      } else {
+        listGroupPerson.insert(0, {'groupName': '메모장', 'saveDate':DateTime.utc(3000), 'memo':groupTempMemo});
+        WidgetsBinding.instance!.addPostFrameCallback((_) {
+          SetSideOptionLayerWidget(true, isShowTempMemo: true);
+          SetSideOptionWidget(Container(
+            width: style.UIButtonWidth + 30,
+            height: MediaQuery.of(context).size.height - style.appBarHeight,
+            child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(
+                listMapGroup: listGroupPerson,
+                refreshListMapGroupLength: RefreshListMapGroupLength,
+                closeOption: SetSideOptionLayerWidget,
+                refreshGroupName: RefreshGroupName,
+                isMemoOpen: true,
+                saveGroupTempMemo: SaveGroupTempMemo,
+                key: UniqueKey()),
+          ));
+        });
+      }
     }
 
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      SetSideOptionLayerWidget(true);
-      SetSideOptionWidget(Container(
-        width: style.UIButtonWidth + 30,
-        height: MediaQuery.of(context).size.height - style.appBarHeight,
-        child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(
-            listMapGroup: listGroupPerson,
-            refreshListMapGroupLength: RefreshListMapGroupLength,
-            closeOption: SetSideOptionLayerWidget,
-            refreshGroupName: RefreshGroupName, isMemoOpen: true, saveGroupTempMemo: SaveGroupTempMemo,
-            key: UniqueKey()),
-      ));
-    });
+   //if(isTempMemoNote == true && listGroupPerson[0]['groupName'] == '메모장' && listGroupPerson[0]['saveDate'] == DateTime.utc(3000) && isShowSideOptionLayer == true){
+   //  WidgetsBinding.instance!.addPostFrameCallback((_) {
+   //    SetSideOptionLayerWidget(false);
+   //  });
+   //} else {
+   //  //if(isTempMemoNote == false && listGroupPerson[0]['groupName'] == nowPageName && )
+   //  WidgetsBinding.instance!.addPostFrameCallback((_) {
+   //    SetSideOptionLayerWidget(true);
+   //    SetSideOptionWidget(Container(
+   //      width: style.UIButtonWidth + 30,
+   //      height: MediaQuery.of(context).size.height - style.appBarHeight,
+   //      child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(
+   //          listMapGroup: listGroupPerson,
+   //          refreshListMapGroupLength: RefreshListMapGroupLength,
+   //          closeOption: SetSideOptionLayerWidget,
+   //          refreshGroupName: RefreshGroupName,
+   //          isMemoOpen: true,
+   //          saveGroupTempMemo: SaveGroupTempMemo,
+   //          key: UniqueKey()),
+   //    ));
+   //  });
+   //}
   }
   //그룹 메모 저장
   SaveGroupTempMemo(String text){
@@ -511,8 +570,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //사이드 옵션 레이어 온오프
-  SetSideOptionLayerWidget(bool onOff){
+  SetSideOptionLayerWidget(bool onOff, {bool isShowTempMemo = false}){
     setState(() {
+      isShowTempMemoNote = isShowTempMemo;
       if(onOff == true){
         isShowSideOptionLayer = true;
       } else {
