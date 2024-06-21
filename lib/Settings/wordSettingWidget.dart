@@ -337,78 +337,78 @@ class _WordSettingState extends State<WordSettingWidget> {
                         margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
                         child: Text("육친, 육신 또는 십성을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
                       ),
-                      Container( //육친 이름
-                        width: (widgetWidth - (style.UIMarginLeft * 2)),
-                        height: style.saveDataMemoLineHeight,
-                        margin: EdgeInsets.only(top: style.UIMarginTop),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.only(
-                                  bottom: style.UIPaddingBottom),
-                              child: Text("원진 ",
-                                  style: style.settingText0),
-                            ),
-                            Radio<WonjinText>(
-                              //남자 버튼
-                                visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
-                                ),
-                                value: WonjinText.Wonjin,
-                                groupValue: wonjinText,
-                                fillColor: wonjinText == WonjinText.Wonjin
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
-                                onChanged: (WonjinText? value) {
-                                  setState(() {
-                                    wonjinText = value;
-                                    personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
-                                  });
-                                }),
-                            Container(
-                              padding: EdgeInsets.only(
-                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                              child: Text("해 ",
-                                  style: style.settingText0),
-                            ),
-                            Radio<WonjinText>(
-                              //여자 버튼
-                                visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
-                                ),
-                                value: WonjinText.Hea,
-                                groupValue: wonjinText,
-                                fillColor: wonjinText == WonjinText.Hea
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
-                                onChanged: (WonjinText? value) {
-                                  setState(() {
-                                    wonjinText = value;
-                                    personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
-                                  });
-                                }),
-                          ],
-                        ),
-                      ),
-                      Container(  //육친 이름 설명
-                        width: (widgetWidth - (style.UIMarginLeft * 2)),
-                        height: style.saveDataMemoLineHeight,
-                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-                        child: Text("원진 또는 해를 표시하는 방법을 선택합니다", style: style.settingInfoText0),
-                      ),
+                      //Container( //육친 이름
+                      //  width: (widgetWidth - (style.UIMarginLeft * 2)),
+                      //  height: style.saveDataMemoLineHeight,
+                      //  margin: EdgeInsets.only(top: style.UIMarginTop),
+                      //  child: Row(
+                      //    mainAxisAlignment: MainAxisAlignment.start,
+                      //    children: [
+                      //      Container(
+                      //        padding: EdgeInsets.only(
+                      //            bottom: style.UIPaddingBottom),
+                      //        child: Text("원진 ",
+                      //            style: style.settingText0),
+                      //      ),
+                      //      Radio<WonjinText>(
+                      //        //남자 버튼
+                      //          visualDensity: const VisualDensity(
+                      //            horizontal:
+                      //            VisualDensity.minimumDensity,
+                      //            vertical:
+                      //            VisualDensity.minimumDensity,
+                      //          ),
+                      //          value: WonjinText.Wonjin,
+                      //          groupValue: wonjinText,
+                      //          fillColor: wonjinText == WonjinText.Wonjin
+                      //              ? MaterialStateColor.resolveWith(
+                      //                  (states) => style.colorMainBlue)
+                      //              : MaterialStateColor.resolveWith(
+                      //                  (states) => style.colorGrey),
+                      //          splashRadius: 0,
+                      //          onChanged: (WonjinText? value) {
+                      //            setState(() {
+                      //              wonjinText = value;
+                      //              personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
+                      //            });
+                      //          }),
+                      //      Container(
+                      //        padding: EdgeInsets.only(
+                      //            bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                      //        child: Text("해 ",
+                      //            style: style.settingText0),
+                      //      ),
+                      //      Radio<WonjinText>(
+                      //        //여자 버튼
+                      //          visualDensity: const VisualDensity(
+                      //            horizontal:
+                      //            VisualDensity.minimumDensity,
+                      //            vertical:
+                      //            VisualDensity.minimumDensity,
+                      //          ),
+                      //          value: WonjinText.Hea,
+                      //          groupValue: wonjinText,
+                      //          fillColor: wonjinText == WonjinText.Hea
+                      //              ? MaterialStateColor.resolveWith(
+                      //                  (states) => style.colorMainBlue)
+                      //              : MaterialStateColor.resolveWith(
+                      //                  (states) => style.colorGrey),
+                      //          splashRadius: 0,
+                      //          onChanged: (WonjinText? value) {
+                      //            setState(() {
+                      //              wonjinText = value;
+                      //              personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
+                      //            });
+                      //          }),
+                      //    ],
+                      //  ),
+                      //),
+                      //Container(  //육친 이름 설명
+                      //  width: (widgetWidth - (style.UIMarginLeft * 2)),
+                      //  height: style.saveDataMemoLineHeight,
+                      //  margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                      //  child: Text("원진 또는 해를 표시하는 방법을 선택합니다", style: style.settingInfoText0),
+                      //),
                       Container(  //천간극
                         height: style.saveDataMemoLineHeight,
                         width: (widgetWidth - (style.UIMarginLeft * 2)),

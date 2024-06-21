@@ -24,9 +24,7 @@ int groupDataLimitCount = 1000; //단체명식
 
 //int savedPersonDataCount = 0;
 List<Map> mapPerson = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
-List<Map> mapPersonSortedMark = []; //즐겨찾기로 정렬된 리스트
 List<List<dynamic>> listMapGroup = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
-List<Map> mapGroupSortedMark = []; //즐겨찾기로 정렬된 리스트
 
 List<Map> mapRecentPerson = [];
 List<Map> mapDiary = [];  //일진일기
@@ -373,7 +371,6 @@ late var snackBar;
 }
   ClearListMapGroup(){
   listMapGroup.clear();
-  print('clearsuccese');
 }
   LoadSavedDiary() async {
   if(mapDiary.length != 0)
@@ -428,7 +425,7 @@ late var snackBar;
 
     SaveGroupFile();
 
-    snackBar('그룹 명식이 저장되었습니다');
+    snackBar('명식 묶음이 저장되었습니다');
   }
 
   Future<void> SaveGroupFile() async {
@@ -456,10 +453,9 @@ late var snackBar;
         if(j < listMapGroup[i].length - 1){
           jsonString = jsonString + '{{';
         } else {
-          jsonString = jsonString + '}}';
+          jsonString = jsonString + '}}'; //그룹의 마지막 명식은 }}로 마무리
         }
       }
-      //['name'] + '{{' + mapPerson[i]['birthData'].toString() + '{{' + mapPerson[i]['saveDate'].toString() + '{{' + mapPerson[i]['memo'] + '{{';
     }
 
     final file = await CreateSaveFile('groupData');
@@ -525,7 +521,7 @@ late var snackBar;
 
     for(int i = 0; i < listMapGroup.length; i++){
       for(int j = 1; j < listMapGroup[i].length; j++){
-        if(listMapGroup[i][j]['name'] == name && listMapGroup[i][j]['birthData'] == personBirthData && listMapGroup[i][j]['saveDate'] == saveDate){
+      if(listMapGroup[i][j]['name'] == name && listMapGroup[i][j]['birthData'] == personBirthData && listMapGroup[i][j]['saveDate'] == saveDate){
           listGroupPersonIndex.add([i,j]);
         }
       }
@@ -573,7 +569,7 @@ late var snackBar;
   listMapGroup.removeAt(FindListMapGroupIndex(groupName, saveDate));
   SaveGroupFile();
 
-  snackBar('그룹이 삭제되었습니다');
+  snackBar('명식 묶음이 삭제되었습니다');
 }
 
   //-- 여기부터 단일 명식 저장
@@ -700,6 +696,29 @@ late var snackBar;
     }
 
     return sameDataChecker;
+  }
+
+  //저장목록 관리 - 단일명식 불러오기 할 때 중복 있는지 확인
+  bool LoadPersonIsSameChecker(String name, int birthData, DateTime saveDate, String memo, int tryCount){  //
+    for(int i = 0; i < tryCount; i++){
+      if(mapPerson[i]['name'] == name && mapPerson[i]['birthData'] == birthData && mapPerson[i]['saveDate'] == saveDate){
+        mapPerson[i]['memo'] = memo;
+        return false;
+      }
+    }
+
+    return true;
+  }
+  //저장목록 관리 - 묶음 불러오기 할 때 중복 있는지 확인
+  bool LoadGroupIsSameChecker(List<dynamic> groupMap, int tryCount){  //
+  for(int i = 0; i < tryCount; i++){
+    if(listMapGroup[i][0]['groupName'] == groupMap[0]['groupName'] && listMapGroup[i][0]['saveDate'] == groupMap[0]['saveDate']){
+      listMapGroup[i] = groupMap;
+      return false;
+    }
+  }
+
+  return true;
 }
 
   //명식을 삭제할 때 사용2 - mapPerson에서 명식을 삭제
@@ -726,41 +745,62 @@ late var snackBar;
 
   //명식의 메모를 수정하여 저장할 때 사용
   SavePersonDataMemo2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate, String memo, {bool withoutSaveFile = false}){
-    int personIndex = FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate);
+    bool isSaveMemo = false;
 
-    if(mapPerson[personIndex]['memo'] != memo){
+    int personIndex = FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate);
+    if(personIndex != -1 && mapPerson[personIndex]['memo'] != memo){
       mapPerson[personIndex]['memo'] = memo;
       if(withoutSaveFile == false) {
         SavePersonFile();
-        WidgetsBinding.instance!.addPostFrameCallback((_) {
-          snackBar('메모가 저장되었습니다');
-        });
+        isSaveMemo = true;
       }
     }
 
     List<List<int>> listGroupPersonIndex = FindListMapGroupPersonIndex(name, gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin, saveDate);
-
     for(int i = 0; i < listGroupPersonIndex.length; i++){
       if(listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['memo'] != memo){
         listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['memo'] = memo;
+        isSaveMemo = true;
       }
     }
     if(withoutSaveFile == false && listGroupPersonIndex.isNotEmpty) {
       SaveGroupFile();
+    }
+
+    if(isSaveMemo == true){
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        snackBar('메모가 저장되었습니다');
+      });
     }
   }
 
   //명식의 정보를 수정하여 저장
   SaveEditedPersonData2(String prevName, bool prevGender, int prevUemYang, int prevBirthYear, int prevBirthMonth, int prevBirthDay, int prevBirthHour, int prevBirthMin, DateTime saveDate, String nowName,
       bool nowGender, int nowUemYang, int nowBirthYear, int nowBirthMonth, int nowBirthDay, int nowBirthHour, int nowBirthMin){
+    bool isEditData = false;
 
     int personIndex = FindMapPersonIndex(prevName, ConvertToBirthData(prevGender, prevUemYang, prevBirthYear, prevBirthMonth, prevBirthDay, prevBirthHour, prevBirthMin), saveDate);
-    mapPerson[personIndex]['name'] = nowName;
-    mapPerson[personIndex]['birthData'] = ConvertToBirthData(nowGender, nowUemYang, nowBirthYear, nowBirthMonth, nowBirthDay, nowBirthHour, nowBirthMin);
+    if(personIndex != -1) {
+      mapPerson[personIndex]['name'] = nowName;
+      mapPerson[personIndex]['birthData'] = ConvertToBirthData(nowGender, nowUemYang, nowBirthYear, nowBirthMonth, nowBirthDay, nowBirthHour, nowBirthMin);
 
-    SavePersonFile();
+      SavePersonFile();
+    }
 
-    snackBar('명식이 수정되었습니다');
+    List<List<int>> listGroupPersonIndex = FindListMapGroupPersonIndex(prevName, prevGender, prevUemYang, prevBirthYear, prevBirthMonth, prevBirthDay, prevBirthHour, prevBirthMin, saveDate);
+    for(int i = 0; i < listGroupPersonIndex.length; i++){
+      listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['name'] = nowName;
+      listMapGroup[listGroupPersonIndex[i][0]][listGroupPersonIndex[i][1]]['birthData'] = ConvertToBirthData(nowGender, nowUemYang, nowBirthYear, nowBirthMonth, nowBirthDay, nowBirthHour, nowBirthMin);
+    }
+    if(listGroupPersonIndex.length > 0) {
+      SaveGroupFile();
+    }
+
+    if(isEditData == true || listGroupPersonIndex.isNotEmpty){
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        snackBar('명식이 수정되었습니다');
+      });
+    }
   }
 
   //명식의 출생 정보를 선택하여 반환

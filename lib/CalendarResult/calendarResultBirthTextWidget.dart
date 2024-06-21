@@ -414,6 +414,10 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       isEditSetting = context.watch<Store>().isEditSetting;
     }
 
+    if(nameText != widget.name){
+      nameText = widget.name;
+    }
+
     return GetBirthTextWidget();
   }
 }

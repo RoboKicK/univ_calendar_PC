@@ -123,6 +123,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   int targetBirthDay = 0;
   int targetBirthHour = 0;  //시간 모름일 때는 30로 조회한다
   int targetBirthMin = 0;
+  String targetName = '';
   bool gender0 = true;
 
   bool isUemryoc = true;
@@ -137,6 +138,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
   bool isShowPersonalDataAll = true, isShowPersonalName = true, isShowPersonalBirth = true;
 
   bool isEditWorldCalendarMemo = false;  //프로젝트 전체에서 메모 변동
+  bool isEditWorldPersonName = false; //프로젝트 전체에서 이름 변동
   
   ShowDialogMessage(String message){
     showDialog<void>(
@@ -522,6 +524,15 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
         editingMemo = saveDataManager.mapPerson[personIndex]['memo'];
       }
       isEditWorldCalendarMemo = context.watch<Store>().isEditWorldCalendarMemo;
+    }
+    if(isEditWorldPersonName != context.watch<Store>().isEditWorldPersonName){
+      if(editingName0 == context.watch<Store>().personPrevName && widget.saveDate == context.watch<Store>().personNameSaveDate &&
+          saveDataManager.ConvertToBirthData(gender0, uemYangType0, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin) == context.watch<Store>().personBirthData){
+        setState(() {
+          editingName0 = context.watch<Store>().personNowName;
+        });
+      }
+    isEditWorldPersonName = context.watch<Store>().isEditWorldPersonName;
     }
 
     return Container(

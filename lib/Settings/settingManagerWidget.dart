@@ -16,10 +16,12 @@ import 'dataManageWidget.dart' as dataManageWidget;
 import 'shareSettingValWidget.dart' as shareSettingValWidget;
 
 class SettingManagerWidget extends StatefulWidget {
-  const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting});
+  const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting, required this. refreshMapPersonLengthAndSort, required this.refreshListMapGroupLength});
 
   final setSettingPage;
   final reloadSetting;
+
+  final refreshMapPersonLengthAndSort, refreshListMapGroupLength;
 
   @override
   State<SettingManagerWidget> createState() => _SettingManagerState();
@@ -178,7 +180,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
           nextPage = themeSettingWidget.ThemeSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 8: {
-          nextPage = dataManageWidget.DataManageWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+          nextPage = dataManageWidget.DataManageWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort, refreshListMapGroupLength: widget.refreshListMapGroupLength,);
         }
         case 9: {
           nextPage = shareSettingValWidget.ShareSettingValWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);

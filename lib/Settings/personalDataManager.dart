@@ -78,7 +78,9 @@ LoadUserData() async{
     await file.writeAsString(jsonEncode(deunSeunDataAllOn));
     deunSeunData = deunSeunDataAllOn;
   }
-  try{etcData = await jsonDecode(await File('${fileDirPath}/etcData').readAsString());
+  try{etcData = await jsonDecode(await File('${fileDirPath}/etcData').readAsString()); if(((etcData%1000)/100).floor() == 2){
+    style.uemYangStringTypeNum = 1;
+  }
   }catch(e){
     final file = await CreateSaveFile('etcData');
     await file.writeAsString(jsonEncode(etcDataAllOff));

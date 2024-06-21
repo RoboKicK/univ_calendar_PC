@@ -210,10 +210,12 @@ class _CalendarMainState extends State<CalendarMain> {
   }
   //그룹 저장
   SaveGroupData({bool coverwrite = false, int mapGroupIndex = 0}){
+    int targetPersonCount = 0;
     List<Map> listGroupMap = [];
+    DateTime groupSaveDate = DateTime.now();
     for(int i = 0; i < listKey.length; i++){
       if(listKey[i]['globalKey'].currentState?.nowState == 1){
-        listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+        targetPersonCount++;
       }
     }
 
@@ -221,8 +223,17 @@ class _CalendarMainState extends State<CalendarMain> {
     DateTime coverwriteDateTime = context.read<Store>().targetGroupSaveDateTime;
 
     WidgetsBinding.instance!.addPostFrameCallback((_){
-      if(listGroupMap.length > 1){
+      if(targetPersonCount > 1){
         if(coverwrite == true){ //덮어쓰기
+          for(int i = 0; i < listKey.length; i++){
+            if(listKey[i]['globalKey'].currentState?.nowState == 1){
+              listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+              if(listKey[i]['globalKey'].currentState?.nowState == 1 && listGroupMap.last['saveDate'] == DateTime.utc(3000)){
+                listGroupMap.last['saveDate'] = groupSaveDate;
+                listKey[i]['globalKey'].currentState?.personSaveDate = groupSaveDate;
+              }
+            }
+          }
           listGroupMap.insert(0,{'groupName':context.read<Store>().nowPageName, 'saveDate':coverwriteDateTime, 'memo':saveDataManager.listMapGroup[mapGroupIndex][0]['memo']});
           saveDataManager.listMapGroup[mapGroupIndex] = listGroupMap;
           saveDataManager.SaveGroupFile();
@@ -253,9 +264,17 @@ class _CalendarMainState extends State<CalendarMain> {
                           if(groupName == ''){
                             groupName = '이름 없는 묶음';
                           }
+                          for(int i = 0; i < listKey.length; i++){
+                            if(listKey[i]['globalKey'].currentState?.nowState == 1){
+                              listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+                              if(listKey[i]['globalKey'].currentState?.nowState == 1 && listGroupMap.last['saveDate'] == DateTime.utc(3000)){
+                                listGroupMap.last['saveDate'] = groupSaveDate;
+                                listKey[i]['globalKey'].currentState?.personSaveDate = groupSaveDate;
+                              }
+                            }
+                          }
                           setState(() {
                             widget.setNowPageName(groupName, isFromCalendarMain:true);
-                            DateTime groupSaveDate = DateTime.now();
                             listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
                             saveDataManager.SaveGroupData2(listGroupMap);
                             widget.refreshListMapGroupLength();
@@ -288,9 +307,17 @@ class _CalendarMainState extends State<CalendarMain> {
                       if(groupName == ''){
                         groupName = '이름 없는 묶음';
                       }
+                      for(int i = 0; i < listKey.length; i++){
+                        if(listKey[i]['globalKey'].currentState?.nowState == 1){
+                          listGroupMap.add(listKey[i]['globalKey'].currentState?.ReportPersonData());
+                          if(listKey[i]['globalKey'].currentState?.nowState == 1 && listGroupMap.last['saveDate'] == DateTime.utc(3000)){
+                            listGroupMap.last['saveDate'] = groupSaveDate;
+                            listKey[i]['globalKey'].currentState?.personSaveDate = groupSaveDate;
+                          }
+                        }
+                      }
                       setState(() {
                         widget.setNowPageName(groupName, isFromCalendarMain:true);
-                        DateTime groupSaveDate = DateTime.now();
                         listGroupMap.insert(0,{'groupName':groupName, 'saveDate':groupSaveDate});
                         saveDataManager.SaveGroupData2(listGroupMap);
                         widget.refreshListMapGroupLength();
@@ -646,6 +673,7 @@ class _CalendarWidget extends State<CalendarWidget> {
       '1901년 이전 명식은 절입시간 오차 가능성이 있습니다';
 
   bool isShowPersonalBirth = true;
+  bool isOnFromGroupData = false; //명식 묶음으로 켜지면 true로 바뀌면서 더이상 안 켜지게 함
 
   SeasonDayMessage() {
     //절입시간이 있는 날인지 알려줌
@@ -957,6 +985,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   ScrollController calendarMemoScrollController = ScrollController();
   bool isChangedCalendarMemo = false; //단일 명식에서 메모 변동
   bool isEditWorldCalendarMemo = false;  //프로젝트 전체에서 메모 변동
+  bool isEditWorldPersonName = false;
 
   int nowState = 0; //0:만세력 입력화면, 1:만세력 조회화면
   int prevState = 0;
@@ -1106,7 +1135,9 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             bool isSamePerson = saveDataManager.SavePersonIsSameChecker(targetName, genderVal==true? '남':'여', uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, ShowSameCheckerMessage);
             if(isSamePerson == true){
-              personSaveDate = DateTime.now();
+              if(personSaveDate == DateTime.utc(3000)) {
+                personSaveDate = DateTime.now();
+              }
               saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate, calendarMemoController.text);
               widget.refreshMapPersonLengthAndSort();
             }
@@ -1483,24 +1514,11 @@ class _CalendarWidget extends State<CalendarWidget> {
       saveDataManager.SaveEditedPersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate,
         name, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
 
+      context.read<Store>().SetEditWorldPersonName(targetName, name, saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), personSaveDate);
+
+      SetWidgetCalendarResultBirthText();
+
       widget.refreshMapRecentPersonLength();
-
-      SnackBar snackBar = SnackBar(
-        content: Text('이름이 수정되었습니다', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
-        backgroundColor: style.colorMainBlue,//Colors.white,
-        //style.colorMainBlue,
-        shape: StadiumBorder(),
-        duration: Duration(milliseconds: style.snackBarDuration),
-        dismissDirection: DismissDirection.down,
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.only(
-            bottom: 20,
-            left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
-            right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
-      );
-
-      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
 
     targetName = name;
@@ -1597,7 +1615,7 @@ class _CalendarWidget extends State<CalendarWidget> {
     SetWidgetWidth(widget.nowWidgetCount);
 
       //그룹 명식 불러오기 처리
-      if (widget.loadPersonData.length != 0) {
+      if (widget.loadPersonData.length != 0 && isOnFromGroupData == false) {
         SetInquireInfo(
             widget.loadPersonData['name'],
             ((widget.loadPersonData['birthData'] / 10000000000000) % 10).floor() == 1? true:false,
@@ -1611,6 +1629,7 @@ class _CalendarWidget extends State<CalendarWidget> {
             widget.loadPersonData['memo']??''
         );
         SetCalendarResultWidget();
+        isOnFromGroupData = true;
       } else {}
 
       //단일 명식 불러오기 처리
@@ -1655,11 +1674,25 @@ class _CalendarWidget extends State<CalendarWidget> {
     if(isEditWorldCalendarMemo != context.watch<Store>().isEditWorldCalendarMemo){  //명식 메모 변동 시 실시간 동기화
       if(personSaveDate != DateTime.utc(3000)){
         int personIndex = saveDataManager.FindMapPersonIndex(targetName, saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), personSaveDate);
-        if(calendarMemoController.text != saveDataManager.mapPerson[personIndex]['memo']){
+        if(personIndex != -1 && calendarMemoController.text != saveDataManager.mapPerson[personIndex]['memo']){
           calendarMemoController.text = saveDataManager.mapPerson[personIndex]['memo'];
+        }
+        List<List<int>> listGroupPersonIndex = saveDataManager.FindListMapGroupPersonIndex(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate);
+        if(listGroupPersonIndex.isNotEmpty) {
+          calendarMemoController.text = saveDataManager.listMapGroup[listGroupPersonIndex[0][0]][listGroupPersonIndex[0][1]]['memo'];
         }
       }
       isEditWorldCalendarMemo = context.watch<Store>().isEditWorldCalendarMemo;
+    }
+    if(isEditWorldPersonName != context.watch<Store>().isEditWorldPersonName){  //명식 메모 변동 시 실시간 동기화
+      if(targetName == context.watch<Store>().personPrevName && personSaveDate == context.watch<Store>().personNameSaveDate &&
+          saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin) == context.watch<Store>().personBirthData){
+        setState(() {
+          targetName = context.watch<Store>().personNowName;
+          SetWidgetCalendarResultBirthText();
+        });
+      }
+      isEditWorldPersonName = context.watch<Store>().isEditWorldPersonName;
     }
 
     return Container(

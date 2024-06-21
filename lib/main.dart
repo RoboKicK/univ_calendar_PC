@@ -32,7 +32,7 @@ class Store extends ChangeNotifier {
     notifyListeners();
   }
 
-  SetEditWorldCalendarMemo(){
+  SetEditWorldCalendarMemo(){ //명식 메모 수정했을 때 동기화
     isEditWorldCalendarMemo = !isEditWorldCalendarMemo;
     notifyListeners();
   }
@@ -50,6 +50,26 @@ class Store extends ChangeNotifier {
   }
   ResetEditWorldGroupName(){
     groupNameSaveDate = DateTime.utc(3000);
+  }
+
+  bool isEditWorldPersonName = false;
+  DateTime personNameSaveDate = DateTime.utc(3000);
+  String personPrevName = '';
+  String personNowName = '';
+  int personBirthData = -1;
+  SetEditWorldPersonName(String prevName, String nowName, int birthData, DateTime personSaveDate){  //명식 이름 수정했을 때 동기화
+    isEditWorldPersonName = !isEditWorldPersonName;
+    personNameSaveDate = personSaveDate;
+    personPrevName = prevName;
+    personNowName = nowName;
+    personBirthData= birthData;
+    notifyListeners();
+  }
+  ResetEditWorldPersonName(){
+    personNameSaveDate = DateTime.utc(3000);
+    personPrevName = '';
+    personNowName = '';
+    personBirthData = -1;
   }
 
   bool isEditWorldGroupMemo = false;
@@ -382,7 +402,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           height: MediaQuery.of(context).size.height - 6,
           alignment: Alignment.center,
           color: Colors.grey.withOpacity(0.1),
-          child: settingManagerWidget.SettingManagerWidget(setSettingPage: ShowSettingPage, reloadSetting: ReloadSetting),
+          child: settingManagerWidget.SettingManagerWidget(setSettingPage: ShowSettingPage, reloadSetting: ReloadSetting, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort, refreshListMapGroupLength: RefreshListMapGroupLength,),
         ),
       );
     } else {
@@ -814,19 +834,20 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                           ),
                         ),
-                        //Container(  //테스트 버튼1
-                        //  width: 40,
-                        //  height: style.appBarHeight,
-                        //  margin: EdgeInsets.only(left: 00),
-                        //  child: ElevatedButton(
-                        //    onPressed: (){
-                        //      RefreshMapPersonLengthAndSort();
-                        //    },
-                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        //    child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
-                        //  ),
-                        //),
+                        Container(  //테스트 버튼1
+                          width: 40,
+                          height: style.appBarHeight,
+                          margin: EdgeInsets.only(left: 00),
+                          child: ElevatedButton(
+                            onPressed: (){
+                              saveDataManager.mapPerson.clear();
+                              saveDataManager.listMapGroup.clear();
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
+                          ),
+                        ),
                         //Container(  //테스트 버튼2
                         //  width: 40,
                         //  height: style.appBarHeight,
