@@ -832,7 +832,7 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   bool InqureChecker(bool isInquire) {
     //조회 전에 입력 잘 했는지 확인 isInquire = false 명식교체,true 조회
-    if(gender == Gender.None && birthController.text.length == 0 && hourController.text.length == 0){
+    if(nameController.text.length == 0 && gender == Gender.None && birthController.text.length == 0 && hourController.text.length == 0){
       targetName = '오늘';
       genderVal = true;
       uemYangType = 0;

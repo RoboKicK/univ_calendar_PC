@@ -17,12 +17,10 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
   await LoadSavedGroup();
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001, 단체명식 g001
-int saveDataLimitCount = 3000; //단일,궁합 공용
+int saveDataLimitCount = 3000; //단일
 int recentDataLimitCount = 300;//1000;  //최근목록
 int diaryDataLimitCount = 1000; //일진일기
-int groupDataLimitCount = 1000; //단체명식
-
-//int savedPersonDataCount = 0;
+int groupDataLimitCount = 1000;
 List<Map> mapPerson = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
 List<List<dynamic>> listMapGroup = []; //String name, bool gender, int uemYang, int birth---, String saveDate, String memo, bool mark
 
