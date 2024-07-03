@@ -513,12 +513,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
               scrollDirection: Axis.vertical,
               physics: ClampingScrollPhysics(),
               child: Column(
-                //mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  //calendarResultBirthTextWidget2.CalendarResultBirthTextWidget2(name:widget.name, gender:widget.gender? '남' : '여', uemYang:widget.uemYang, birthYear:widget.birthYear, birthMonth:widget.birthMonth, birthDay:widget.birthDay,
-                  //    birthHour:widget.birthHour, birthMin:widget.birthMin, isShowDrawerManOld:0, widgetWidth:widgetWidth,
-                  //    isOneWidget:(widgetWidth > (MediaQuery.of(context).size.width * 0.6))? true : false, isEditSetting:isEditSetting, setTargetName:null),
                   SizedBox(
                     height: 4
                   ),
@@ -959,9 +955,8 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
     }
 
     saveDate = widget.saveDate;
-    if(widget.name != '오늘') {
-      saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
-    }
+    saveDataManager.SaveRecentPersonData2(widget.name, widget.gender, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin);
+
     widget.refreshMapRecentPersonLength();
     gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
 

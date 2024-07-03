@@ -6,7 +6,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../style.dart' as style;
-import 'personalDataManager.dart' as personalDataManager;
 import '../SaveData/saveDataManager.dart' as saveDataManager;
 
 class DataManageWidget extends StatefulWidget {
@@ -29,6 +28,24 @@ class _DataManageWidgetState extends State<DataManageWidget> {
   double widgetHeight = 0;
 
   Future<void> ExportData() async { //데이터 추출
+
+    if(isExportPersonData == false && isExportGroupData == false && isExportDiary == false){
+      showDialog<void>(
+        context: context,
+        barrierDismissible: true,
+        //barrierColor: Colors.transparent,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+              '추출할 데이터를 선택해 주세요',
+              textAlign: TextAlign.center,
+            ),
+          );
+        },
+      );
+      return;
+    }
+
     String jsonString = '';
     if(isExportPersonData == true){ //단일 명식
       jsonString = '{[]}personData_pc{[]}';

@@ -91,7 +91,8 @@ double saveDataNameTextLineHeight = 20;  //저장목록 이름 텍스트 줄 높
 double saveDataMemoLineHeight = 34;  //저장목록 메모 줄 높이
 double resultDrawerInfoLineHeight = 28;  //팔자 서랍옵션 설명 줄 높이
 
-double iconSize = 16; //모든 아이콘 사이즈
+double iconSize = 30; // 아이콘 사이즈
+double appbarIconSize = 24;
 
 double UIMarginLeft = 14;
 double UIMarginTop = 13;
@@ -114,6 +115,7 @@ FontWeight UIOhengDeunFontWeight = FontWeight.w600;  //팔자 텍스트 두께
 //double UIOhengBoxPadding0 = 6; //간지변환 팔자 버튼 텍스트 패딩
 //double UIOhengBoxPadding1 = 4; //팔자 텍스트 패딩
 double UIOhengBoxPadding2 = 2; //대운 간지 텍스트 패딩
+double checkBoxContainerWidth = 26;
 
 double SettingDisWithRadioButton = 20;
 double SettingMarginTop = 30;
@@ -209,3 +211,5 @@ String SetOhengSpriteString(bool isCheongan, int num, String themeTitle){
 }
 
 double appBarHeight = 50;
+
+String myeongsicString = '명식';

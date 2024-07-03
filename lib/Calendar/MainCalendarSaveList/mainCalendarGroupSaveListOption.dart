@@ -535,6 +535,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                                 autofocus: true,
                                 controller: memoController,
                                 keyboardType: TextInputType.multiline,
+                                maxLength: 500,
                                 maxLines: null,
                                 focusNode: memoFocusNode,
                                 onTapOutside: (event) {

@@ -78,7 +78,8 @@ LoadUserData() async{
     await file.writeAsString(jsonEncode(deunSeunDataAllOn));
     deunSeunData = deunSeunDataAllOn;
   }
-  try{etcData = await jsonDecode(await File('${fileDirPath}/etcData').readAsString()); if(((etcData%1000)/100).floor() == 2){
+  try{etcData = await jsonDecode(await File('${fileDirPath}/etcData').readAsString());
+    if(((etcData%1000)/100).floor() == 2){
     style.uemYangStringTypeNum = 1;
   }
   }catch(e){
@@ -156,9 +157,9 @@ Future<void> SaveSinsalData(int typeUnit, int num,  {bool isAll = false}) async{
 
   if(isAll == true){
     if(num == 1){
-      sinsalData = 19;
+      sinsalData = 119;
     } else {
-      sinsalData = 27;
+      sinsalData = 327;
     }
   } else {
     int largeNum = (sinsalData / (typeUnit * 10)).floor();

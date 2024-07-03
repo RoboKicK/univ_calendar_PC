@@ -36,8 +36,8 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
   List<int> listDeunJiji0 = [0,0,0,0,0,0,0,0,0,0];
   List<Color> listCheonganBoxColor0 =  [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
   List<Color> listCheonganTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
-  List<Color> listJijiBoxColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
-  List<Color> listJijiTextColor0 = [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listJijiBoxColor0 =      [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
+  List<Color> listJijiTextColor0 =      [Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,Colors.transparent,];
 
   List<Color> listContainerColor = [style.colorBoxGray0, style.colorBoxGray1];
   int containerColorNum = 1;
@@ -617,7 +617,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
           listSeunJijiTextColor0[i] = Colors.white;
         }
       }
-    });;
+    });
   }
 
   Container GetSeunsuBoxAndText(int num){ //세운수

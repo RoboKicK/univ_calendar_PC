@@ -136,8 +136,8 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
 
   SetAllShow(bool isAllShow){
     if(isAllShow == true){  //모두 보기, 모두 끈 상태에서 애니메이션을 돌린다
-      isShowGongmangNum = 1; //0:안보여줌, 1:보여줌
-      isShowSibisinsal = 1;
+      isShowGongmangNum = 2; //0:안보여줌, 1:보여줌
+      isShowSibisinsal = 2;
       isShowEtc = 1;
     }
     else{ //모두 끄기

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:univ_calendar_pc/main.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../style.dart' as style;
 import '../../findGanji.dart' as findGanji;
 import 'mainCalendarInquireResult.dart' as mainCalendarInquireResult;
@@ -721,10 +722,14 @@ class _CalendarWidget extends State<CalendarWidget> {
       ShowDialogMessage('2050년 12월 6일 이후는 조회할 수 없습니다');
       return false;
     }
-    if (year < 0) {
-      ShowDialogMessage('기원전 생일은 조회할 수 없습니다');
+    if (year < 1902) {
+      ShowDialogMessage('1902년 이전은 조회할 수 없습니다');
       return false;
     }
+    //if (year < 0) {
+    //  ShowDialogMessage('기원전 생일은 조회할 수 없습니다');
+    //  return false;
+    //}
     if (isUemryoc == true && year < 1901) {
       ShowDialogMessage('음력은 1901년부터 조회할 수 있습니다');
       return false;
@@ -858,12 +863,6 @@ class _CalendarWidget extends State<CalendarWidget> {
     int _targetBirthMonth = int.parse(birthController.text.substring(5, 7));
     int _targetBirthDay = int.parse(birthController.text.substring(8, 10));
 
-    if (_targetBirthYear < 1901) {
-      //아직 1900년 이전은 조회가 안돼요!
-      ShowDialogMessage('1901년 이전은 아직 조회가 안됩니다');
-      return false;
-    }
-
     if (BirthDayErrorChecker(_targetBirthYear, _targetBirthMonth, _targetBirthDay) == false) {
       return false;
     }
@@ -991,6 +990,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   int prevState = 0;
   bool isEditSetting = false;
 
+  FocusNode nameTextFocusNode = FocusNode();
   FocusNode maleFocusNode = FocusNode();
   FocusNode femaleFocusNode = FocusNode();
   FocusNode birthTextFocusNode = FocusNode();
@@ -1227,6 +1227,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 controller: calendarMemoController,
                 keyboardType: TextInputType.multiline,
                 cursorColor: Colors.white,
+                maxLength: 500,
                 maxLines: null,
                 style: Theme.of(context).textTheme.labelLarge,
                 decoration: InputDecoration(
@@ -1512,13 +1513,29 @@ class _CalendarWidget extends State<CalendarWidget> {
   SetTargetName(String name){
     if(personSaveDate != DateTime.utc(3000)){
       saveDataManager.SaveEditedPersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate,
-        name, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+          name,genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
 
       context.read<Store>().SetEditWorldPersonName(targetName, name, saveDataManager.ConvertToBirthData(genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin), personSaveDate);
 
-      SetWidgetCalendarResultBirthText();
+      widget.refreshMapPersonLengthAndSort();
 
-      widget.refreshMapRecentPersonLength();
+      SnackBar snackBar = SnackBar(
+        content: Text('이름이 수정되었습니다', style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+        backgroundColor: style.colorMainBlue,//Colors.white,
+        //style.colorMainBlue,
+        shape: StadiumBorder(),
+        duration: Duration(milliseconds: style.snackBarDuration),
+        dismissDirection: DismissDirection.down,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+            bottom: 20,
+            left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+            right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+      );
+
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
     }
 
     targetName = name;
@@ -1803,6 +1820,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                           width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
                           height: 50,
                           child: TextField(
+                            focusNode: nameTextFocusNode,
                             enableSuggestions: false,
                             autocorrect: false,
                             controller: nameController,
@@ -1810,7 +1828,13 @@ class _CalendarWidget extends State<CalendarWidget> {
                             cursorColor: Colors.white,
                             maxLength: 10,
                             onEditingComplete:() {
-                              FocusScope.of(context).requestFocus(maleFocusNode);
+                              if(genderState == 0) {
+                                FocusScope.of(context).requestFocus(maleFocusNode);
+                              } else if(birthController.text == '') {
+                                FocusScope.of(context).requestFocus(birthTextFocusNode);
+                              } else if(hourController.text == ''){
+                                FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                              }
                             },
                             style: Theme.of(context).textTheme.labelLarge,
                             decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '이름', hintStyle: Theme.of(context).textTheme.labelSmall,),
@@ -1839,7 +1863,13 @@ class _CalendarWidget extends State<CalendarWidget> {
                                       genderState = 0;
                                       gender = value;
                                       SetGenderRadioButtonColor(value);
-                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                      if(nameController.text == ''){
+                                        FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                      } else if(birthController.text == '') {
+                                        FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                      } else if(hourController.text == ''){
+                                        FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                      }
                                     });
                                   }),
                               Container(
@@ -1865,7 +1895,13 @@ class _CalendarWidget extends State<CalendarWidget> {
                                       genderState = 1;
                                       gender = value;
                                       SetGenderRadioButtonColor(value);
-                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                      if(nameController.text == ''){
+                                        FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                      } else if(birthController.text == '') {
+                                        FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                      } else if(hourController.text == ''){
+                                        FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                      }
                                     });
                                   }),
                               Container(
@@ -2130,12 +2166,12 @@ class _CalendarWidget extends State<CalendarWidget> {
                         ),
                         child:  ElevatedButton(
                           style:  ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(style.colorMainBlue),
-                            padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
+                            backgroundColor: WidgetStateProperty.all(style.colorMainBlue),
+                            padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
                             //overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
-                            elevation: MaterialStatePropertyAll(0),
+                            elevation: WidgetStatePropertyAll(0),
                           ),
-                          child:Icon(Icons.recycling,),
+                          child:SvgPicture.asset('assets/burger_icon.svg', width: style.iconSize*2, height: style.iconSize*2,),
                           onPressed: () {
                             setState(() {
                               ResetAll();

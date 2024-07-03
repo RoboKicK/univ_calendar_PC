@@ -38,6 +38,8 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
 
   TextStyle textStyle = TextStyle(color : Colors.white, fontSize: 20, fontWeight: FontWeight.w500);
 
+  bool isEditWorldPersonName = false;
+
   String GetOld() {
     if(((personalDataManager.etcData % 10000) / 1000).floor() != 1){  //인적사항 숨김
       if(isShowPersonalOld == false){
@@ -116,13 +118,12 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
   }
 
   String GetName(){
-   // print(isShowPersonalData);
-   // print(isShowPersonalName);
     if(isShowPersonalData != 1){
       if(isShowPersonalName == false){
         return '';
       }
     }
+
     return nameText;
   }
 
@@ -151,6 +152,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                   setState(() {
                     nameText = nameTextController.text;
                     widget.setTargetName(nameText);
+                   // widget.refreshMapPersonLengthAndSort();
                   });
                 },
                 decoration: InputDecoration(
@@ -174,7 +176,7 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
               setState(() {
                 nameText = nameTextController.text;
                 widget.setTargetName(nameText);
-                widget.refreshMapPersonLengthAndSort();
+              //  widget.refreshMapPersonLengthAndSort();
               });
             },
             child: Text('저장'),
@@ -347,21 +349,6 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
                 height: 6,
                 color:style.colorBackGround,
               ),
-              //Row(
-              //  mainAxisAlignment: MainAxisAlignment.start,
-              //  children: [
-              //    //GetManTextWidget(),
-              //    Container(
-              //      height: 24,
-              //      child: ElevatedButton(
-              //          onPressed: (){},
-              //          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), fixedSize: Size(100, 22), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-              //              foregroundColor: Colors.transparent, surfaceTintColor: Colors.transparent),
-              //          child: GetBirthText()
-              //      ),
-              //    ),
-              //  ],
-              //),
             ],
           ),
         ),
@@ -414,9 +401,18 @@ class _CalendarResultBirthTextWidgetState extends State<CalendarResultBirthTextW
       isEditSetting = context.watch<Store>().isEditSetting;
     }
 
-    if(nameText != widget.name){
-      nameText = widget.name;
+    if(isEditWorldPersonName != context.watch<Store>().isEditWorldPersonName){
+      if(nameText == context.watch<Store>().personPrevName &&
+          saveDataManager.ConvertToBirthData(widget.gender == '남'? true:false, widget.uemYang, widget.birthYear, widget.birthMonth, widget.birthDay, widget.birthHour, widget.birthMin) == context.watch<Store>().personBirthData){
+        setState(() {
+          nameText = context.watch<Store>().personNowName;
+        });
+      }
+      isEditWorldPersonName = context.watch<Store>().isEditWorldPersonName;
     }
+    //if(nameText != widget.name){
+    //  nameText = widget.name;
+    //}
 
     return GetBirthTextWidget();
   }

@@ -30,6 +30,7 @@ environment:
 dependencies:
   path_provider: ^2.0.5
   file_picker: ^8.0.3
+  flutter_svg: 2.0.0
   flutter:
     sdk: flutter
 

@@ -364,8 +364,6 @@ late var snackBar;
       SaveGroupFile();
     }
   } catch(e) {};
-
-  SaveGroupFile();
 }
   ClearListMapGroup(){
   listMapGroup.clear();
@@ -857,6 +855,10 @@ late var snackBar;
   //최근 명식 저장
   SaveRecentPersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin) {
   int birthData = ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin);
+
+  if(name == '오늘' && birthYear == DateTime.now().year && birthMonth == DateTime.now().month && birthDay == DateTime.now().day && birthHour == DateTime.now().hour){
+    return;
+  }
 
   Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now()};
 
