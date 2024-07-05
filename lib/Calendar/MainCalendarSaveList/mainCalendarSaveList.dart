@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:univ_calendar_pc/main.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import 'mainCalendarSaveListOption.dart' as mainCalendarSaveListOption;
@@ -31,6 +32,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
   double sortContainerHeight = 0;
 
   int sortNum = 0;
+  int koreanGanji = 0;
 
   String nowSortText = "저장 일자 ↑";
 
@@ -141,7 +143,19 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
   //  });
   //}
 
-  List<Widget> GetPersonNameText(int num){
+  Text GetIlganText(int ilganNum){
+    var textColor = style.SetOhengColor(true, ilganNum);
+    return Text("  ${style.stringCheongan[koreanGanji][ilganNum]}",
+        //    style: Theme.of(context).textTheme.titleLarge);
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.2));
+  }
+  Text GetIljiText(int iljiNum){
+    var textColor = style.SetOhengColor(false, iljiNum);
+    return Text(style.stringJiji[koreanGanji][iljiNum],
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.2));
+  }
+
+  List<Widget> GetPersonNameAndGanjiText(int num){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
@@ -158,6 +172,24 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
           Container(
               height: style.saveDataNameTextLineHeight,
               child:Text("(${saveDataManager.GetSelectedBirthData('gender', num) == true?'남':'여'}) ${GetOld(saveDataManager.GetSelectedBirthData('uemYang', num), saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
+    }
+
+    if(((personalDataManager.etcData % 10000000) / 1000000).floor() == 2){  //간지 보이기
+      List<int> listPaljaData = [];
+      if(saveDataManager.GetSelectedBirthData('uemYang', num) == 0) {
+        listPaljaData = findGanji.InquireGanji(saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num), saveDataManager.GetSelectedBirthData('birthHour', num), saveDataManager.GetSelectedBirthData('birthMin', num));
+      } else {
+        List<int> listBirth = findGanji.LunarToSolar(saveDataManager.GetSelectedBirthData('birthYear', num), saveDataManager.GetSelectedBirthData('birthMonth', num), saveDataManager.GetSelectedBirthData('birthDay', num), saveDataManager.GetSelectedBirthData('uemYang', num) == 1? false:true);
+        listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], saveDataManager.GetSelectedBirthData('birthHour', num), saveDataManager.GetSelectedBirthData('birthMin', num));
+      }
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight+4,
+              child:GetIlganText(listPaljaData[4])));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight+4,
+              child:GetIljiText(listPaljaData[5])));
     }
 
     return listPersonalTextData;
@@ -179,7 +211,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
       listPersonalTextData.add(
           Container(
               height: style.saveDataMemoLineHeight,
-              child:Text("****.**.** **:**",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
+              child:Text("****년 **월 **일 **:**",  style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)));
     }
 
     return listPersonalTextData;
@@ -242,6 +274,8 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
   Widget build(BuildContext context) {
 
     CheckPersonalDataHide();
+
+    koreanGanji = ((personalDataManager.etcData%1000)/100).floor() - 1;
 
     return Column(
     mainAxisAlignment: MainAxisAlignment.start,
@@ -464,7 +498,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                           //color:Colors.green,
                                           child:
                                           Row(
-                                            children: GetPersonNameText(i),
+                                            children: GetPersonNameAndGanjiText(i),
                                           ),
                                         ),
                                         Container(
@@ -498,7 +532,7 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
                                       },
                                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                           foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                      child: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                                      child: SvgPicture.asset('assets/info_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                                     ),
                                   ),
                                 ],

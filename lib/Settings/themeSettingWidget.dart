@@ -505,7 +505,7 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                               child:ElevatedButton(
                                   onPressed: (){
                                     setState(() {
-                                      personalDataManager.SaveEtcData(1000000, 1);
+                                      personalDataManager.SaveThemeData(1);
                                       widget.reloadSetting();
                                       ShowSnackBar('테마가 적용되었습니다');
                                     });
@@ -557,7 +557,7 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
                               child: ElevatedButton(
                                   onPressed: (){
                                     setState(() {
-                                      personalDataManager.SaveEtcData(1000000, 2);
+                                      personalDataManager.SaveThemeData(2);
                                       widget.reloadSetting();
                                       ShowSnackBar('테마가 적용되었습니다');
                                     });

@@ -30,7 +30,7 @@ environment:
 dependencies:
   path_provider: ^2.0.5
   file_picker: ^8.0.3
-  flutter_svg: 2.0.0
+  flutter_svg: 2.0.10
   flutter:
     sdk: flutter
 
@@ -42,7 +42,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  http: ^0.13.4
+  http: 1.2.1
   shared_preferences: ^2.0.11
   provider: ^6.0.1
   intl: ^0.18.1
@@ -66,12 +66,14 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 msix_config:
-  display_name: Lucia One Calendar
+  display_name: Lucia_One_Calendar
   publisher_display_name: WujuHaneulByeol
-  identity_name: company.suite.flutterapp
+  publisher: CN=A1234
+  identity_name: com.example.lucia_one_calendar
   msix_version: 1.0.0.0
-  #logo_path: C:\path\to\logo.png
+  ogo_path: C:\Users\hoon87\Desktop\1x\luciaBearYellow
   #capabilities: internetClient, location, microphone, webcam
+  languages: ko-kr
   certificate_path: C:\Users\hoon87\certs\CERTIFICATE.pfx
   certificate_password: 524200
   app_installer:

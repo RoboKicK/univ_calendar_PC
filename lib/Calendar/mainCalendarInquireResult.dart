@@ -5,6 +5,7 @@ import 'package:univ_calendar_pc/main.dart';
 import '../style.dart' as style;
 import '../findGanji.dart' as findGanji;
 import '../SaveData/saveDataManager.dart' as saveDataManager;
+import 'package:flutter_svg/flutter_svg.dart';
 //import '../CalendarResult/calendarResultAppBarWidget.dart' as calendarResultAppBarWidget;  //앱바
 //import '../CalendarResult/calendarResultBirthTextWidget2.dart' as calendarResultBirthTextWidget2;  //이름과 생년월일
 import '../CalendarResult/calendarResultPaljaWidget.dart' as calendarResultPaljaWidget;  //팔자
@@ -383,46 +384,58 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(0, true);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
+                      //child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(1, true);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
+                    //child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(2, true);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
+                    //child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(3, true);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
+                    //child: Icon(Icons.arrow_drop_up_sharp, color: style.colorMainBlue, size: 40),),
                   ),
                 ],
               ),
@@ -439,46 +452,54 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(0, false);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle_reverse.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(1, false);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle_reverse.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(2, false);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle_reverse.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
                   ),
                   Container(
                     width: 40,
                     height: 40,
+                    padding:EdgeInsets.only(top:10),
+                    alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
                         EditBirthData(3, false);
                       },
                       style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                           foregroundColor: listContainerColor[1], surfaceTintColor: Colors.transparent),
-                      child: Icon(Icons.arrow_drop_down_sharp, color: style.colorMainBlue, size: 40),),
+                      child: SvgPicture.asset('assets/calendar_triangle_reverse.svg', width: style.appbarIconSize, height: style.appbarIconSize),),
                   ),
                 ],
               ),

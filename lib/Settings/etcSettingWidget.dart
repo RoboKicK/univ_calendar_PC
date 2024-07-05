@@ -40,6 +40,10 @@ class EtcSettingState extends State<EtcSettingWidget> {
   Image wakeLockButtonImage = Image.asset('assets/EllipseGray.png', width: 16, height: 16); //스위치 동그라미 이미지
   Alignment wakeLockAlign = Alignment.centerLeft;  //스위치 동그라미 정렬
 
+  int isShowIljuGanji = 0;
+  Image iljuGanjiButtonImage = Image.asset('assets/EllipseGray.png', width: 16, height: 16); //스위치 동그라미 이미지
+  Alignment iljuGanjiAlign = Alignment.centerLeft;  //스위치 동그라미 정렬
+
   double widgetWidth = 0;
   double widgetHeight = 0;
 
@@ -144,6 +148,22 @@ class EtcSettingState extends State<EtcSettingWidget> {
     }
   }
 
+  SetIljuGanji({bool isSwitch = true}){  // 만나이
+    if(isSwitch == true)
+    {setState(() {
+      isShowIljuGanji = (isShowIljuGanji + 1) % 2;
+      personalDataManager.SaveEtcData(1000000, isShowIljuGanji + 1);
+    });}
+
+    if(isShowIljuGanji == 0){
+      iljuGanjiAlign = Alignment.centerLeft;
+      iljuGanjiButtonImage = Image.asset('assets/EllipseGray.png', width: 16, height: 16);
+    } else {
+      iljuGanjiAlign = Alignment.centerRight;
+      iljuGanjiButtonImage = Image.asset('assets/EllipseBlue.png', width: 16, height: 16);
+    }
+  }
+
   @override
   initState() {
     super.initState();
@@ -187,6 +207,10 @@ class EtcSettingState extends State<EtcSettingWidget> {
     tempNum = ((dataNum % 1000000) / 100000).floor();
     isWakeLock = tempNum - 1;
     SetWakeLock(isSwitch: false);
+
+    tempNum = ((dataNum % 10000000) / 1000000).floor();
+    isShowIljuGanji = tempNum - 1;
+    SetIljuGanji(isSwitch: false);
   }
 
   @override
@@ -395,7 +419,8 @@ class EtcSettingState extends State<EtcSettingWidget> {
                             ),
                             Text("간지 한글화", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
-                              onPressed: (){SetKoreanGanji();widget.reloadSetting();}, child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
+                              onPressed: (){SetKoreanGanji(); widget.reloadSetting();},
+                              child: Container(width:(widgetWidth - (style.UIMarginLeft * 2)), height:20),
                               style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),),
                           ],
                         ),
@@ -405,6 +430,69 @@ class EtcSettingState extends State<EtcSettingWidget> {
                         height: style.saveDataMemoLineHeight,
                         margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo1),
                         child: Text("간지를 한글로 표시합니다", style: style.settingInfoText0),
+                      ),
+                      Container(  //일주 표시
+                        height: style.saveDataMemoLineHeight,
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: style.saveDataMemoLineHeight,
+                              width: (MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)),
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                height: style.saveDataMemoLineHeight,
+                                width: 32,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    AnimatedCrossFade(  //천간 합충극 스위치 배경
+                                      duration: Duration(milliseconds: 130),
+                                      firstChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchWhite0.png', width: 32, height: 20),
+                                      ),
+                                      secondChild: Container(
+                                        width: 32,
+                                        height: 20,
+                                        child: Image.asset('assets/SwitchGray0.png', width: 32, height: 20),
+                                      ),
+                                      crossFadeState: isShowIljuGanji == 1? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                      alignment: Alignment.center,
+                                      firstCurve: Curves.easeIn,
+                                      secondCurve: Curves.easeIn,
+                                    ),
+                                    Container(
+                                      width: 26,
+                                      child: AnimatedAlign(
+                                        alignment: iljuGanjiAlign,
+                                        duration: Duration(milliseconds: 130),
+                                        curve: Curves.easeIn,
+                                        child: Container(
+                                          width: 16,
+                                          height: 16,
+                                          child: iljuGanjiButtonImage,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Text("일주 표시", style: style.settingText0),
+                            ElevatedButton( //천간 합충극 스위치 버튼
+                              onPressed: (){SetIljuGanji(); widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
+                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                          ],
+                        ),
+                      ),
+                      Container(  //일주 표시 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom: style.SettingMarginTopWithInfo1),
+                        child: Text("저장목록과 상세정보에 일주를 표시합니다", style: style.settingInfoText0),
                       ),
                       Container(  //인적사항 숨김
                         height: style.saveDataMemoLineHeight,

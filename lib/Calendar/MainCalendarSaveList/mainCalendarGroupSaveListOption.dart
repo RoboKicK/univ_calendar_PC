@@ -194,7 +194,18 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     return "${saveDate.year}년 ${saveDate.month}월 ${saveDate.day}일";
   }
 
-  List<Widget> GetPersonNameText(String name, int birthData){
+  Text GetIlganText(int ilganNum){
+    var textColor = style.SetOhengColor(true, ilganNum);
+    return Text('  ${style.stringCheongan[((personalDataManager.etcData%1000)/100).floor() - 1][ilganNum]}',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.1));
+  }
+  Text GetIljiText(int iljiNum){
+    var textColor = style.SetOhengColor(false, iljiNum);
+    return Text(style.stringJiji[((personalDataManager.etcData%1000)/100).floor() - 1][iljiNum],
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.1));
+  }
+
+  List<Widget> GetPersonNameAndGanjiText(String name, int birthData){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
@@ -211,6 +222,23 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
           Container(
               height: style.saveDataNameTextLineHeight + 4,
               child:Text("(${saveDataManager.GetSelectedDataFromBirthData('gender', birthData) == 1 ?'남':'여'}) ${GetOld(saveDataManager.GetSelectedDataFromBirthData('uemYang', birthData), saveDataManager.GetSelectedDataFromBirthData('birthYear', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMonth', birthData), saveDataManager.GetSelectedDataFromBirthData('birthDay', birthData))}", style: Theme.of(context).textTheme.titleLarge)));
+    }
+    if(((personalDataManager.etcData % 10000000) / 1000000).floor() == 2){
+      List<int> listPaljaData = [];
+      if(saveDataManager.GetSelectedDataFromBirthData('uemYang', birthData) == 0) {
+        listPaljaData = findGanji.InquireGanji(saveDataManager.GetSelectedDataFromBirthData('birthYear', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMonth', birthData), saveDataManager.GetSelectedDataFromBirthData('birthDay', birthData), saveDataManager.GetSelectedDataFromBirthData('birthHour', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMin', birthData));
+      } else {
+        List<int> listBirth = findGanji.LunarToSolar(saveDataManager.GetSelectedDataFromBirthData('birthYear', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMonth', birthData), saveDataManager.GetSelectedDataFromBirthData('birthDay', birthData), saveDataManager.GetSelectedDataFromBirthData('uemYang', birthData) == 1? false:true);
+        listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], saveDataManager.GetSelectedDataFromBirthData('birthHour', birthData), saveDataManager.GetSelectedDataFromBirthData('birthMin', birthData));
+      }
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight + 4,
+              child: GetIlganText(listPaljaData[4])));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight + 4,
+              child: GetIljiText(listPaljaData[5])));
     }
 
     return listPersonalTextData;
@@ -247,7 +275,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
     List<List<Widget>> listPersonWidget = [];
 
     for (int i = 1; i < listMapGroup.length; i++) {
-      listPersonWidget.add(GetPersonNameText(listMapGroup[i]['name'], listMapGroup[i]['birthData']));
+      listPersonWidget.add(GetPersonNameAndGanjiText(listMapGroup[i]['name'], listMapGroup[i]['birthData']));
       listPersonWidget.add(GetPersonBirthText(listMapGroup[i]['birthData']));
     }
 
@@ -280,7 +308,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
           child: Column(
             children: [
               Row(
-                children: GetPersonNameText(listMapGroup[i]['name'], listMapGroup[i]['birthData']),
+                children: GetPersonNameAndGanjiText(listMapGroup[i]['name'], listMapGroup[i]['birthData']),
               ),
               Row(
                 children: GetPersonBirthText(listMapGroup[i]['birthData']),
@@ -617,7 +645,7 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                                   barrierDismissible: false,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      content: Text("그룹을 삭제합니다", textAlign: TextAlign.center),
+                                      content: Text("묶음을 삭제합니다", textAlign: TextAlign.center),
                                       actionsAlignment: MainAxisAlignment.center,
                                       actions:[
                                         ElevatedButton(

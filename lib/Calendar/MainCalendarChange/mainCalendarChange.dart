@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:univ_calendar_pc/main.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'mainCalendarFindGanjiChange.dart' as mainCalendarFindGanjiChange;
 import '../../style.dart' as style;
 import 'package:provider/provider.dart';
@@ -355,6 +356,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 1.4, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[3]), //style.colorMainBlue),
@@ -383,6 +385,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 1.4, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[0]), //style.colorMainBlue),
@@ -412,6 +415,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop), //* 1.4),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[5]), //style.colorMainBlue),
@@ -436,6 +440,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop), //* 1.4),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[4]), //style.colorMainBlue),
@@ -460,6 +465,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop), //* 1.4),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[2]), //style.colorMainBlue),
@@ -484,6 +490,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop), //* 1.4),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             border: Border.all(width: 2, color: _listSelectedBoxColor[1]), //style.colorMainBlue),
@@ -526,6 +533,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, left: cheonganMarjinVal),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorGreen,
@@ -548,6 +556,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorGreen,
@@ -570,6 +579,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorRed,
@@ -592,6 +602,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorRed,
@@ -614,6 +625,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, right: cheonganMarjinVal),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorYellow,
@@ -642,6 +654,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, left: jijiMarjinVal),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorBlack,
@@ -664,6 +677,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorYellow,
@@ -686,6 +700,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorGreen,
@@ -708,6 +723,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorGreen,
@@ -730,6 +746,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorYellow,
@@ -752,6 +769,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                               width: style.fullSizeButtonHeight,
                               height: style.fullSizeButtonHeight,
                               margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, right: jijiMarjinVal),
+                              padding: EdgeInsets.only(bottom:4),
                               decoration: BoxDecoration(
                                 boxShadow: [style.uiOhengShadow],
                                 color: style.colorRed,
@@ -781,6 +799,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop, left: cheonganMarjinVal),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorYellow,
@@ -804,6 +823,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: Colors.white,
@@ -827,6 +847,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: Colors.white,
@@ -850,6 +871,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorBlack,
@@ -873,6 +895,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                             width: style.fullSizeButtonHeight,
                             height: style.fullSizeButtonHeight,
                             margin: EdgeInsets.only(bottom: style.UIOhengMarginTop, top: style.UIOhengMarginTop, right: cheonganMarjinVal),
+                            padding: EdgeInsets.only(bottom:4),
                             decoration: BoxDecoration(
                               boxShadow: [style.uiOhengShadow],
                               color: style.colorBlack,
@@ -899,6 +922,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, left: jijiMarjinVal),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: style.colorRed,
@@ -922,6 +946,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: style.colorYellow,
@@ -945,6 +970,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: Colors.white,
@@ -968,6 +994,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: Colors.white,
@@ -991,6 +1018,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: style.colorYellow,
@@ -1014,6 +1042,7 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                           width: style.fullSizeButtonHeight,
                           height: style.fullSizeButtonHeight,
                           margin: EdgeInsets.only(bottom: style.UIOhengMarginTop * 0.7, top: style.UIOhengMarginTop, right: jijiMarjinVal),
+                          padding: EdgeInsets.only(bottom:4),
                           decoration: BoxDecoration(
                             boxShadow: [style.uiOhengShadow],
                             color: style.colorBlack,
@@ -1083,11 +1112,12 @@ class _MainCalendarChangeState extends State<MainCalendarChange> {
                   ),
                   child: ElevatedButton(
                     style:  ButtonStyle(
-                      padding: MaterialStatePropertyAll(EdgeInsets.all(0)),
-                      overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
-                      elevation: MaterialStatePropertyAll(0),
+                      backgroundColor: WidgetStateProperty.all(style.colorMainBlue),
+                      padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
+                      //overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      elevation: WidgetStatePropertyAll(0),
                     ),
-                    child:Icon(Icons.recycling),
+                    child:SvgPicture.asset('assets/recycle_icon.svg', width: style.iconSize, height: style.iconSize,),
                     onPressed: () {
                       setState(() {
                         ResetAll();

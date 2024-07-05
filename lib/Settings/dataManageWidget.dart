@@ -311,7 +311,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
                       },
                     ),
                     SizedBox(width:20),
-                    Text("그룹 명식 ", style: style.settingText0,),
+                    Text("묶음 명식 ", style: style.settingText0,),
                     Checkbox(
                       value: isExportGroupData,
                       onChanged: (value) {

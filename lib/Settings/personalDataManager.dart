@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import '../style.dart' as style;
-import 'package:fluttertoast/fluttertoast.dart';
 
 String fileDirPath = '';
 
@@ -29,8 +28,8 @@ int etcSinsalData = 0;  //1자리: 보기 안보기, 10자리: 천을귀인, 100
 int deunSeunDataAllOn = 2272223; //1자리: 간지추가, 10자리: 육친, 100자리: 십이운성, 1000자리: 십이신살, 만자리: 공망
 int deunSeunDataAllOff = 1191111;
 int deunSeunData = 0; //1자리: 간지 추가, 10자리: 육친, 100자리: 십이운성, 1000자리: 십이신살, 만자리: 공망, 십만자리: 세운에 나이 표시, 백만자리: 월운 표시
-int etcDataAllOn = 1273222;
-int etcDataAllOff = 1191111;
+int etcDataAllOn = 21273222;
+int etcDataAllOff = 11191111;
 int etcData = 0;  //1자리: 만 나이, 10자리: 간지 음양 표시, 100자리: 한글 간지, 1000자리: 인적사항 숨기기(1:안숨김, 2:만세력에서만 숨김, 3:항상 숨김)
 //만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 테마
 //테마: 1부터 베이직, 곰돌이
@@ -63,8 +62,8 @@ LoadUserData() async{
   try{sinsalData = await jsonDecode(await File('${fileDirPath}/sinsalData').readAsString());
   }catch(e){
     final file = await CreateSaveFile('sinsalData');
-    await file.writeAsString(jsonEncode(327));
     sinsalData = 327;
+    await file.writeAsString(jsonEncode(327));
   }
   try{etcSinsalData = await jsonDecode(await File('${fileDirPath}/etcSinsalData').readAsString());
   }catch(e){
@@ -84,8 +83,16 @@ LoadUserData() async{
   }
   }catch(e){
     final file = await CreateSaveFile('etcData');
-    await file.writeAsString(jsonEncode(etcDataAllOff));
     etcData = etcDataAllOff;
+    if(etcData < 10000000){
+      etcData = etcData + 20000000;
+    }
+    await file.writeAsString(jsonEncode(etcData));
+  }
+  try{themeData = await jsonDecode(await File('${fileDirPath}/themeData').readAsString());
+  }catch(e){
+    final file = await CreateSaveFile('themeData');
+    await file.writeAsString(jsonEncode(1));
   }
 }
 
@@ -114,8 +121,6 @@ Future<void> SaveUserData(String name, bool gender, int uemYang, int birthYear, 
 
   await file.writeAsString(jsonEncode({'name':name, 'gender':gender, 'uemYang': uemYang, 'birthYear':birthYear, 'birthMonth':birthMonth,
     'birthDay':birthDay, 'birthHour':birthHour, 'birthMin':birthMin, 'listPaljaData': paljaData}));
-
-  Fluttertoast.showToast(msg: '사용자 정보가 저장되었습니다');
 }
 //단어 설정 저장
 Future<void> SaveWordData(String type, int num) async{
@@ -132,9 +137,7 @@ Future<void> SaveWordData(String type, int num) async{
   //mapWordData = jsonDecode(await file.readAsString());
 }
 //만세력 합충극 등 보기 설정
-Future<void> SaveCalendarData(int typeUnit, int num, {bool isAll = false}) async{
-
-  final file = await CreateSaveFile('calendarData');
+Future<void> SaveCalendarData(int typeUnit, int num, {bool isAll = false, bool withoutSave = false}) async{
 
   if(isAll == true){
     if(num == 1){
@@ -148,12 +151,14 @@ Future<void> SaveCalendarData(int typeUnit, int num, {bool isAll = false}) async
     calendarData = (largeNum * (typeUnit * 10)) + (num * typeUnit) + smallNum;
   }
 
-  await file.writeAsString(jsonEncode(calendarData));
+  if(withoutSave == false) {
+    final file = await CreateSaveFile('calendarData');
+
+    await file.writeAsString(jsonEncode(calendarData));
+  }
 }
 
-Future<void> SaveSinsalData(int typeUnit, int num,  {bool isAll = false}) async{
-
-  final file = await CreateSaveFile('sinsalData');
+Future<void> SaveSinsalData(int typeUnit, int num,  {bool isAll = false, bool withoutSave = false}) async{
 
   if(isAll == true){
     if(num == 1){
@@ -167,12 +172,14 @@ Future<void> SaveSinsalData(int typeUnit, int num,  {bool isAll = false}) async{
     sinsalData = (largeNum * (typeUnit * 10)) + (num * typeUnit) + smallNum;
   }
 
-  await file.writeAsString(jsonEncode(sinsalData));
+  if(withoutSave == false) {
+    final file = await CreateSaveFile('sinsalData');
+
+    await file.writeAsString(jsonEncode(sinsalData));
+  }
 }
 
-Future<void> SaveEtcSinsalData(int typeUnit, int num, {bool isAll = false}) async{
-
-  final file = await CreateSaveFile('etcSinsalData');
+Future<void> SaveEtcSinsalData(int typeUnit, int num, {bool isAll = false, bool withoutSave = false}) async{
 
   if(isAll == true){
     if(num == 1){
@@ -186,12 +193,14 @@ Future<void> SaveEtcSinsalData(int typeUnit, int num, {bool isAll = false}) asyn
     etcSinsalData = (largeNum * (typeUnit * 10)) + (num * typeUnit) + smallNum;
   }
 
-  await file.writeAsString(jsonEncode(etcSinsalData));
+  if(withoutSave == false) {
+    final file = await CreateSaveFile('etcSinsalData');
+
+    await file.writeAsString(jsonEncode(etcSinsalData));
+  }
 }
 
-Future<void> SaveDeunSeunData(int typeUnit, int num, {bool isAll = false}) async{
-
-  final file = await CreateSaveFile('deunSeunData');
+Future<void> SaveDeunSeunData(int typeUnit, int num, {bool isAll = false, bool withoutSave = false}) async{
 
   if(isAll == true){
     if(num == 1){
@@ -205,12 +214,14 @@ Future<void> SaveDeunSeunData(int typeUnit, int num, {bool isAll = false}) async
     deunSeunData = (largeNum * (typeUnit * 10)) + (num * typeUnit) + smallNum;
   }
 
-  await file.writeAsString(jsonEncode(deunSeunData));
+  if(withoutSave == false) {
+    final file = await CreateSaveFile('deunSeunData');
+
+    await file.writeAsString(jsonEncode(deunSeunData));
+  }
 }
 
-Future<void> SaveEtcData(int typeUnit, int num) async{
-
-  final file = await CreateSaveFile('etcData');
+Future<void> SaveEtcData(int typeUnit, int num, {bool withoutSave = false}) async{
 
   int largeNum = (etcData / (typeUnit * 10)).floor();
   int smallNum = etcData % typeUnit;
@@ -220,7 +231,42 @@ Future<void> SaveEtcData(int typeUnit, int num) async{
     style.uemYangStringTypeNum = num - 1;
   }
 
-  await file.writeAsString(jsonEncode(etcData));
+  if(withoutSave == false) {
+    final file = await CreateSaveFile('etcData');
+
+    await file.writeAsString(jsonEncode(etcData));
+  }
+}
+
+Future<void> SaveThemeData(int num) async{
+
+  themeData = num;
+
+  final file = await CreateSaveFile('themeData');
+
+  await file.writeAsString(jsonEncode(themeData));
+}
+
+Future<void> SaveAllFiles() async{
+  final file = await CreateSaveFile('wordData');
+
+  await file.writeAsString(jsonEncode(mapWordData));
+
+  final file0 = await CreateSaveFile('calendarData');
+
+  await file0.writeAsString(jsonEncode(calendarData));
+
+  final file1 = await CreateSaveFile('sinsalData');
+
+  await file1.writeAsString(jsonEncode(sinsalData));
+
+  final file3 = await CreateSaveFile('deunSeunData');
+
+  await file3.writeAsString(jsonEncode(deunSeunData));
+
+  final file4 = await CreateSaveFile('etcData');
+
+  await file4.writeAsString(jsonEncode(etcData));
 }
 
 String GetYugchinText(){  //육친 단어를 설정에 따라 반환한다

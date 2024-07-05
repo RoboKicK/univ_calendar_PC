@@ -1093,7 +1093,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           onPressed: (){
             widget.closeWidget(widgetNum);
           },
-          child: Icon(Icons.close, color: Colors.white),//Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
+          child: Icon(Icons.close, color: Colors.white, size: style.appbarIconSize * 1.2),//Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
           style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
         ),
       );
@@ -1142,7 +1142,7 @@ class _CalendarWidget extends State<CalendarWidget> {
               widget.refreshMapPersonLengthAndSort();
             }
           },
-          child: Icon(Icons.save, color:Colors.white),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
+          child: Icon(Icons.save, color:Colors.white, size: style.appbarIconSize*1.1,),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
           style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
         ),
       );
@@ -1165,7 +1165,7 @@ class _CalendarWidget extends State<CalendarWidget> {
             onPressed: () {
               MemoButtonAction();
             },
-            child: Icon(Icons.chat, color: Colors.white), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
+            child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),// Icon(Icons.chat, color: Colors.white), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
           ),
@@ -1174,14 +1174,18 @@ class _CalendarWidget extends State<CalendarWidget> {
         memoButtonWidget = Container(
           width: 40,
           height: appBarHeight,
-          padding: EdgeInsets.only(top: 4),
-          margin: EdgeInsets.only(top: 0),
+          //padding: EdgeInsets.only(top: 4),
+          margin: EdgeInsets.only(top: 4),
+          decoration: BoxDecoration(
+            color: style.colorBlack,
+            borderRadius: BorderRadius.circular(style.textFiledRadius),
+          ),
           //, right:10),
           child: ElevatedButton(
             onPressed: () {
               MemoButtonAction();
             },
-            child: Icon(Icons.chat, color: style.colorMainBlue), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
+              child: SvgPicture.asset('assets/memo_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),//child: Icon(Icons.chat, color: style.colorMainBlue), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
           ),
@@ -1293,7 +1297,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           width: 40,
           padding: EdgeInsets.only(top:4),
           child: ElevatedButton(
-            child: Icon(Icons.calendar_month, color:Colors.white),
+              child: SvgPicture.asset('assets/calendar_appbar_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
             onPressed: (){
               if(uemYangType != 0){// != 0 || (uemYangType == 0 && isChangeUemYangBirthType == true)){
                 ShowDialogMessage('택일 모드는 양력 명식만 가능합니다');
@@ -1317,9 +1321,13 @@ class _CalendarWidget extends State<CalendarWidget> {
       } else {
         chooseDayButtonWidget = Container(
           width: 40,
-          padding: EdgeInsets.only(top:4),
+          margin: EdgeInsets.only(top:4),
+          decoration: BoxDecoration(
+            color: style.colorBlack,
+            borderRadius: BorderRadius.circular(style.textFiledRadius),
+          ),
           child: ElevatedButton(
-            child: Icon(Icons.calendar_month, color:style.colorMainBlue),
+            child: SvgPicture.asset('assets/calendar_appbar_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
             onPressed: (){
               setState(() {
                 isShowChooseDayButtons = !isShowChooseDayButtons;
@@ -2171,7 +2179,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                             //overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
                             elevation: WidgetStatePropertyAll(0),
                           ),
-                          child:SvgPicture.asset('assets/burger_icon.svg', width: style.iconSize*2, height: style.iconSize*2,),
+                          child:SvgPicture.asset('assets/recycle_icon.svg', width: style.iconSize, height: style.iconSize,),
                           onPressed: () {
                             setState(() {
                               ResetAll();

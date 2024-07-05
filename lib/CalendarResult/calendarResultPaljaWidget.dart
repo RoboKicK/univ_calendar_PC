@@ -820,7 +820,7 @@ class _CalendarResultPaljaWidgetState extends State<CalendarResultPaljaWidget> {
 
     ganjiContainerHeight = 156;
 
-    int themeType = ((personalDataManager.etcData % 10000000) / 1000000).floor();
+    int themeType = personalDataManager.themeData;
     isSpriteTheme = false;
     if(themeType == 2){
       isSpriteTheme = true;

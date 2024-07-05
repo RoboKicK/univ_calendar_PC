@@ -5,6 +5,7 @@ import '../findGanji.dart' as findGanji;
 import 'personalDataManager.dart' as personalDataManager;
 import '../findGanji.dart' as findGanji;
 import 'dart:io';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class UserDataWidget extends StatefulWidget {
   const UserDataWidget({super.key, required this.diaryFirstSet, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
@@ -734,7 +735,23 @@ class _UserDataState extends State<UserDataWidget> {
                               listPaljaData,
                             diaryFirstSet: widget.diaryFirstSet
                           );
-                          Navigator.pop(context);
+
+                            SnackBar snackBar = SnackBar(
+                              content: Text("사용자 정보가 저장되었습니다", style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                              backgroundColor: style.colorMainBlue,//Colors.white,
+                              //style.colorMainBlue,
+                              shape: StadiumBorder(),
+                              duration: Duration(milliseconds: style.snackBarDuration),
+                              dismissDirection: DismissDirection.down,
+                              behavior: SnackBarBehavior.floating,
+                              margin: EdgeInsets.only(
+                                  bottom: 20,
+                                  left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+                                  right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+                            );
+
+                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       }),
                 ),
@@ -749,15 +766,18 @@ class _UserDataState extends State<UserDataWidget> {
                     borderRadius: BorderRadius.circular(
                         style.textFiledRadius),
                   ),
-                  child: IconButton(
-                    style: ButtonStyle(
-                      splashFactory: NoSplash.splashFactory,
-                      overlayColor: MaterialStateProperty.all(
-                          Colors.transparent),
+                  child: ElevatedButton(
+                    style:  ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(style.colorMainBlue),
+                      padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
+                      //overlayColor: MaterialStateProperty.all(Colors.white.withOpacity(0.1)),
+                      elevation: WidgetStatePropertyAll(0),
                     ),
-                    icon: Icon(Icons.recycling),
+                    child:SvgPicture.asset('assets/recycle_icon.svg', width: style.iconSize, height: style.iconSize,),
                     onPressed: () {
-                      ResetAll();
+                      setState(() {
+                        ResetAll();
+                      });
                     },
                   ),
                 ),

@@ -113,12 +113,24 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
   }
 
   String searchText = '';
+  int koreanGanji = 0;
 
   ScrollController scrollController = ScrollController();
 
   List<Map> mapRecentPerson = [];
 
-  List<Widget> GetPersonalNameText(int num){
+  Text GetIlganText(int ilganNum){
+    var textColor = style.SetOhengColor(true, ilganNum);
+    return Text('  ${style.stringCheongan[koreanGanji][ilganNum]}',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.2));
+  }
+  Text GetIljiText(int iljiNum){
+    var textColor = style.SetOhengColor(false, iljiNum);
+    return Text(style.stringJiji[koreanGanji][iljiNum],
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.2));
+  }
+
+  List<Widget> GetPersonNameAndGanjiText(int num){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == true || isShowPersonalName == true){
       listPersonalTextData.add(
@@ -137,6 +149,23 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
               child:Text("(${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남':'여'}) ${GetOld(saveDataManager.GetSelectedRecentBirthData('uemYang', num), saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge)));
     } else {
        listPersonalTextData.add(Text("${saveDataManager.GetSelectedRecentBirthData('gender',num)?'남성':'여성'} ${GetOld(saveDataManager.GetSelectedRecentBirthData('uemYang', num), saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num))}", style: Theme.of(context).textTheme.titleLarge));
+    }
+    if(((personalDataManager.etcData % 10000000) / 1000000).floor() == 2){
+      List<int> listPaljaData = [];
+      if(saveDataManager.GetSelectedRecentBirthData('uemYang', num) == 0) {
+        listPaljaData = findGanji.InquireGanji(saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num), saveDataManager.GetSelectedRecentBirthData('birthHour', num), saveDataManager.GetSelectedRecentBirthData('birthMin', num));
+      } else {
+        List<int> listBirth = findGanji.LunarToSolar(saveDataManager.GetSelectedRecentBirthData('birthYear', num), saveDataManager.GetSelectedRecentBirthData('birthMonth', num), saveDataManager.GetSelectedRecentBirthData('birthDay', num), saveDataManager.GetSelectedRecentBirthData('uemYang', num) == 1? false:true);
+        listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], saveDataManager.GetSelectedRecentBirthData('birthHour', num), saveDataManager.GetSelectedRecentBirthData('birthMin', num));
+      }
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight+4,
+              child:GetIlganText(listPaljaData[4])));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight+4,
+              child:GetIljiText(listPaljaData[5])));
     }
     return listPersonalTextData;
   }
@@ -234,6 +263,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
     mapRecentPerson = saveDataManager.mapRecentPerson;
     //mapRecentPerson.sort((a, b) => a['name'].compareTo(b['name']));
 
+    koreanGanji = ((personalDataManager.etcData%1000)/100).floor() - 1;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -336,7 +366,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                     padding: EdgeInsets.only(top:6),
                                     child: Row(
                                       children:
-                                      GetPersonalNameText(i),
+                                      GetPersonNameAndGanjiText(i),
                                     ),
                                   ),
                                   Container(

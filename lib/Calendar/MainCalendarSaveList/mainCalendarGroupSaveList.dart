@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import 'mainCalendarSaveListOption.dart' as mainCalendarSaveListOption;
@@ -279,7 +280,7 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                                   },
                                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                       foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                  child: Image.asset('assets/readingGlass.png', width: style.iconSize, height: style.iconSize),
+                                  child: SvgPicture.asset('assets/info_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                                 ),
                               ),
                             ],

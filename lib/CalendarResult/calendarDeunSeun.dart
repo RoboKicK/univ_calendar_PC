@@ -137,7 +137,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
       }
       else{ //역행이면
         if(((widget.birthDay0 * 10000) + (widget.birthHour0 * 100) + widget.birthMin0) >= findGanji.listSeasonData[widget.birthYear0 - findGanji.stanYear][widget.birthMonth0 - 1]){ //태어난 달에 이전 절기가 있고 이전 절기 보다 늦게 태어났으면
-          deunStart0 = ((widget.birthDay0 - (findGanji.listSeasonData[widget.birthYear0 - findGanji.stanYear - 1][widget.birthMonth0 - 1] / 10000).floor()) / 3).round();
+          deunStart0 = ((widget.birthDay0 - (findGanji.listSeasonData[widget.birthYear0 - findGanji.stanYear][widget.birthMonth0 - 1] / 10000).floor()) / 3).round();
           if(deunStart0 == 0){
             deunStart0 = 1;
           }
@@ -153,7 +153,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
               }
             }
             else{
-              leftDays = widget.birthDay0 + findGanji.listSolNday[11] - (findGanji.listSeasonData[widget.birthYear0 - findGanji.stanYear - 1][11] / 10000).floor();
+              leftDays = widget.birthDay0 + findGanji.listSolNday[11] - (findGanji.listSeasonData[widget.birthYear0 - findGanji.stanYear][11] / 10000).floor();
               deunStart0 = (leftDays / 3).round();
             }
           }
@@ -2071,7 +2071,7 @@ class _CalendarDeunSeunState extends State<CalendarDeunSeun> {
       widgetWidth = widget.widgetWidth - style.UIMarginLeft;
     }
 
-    int themeType = ((personalDataManager.etcData % 10000000) / 1000000).floor();
+    int themeType = personalDataManager.themeData;
     isSpriteTheme = false;
     if(themeType == 2){
       isSpriteTheme = true;

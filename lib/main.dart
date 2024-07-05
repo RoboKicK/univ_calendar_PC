@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'findGanji.dart' as findGangi;
@@ -165,7 +166,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
-  var appBarTitle = ['  루시아 원 만세력', '  일진일기'];
+  var appBarTitle = ['  루시아 원 만세력 - 베타 테스트 버전', '  일진일기'];
   int _nowMainTap = 0;  //만세력, 일진일기 구분
   bool _isShowSettingPage = false;
 
@@ -749,7 +750,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.save, size: 20, color:Colors.white),
+                            child: Icon(Icons.save, size: style.appbarIconSize*1.1, color:Colors.white),
                           ),
                         ),
                         Container(  //묶음(group) 메모
@@ -768,7 +769,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.chat, size: 20, color:Colors.white),
+                            child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                         Container(  //한 페이지 비우기
@@ -781,7 +782,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.clear, size: 20, color:Colors.white),
+                            child: Icon(Icons.clear, size: style.appbarIconSize*1.3, color:Colors.white),
                           ),
                         ),
                         Container(  //모든 페이지 비우기
@@ -794,7 +795,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.clear_all, size: 20, color:Colors.white),
+                            child: SvgPicture.asset('assets/close_all_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                         Container(  //페이지 이름
@@ -834,20 +835,20 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                           ),
                         ),
-                        Container(  //테스트 버튼1
-                          width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
-                          child: ElevatedButton(
-                            onPressed: (){
-                              saveDataManager.mapPerson.clear();
-                              saveDataManager.listMapGroup.clear();
-                            },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
-                          ),
-                        ),
+                        //Container(  //테스트 버튼1
+                        //  width: 40,
+                        //  height: style.appBarHeight,
+                        //  margin: EdgeInsets.only(left: 00),
+                        //  child: ElevatedButton(
+                        //    onPressed: (){
+                        //      saveDataManager.mapPerson.clear();
+                        //      saveDataManager.listMapGroup.clear();
+                        //    },
+                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        //    child: Icon(Icons.accessibility_sharp, size: 20, color:Colors.white),
+                        //  ),
+                        //),
                         //Container(  //테스트 버튼2
                         //  width: 40,
                         //  height: style.appBarHeight,
@@ -883,7 +884,6 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         Container(  //묶음(group) 메모장
                           width: 40,
                           height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
                           child: ElevatedButton(
                             onPressed: (){
                               setState(() {
@@ -893,7 +893,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.chat, size: 20, color:Colors.white),
+                            child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                         Container(  //저장목록들, 간지변환 버튼
@@ -908,7 +908,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.dehaze, size: 20, color:Colors.white),
+                            child: SvgPicture.asset('assets/burger_icon.svg', width: style.appbarIconSize*0.8, height: style.appbarIconSize*0.8),
                           ),
                         ),
                         Container(  //설정 버튼
@@ -924,7 +924,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                 foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                            child: Icon(Icons.settings, size: 20, color:Colors.white),
+                            child: SvgPicture.asset('assets/setting_navi_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                       ],
@@ -1080,7 +1080,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         width:0,
                         height: MediaQuery.of(context).size.height - style.appBarHeight,
                       ),
-                      crossFadeState: isShowSideLayer? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                      crossFadeState: isShowSideLayer == true? CrossFadeState.showFirst : CrossFadeState.showSecond,
                       alignment: Alignment.topCenter,
                       firstCurve: Curves.easeOut,
                       secondCurve: Curves.easeOut,

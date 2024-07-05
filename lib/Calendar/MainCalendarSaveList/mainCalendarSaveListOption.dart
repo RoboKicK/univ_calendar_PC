@@ -366,7 +366,18 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
     return firstLineText;
   }
 
-  List<Widget> GetPersonNameText(){
+  Text GetIlganText(int ilganNum){
+    var textColor = style.SetOhengColor(true, ilganNum);
+    return Text('  ${style.stringCheongan[((personalDataManager.etcData%1000)/100).floor() - 1][ilganNum]}',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.1));
+  }
+  Text GetIljiText(int iljiNum){
+    var textColor = style.SetOhengColor(false, iljiNum);
+    return Text(style.stringJiji[((personalDataManager.etcData%1000)/100).floor() - 1][iljiNum],
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: textColor, height: 1.1));
+  }
+
+  List<Widget> GetPersonNameAndGanjiText(){
     List<Widget> listPersonalTextData = [];
     if(isShowPersonalDataAll == false && isShowPersonalName == false){ //이름 숨김일 때
       listPersonalTextData.add(
@@ -383,6 +394,24 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
           Container(
               height: style.saveDataNameTextLineHeight,
               child:Text("(${gender0 == true ?'남':'여'})", style: Theme.of(context).textTheme.titleLarge)));
+    }
+
+    if(((personalDataManager.etcData % 10000000) / 1000000).floor() == 2){
+      List<int> listPaljaData = [];
+      if(uemYangType0 == 0) {
+        listPaljaData = findGanji.InquireGanji(targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+      } else {
+        List<int> listBirth = findGanji.LunarToSolar(targetBirthYear, targetBirthMonth, targetBirthDay, uemYangType0 == 1? false:true);
+        listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], targetBirthHour, targetBirthMin);
+      }
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child: GetIlganText(listPaljaData[4])));
+      listPersonalTextData.add(
+          Container(
+              height: style.saveDataNameTextLineHeight,
+              child: GetIljiText(listPaljaData[5])));
     }
 
     return listPersonalTextData;
@@ -549,7 +578,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                           width: style.UIButtonWidth * 0.9,
                           height: style.saveDataNameLineHeight,
                           child:Row(
-                            children: GetPersonNameText(),
+                            children: GetPersonNameAndGanjiText(),
                           ),
                         ),Container(  //생년월일
                           width: style.UIButtonWidth * 0.9,
