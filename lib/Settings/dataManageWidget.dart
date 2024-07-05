@@ -107,7 +107,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
       int startNum = 0;
       int endNum = 0;
 
-      if(saveDataString.substring(startNum, 21) == '{[]}personData_pc{[]}'){
+      if(saveDataString.substring(startNum, 21) == '{[]}personData_pc{[]}'){  //PC버전 단일명식 저장목록
         startNum = 21;
         endNum = 24;
 
@@ -121,7 +121,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
         while (true) {
           if (saveDataString.substring(endNum - 2, endNum) == '{{') {
             personName = saveDataString.substring(startNum, endNum - 2);
-            if(personName.length > 20 && personName.substring(0,20) == '{[]}groupData_pc{[]}'){
+            if(personName.length > 20 && personName.substring(0,20) == '{[]}groupData_pc{[]}'){ //PC버전 묶음명식 저장목록이 시작되면
               saveDataManager.SavePersonFile();
               widget.refreshMapPersonLengthAndSort();
               isLoadSuccess = true;
@@ -159,7 +159,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
           }
         }
       }
-      if(saveDataString.substring(startNum, startNum + 20) == '{[]}groupData_pc{[]}'){
+      if(saveDataString.substring(startNum, startNum + 20) == '{[]}groupData_pc{[]}'){  //PC버전 묶음명식 저장목록
 
         startNum = startNum + 20;
         endNum = startNum + 2;

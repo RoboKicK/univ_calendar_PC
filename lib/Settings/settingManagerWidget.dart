@@ -99,6 +99,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   }
 
   Widget GetUserDataText() {
+    if (personalDataManager.mapUserData['name'] != null){
       String uemYangText = '';
       if (personalDataManager.mapUserData['uemYang'] == 0) {
         uemYangText = '(양력)';
@@ -148,6 +149,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
             height: settingButtonContainerHeight,
            child:Text(" ${birthTimeText}", style: style.settingText0)),
       ]);
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   double widgetWidth = 500;

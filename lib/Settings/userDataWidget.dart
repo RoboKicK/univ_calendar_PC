@@ -79,6 +79,12 @@ class _UserDataState extends State<UserDataWidget> {
 
   int editingUserData = 0;
 
+  FocusNode nameTextFocusNode = FocusNode();
+  FocusNode maleFocusNode = FocusNode();
+  FocusNode femaleFocusNode = FocusNode();
+  FocusNode birthTextFocusNode = FocusNode();
+  FocusNode birthHourTextFocusNode = FocusNode();
+
   SeasonDayMessage() {
     //절입시간이 있는 날인지 알려줌
     if (birthController.text.length == 10 && seasonMessageDate != birthController.text) {
@@ -399,10 +405,22 @@ class _UserDataState extends State<UserDataWidget> {
                     width: style.UIButtonWidth * 0.55,
                     height: 50,
                     child: TextField(
+                      focusNode: nameTextFocusNode,
+                      enableSuggestions: false,
+                      autocorrect: false,
                       controller: nameController,
                       keyboardType: TextInputType.text,
                       cursorColor: Colors.white,
                       maxLength: 10,
+                      onEditingComplete:() {
+                        if(genderState == 3) {
+                          FocusScope.of(context).requestFocus(maleFocusNode);
+                        } else if(birthController.text == '') {
+                          FocusScope.of(context).requestFocus(birthTextFocusNode);
+                        } else if(hourController.text == ''){
+                          FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                        }
+                      },
                       style:
                       Theme.of(context).textTheme.labelMedium,
                       decoration: InputDecoration(
@@ -430,17 +448,28 @@ class _UserDataState extends State<UserDataWidget> {
                               VisualDensity.minimumDensity,
                             ),
                             value: Gender.Male,
+                            focusNode: maleFocusNode,
                             groupValue: gender,
                             fillColor: gender == Gender.Male
-                                ? MaterialStateColor.resolveWith(
+                                ? WidgetStateColor.resolveWith(
                                     (states) => style.colorMainBlue)
-                                : MaterialStateColor.resolveWith(
+                                : WidgetStateColor.resolveWith(
                                     (states) => style.colorGrey),
-                            splashRadius: 0,
+                            splashRadius: 16,
+                            hoverColor: Colors.white.withOpacity(0.1),
+                            focusColor: Colors.white.withOpacity(0.1),
                             onChanged: (Gender? value) {
                               setState(() {
                                 genderState = 0;
                                 gender = value;
+                                //SetGenderRadioButtonColor(value);
+                                if(nameController.text == ''){
+                                  FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                } else if(birthController.text == '') {
+                                  FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                } else if(hourController.text == ''){
+                                  FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                }
                               });
                             }),
                         Container(
@@ -463,15 +492,26 @@ class _UserDataState extends State<UserDataWidget> {
                             value: Gender.Female,
                             groupValue: gender,
                             fillColor: gender == Gender.Female
-                                ? MaterialStateColor.resolveWith(
+                                ? WidgetStateColor.resolveWith(
                                     (states) => style.colorMainBlue)
-                                : MaterialStateColor.resolveWith(
+                                : WidgetStateColor.resolveWith(
                                     (states) => style.colorGrey),
-                            splashRadius: 0,
+                            focusNode: femaleFocusNode,
+                            splashRadius: 16,
+                            hoverColor: Colors.white.withOpacity(0.1),
+                            focusColor: Colors.white.withOpacity(0.1),
+
                             onChanged: (Gender? value) {
                               setState(() {
                                 genderState = 1;
                                 gender = value;
+                                if(nameController.text == ''){
+                                  FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                } else if(birthController.text == '') {
+                                  FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                } else if(hourController.text == ''){
+                                  FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                }
                               });
                             }),
                         Container(
@@ -506,6 +546,9 @@ class _UserDataState extends State<UserDataWidget> {
                     width: style.UIButtonWidth * 0.55,
                     height: 50,
                     child: TextField(
+                      focusNode: birthTextFocusNode,
+                      enableSuggestions: false,
+                      autocorrect: false,
                       controller: birthController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -515,6 +558,9 @@ class _UserDataState extends State<UserDataWidget> {
                       ],
                       cursorColor: Colors.white,
                       maxLength: 10,
+                      onEditingComplete: () {
+                        FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                      },
                       style:
                       Theme.of(context).textTheme.labelMedium,
                       decoration: InputDecoration(
@@ -597,6 +643,9 @@ class _UserDataState extends State<UserDataWidget> {
                     width: style.UIButtonWidth * 0.5,
                     height: 50,
                     child: TextField(
+                      focusNode: birthHourTextFocusNode,
+                      enableSuggestions: false,
+                      autocorrect: false,
                       controller: hourController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
@@ -616,6 +665,60 @@ class _UserDataState extends State<UserDataWidget> {
                           hintStyle: Theme.of(context)
                               .textTheme
                               .labelSmall),
+                      onEditingComplete: () {
+                        if (InqureChecker(true) == true) {
+                          List<int> listPaljaData = [];
+                          List<int> listBirthLunarToSolar;
+                          if(targetBirthYear > 1900){ //1900년 이후 출생은 findGanji로 팔자를 뽑는다
+                            if(uemYangType == 0){ //양력
+                              listPaljaData = findGanji.InquireGanji(targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin);
+                            }
+                            else{
+                              if(uemYangType == 1){
+                                listBirthLunarToSolar = findGanji.LunarToSolar(targetBirthYear, targetBirthMonth, targetBirthDay, false);
+                                listPaljaData = findGanji.InquireGanji(listBirthLunarToSolar[0], listBirthLunarToSolar[1], listBirthLunarToSolar[2], targetBirthHour, targetBirthMin);
+                              }
+                              else{
+                                listBirthLunarToSolar = findGanji.LunarToSolar(targetBirthYear, targetBirthMonth, targetBirthDay, true);
+                                listPaljaData = findGanji.InquireGanji(listBirthLunarToSolar[0], listBirthLunarToSolar[1], listBirthLunarToSolar[2], targetBirthHour, targetBirthMin);
+                              }
+                            }
+                          }
+                          else{
+
+                          }
+
+                          personalDataManager.SaveUserData(
+                              targetName,
+                              gender == Gender.Male ? true : false,
+                              uemYangType,
+                              targetBirthYear,
+                              targetBirthMonth,
+                              targetBirthDay,
+                              targetBirthHour,
+                              targetBirthMin,
+                              listPaljaData,
+                              diaryFirstSet: widget.diaryFirstSet
+                          );
+
+                          SnackBar snackBar = SnackBar(
+                            content: Text("사용자 정보가 저장되었습니다", style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
+                            backgroundColor: style.colorMainBlue,//Colors.white,
+                            //style.colorMainBlue,
+                            shape: StadiumBorder(),
+                            duration: Duration(milliseconds: style.snackBarDuration),
+                            dismissDirection: DismissDirection.down,
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.only(
+                                bottom: 20,
+                                left: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5,
+                                right: (MediaQuery.of(context).size.width - style.UIButtonWidth) * 0.5),
+                          );
+
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      },
                       onChanged: (text) {
                         setState(() {
                           if (popUpSelect != popUpVal[0]) {

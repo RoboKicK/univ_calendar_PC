@@ -199,7 +199,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
 
     dataNum = personalDataManager.etcSinsalData;
     //여기부터 기타 신살
-    tempNum = ((dataNum % 10) / 1).floor();
+    tempNum = dataNum % 10;
     isShowEtc = tempNum - 1;
     SetEtcSinsal(isSwitch : false);
 

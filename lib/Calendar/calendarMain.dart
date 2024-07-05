@@ -1836,7 +1836,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                             cursorColor: Colors.white,
                             maxLength: 10,
                             onEditingComplete:() {
-                              if(genderState == 0) {
+                              if(genderState == 3) {
                                 FocusScope.of(context).requestFocus(maleFocusNode);
                               } else if(birthController.text == '') {
                                 FocusScope.of(context).requestFocus(birthTextFocusNode);

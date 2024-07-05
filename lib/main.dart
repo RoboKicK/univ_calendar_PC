@@ -136,7 +136,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
-    setWindowTitle('루시아 원 만세력');
+    setWindowTitle('루시아 원 만세력 - 내부 테스트 ver');
     //setWindowMaxSize(const Size(max_width, max_height));
     setWindowMinSize(Size(1280, 720));
   }
