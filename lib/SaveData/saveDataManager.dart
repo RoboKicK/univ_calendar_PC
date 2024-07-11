@@ -367,71 +367,120 @@ late var snackBar;
   } catch(e) {};
 }
   LoadSavedDiary() async {
-    if(mapDiary.length != 0)
-      return;
+  if(mapDiary.length != 0)
+    return;
 
-    String saveDataString = '';
-    bool isEditedFile = false;
+  String saveDataString = '';
+  bool isEditedFile = false;
 
-    try {
-      saveDataString = jsonDecode(await File('${fileDirPath}/diaryData').readAsString());
+  try {
+    saveDataString = jsonDecode(await File('${fileDirPath}/diaryData').readAsString());
 
-      if(saveDataString.isNotEmpty) {
-        int startNum = 0;
-        int endNum = 3;
+    if(saveDataString.isNotEmpty) {
+      int startNum = 0;
+      int endNum = 3;
 
-        int dayData = 0;
-        int labelData = 0;
-        String memo = '';
+      int dayData = 0;
+      int labelData = 0;
+      String memo = '';
 
-        while (true) {
-          if (saveDataString.length < endNum + 2) {
-            break;
-          }
+      while (true) {
+        if (saveDataString.length < endNum + 2) {
+          break;
+        }
 
-          if (saveDataString.substring(endNum - 2, endNum) == '{{') {
-            dayData = int.parse(saveDataString.substring(startNum, endNum - 2));
-            startNum = endNum;
+        if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+          dayData = int.parse(saveDataString.substring(startNum, endNum - 2));
+          startNum = endNum;
 
-            labelData = int.parse(saveDataString.substring(startNum, startNum + 9));
+          labelData = int.parse(saveDataString.substring(startNum, startNum + 9));
 
-            startNum = startNum + 11;
-            endNum = startNum + 2;
+          startNum = startNum + 11;
+          endNum = startNum + 2;
 
-            while(true) {
-              if (saveDataString.substring(endNum - 2, endNum) == '{{') {
-                memo = saveDataString.substring(startNum, endNum - 2);
+          while(true) {
+            if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+              memo = saveDataString.substring(startNum, endNum - 2);
 
-                if(memo.length < 4) {
-                  isEditedFile = true;
+              if(memo.length < 4) {
+                isEditedFile = true;
 
-                  memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
-                } else  if(int.tryParse(memo.substring(3, 4)) == null){
-                  isEditedFile = true;
+                memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
+              } else  if(int.tryParse(memo.substring(3, 4)) == null){
+                isEditedFile = true;
 
-                  memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
-                }
-
-                startNum = endNum;
-                endNum = startNum + 2;
-
-                mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': memo});
-                break;
-              } else {
-                endNum++;
+                memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
               }
+
+              startNum = endNum;
+              endNum = startNum + 2;
+
+              mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': memo});
+              break;
+            } else {
+              endNum++;
             }
-          } else {
-            endNum++;
           }
+        } else {
+          endNum++;
         }
       }
-    } catch(e) {};
-
-    if(isEditedFile == true){
-      SaveDiaryFile();
     }
+  } catch(e) {};
+
+  try{  //초기 버전 저장데이터 확인
+    Map mapTemp = jsonDecode(await File('${fileDirPath}/d0000').readAsString());
+    if(mapTemp.isNotEmpty){
+      isEditedFile = true;
+      for(int i = 0; i <= saveDataLimitCount; i++){
+        if(i < 10){
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/d000${i}').readAsString());
+            await File('${fileDirPath}/d000${i}').delete();
+          } catch(e){break;}
+        }
+        else if(i < 100){
+          try{
+            mapTemp = jsonDecode(await File('${fileDirPath}/d00${i}').readAsString());
+            await File('${fileDirPath}/d00${i}').delete();
+          } catch(e){break;}
+        }
+        else{
+          try {
+            mapTemp = jsonDecode(await File('${fileDirPath}/d0${i}').readAsString());
+            await File('${fileDirPath}/d0${i}').delete();
+          } catch(e){break;}
+        }
+        Map diaryData = {'dayData':((mapTemp['year'] * 10000) + (mapTemp['month'] * 100) + mapTemp['day']), 'labelData':mapTemp['labelData'],
+          'memo': '${mapTemp['dayString']}${mapTemp['dayPaljaData'][6]}${mapTemp['dayPaljaData'][7]}'+mapTemp['memo']};
+        mapDiary.add(diaryData);
+      }
+    }
+  } catch(e) {};
+  //for(int i = 0; i <= diaryDataLimitCount; i++){
+  //  if(i < 10){
+  //    try {
+  //      mapDiary.add(
+  //          jsonDecode(await File('${fileDirPath}/d000${i}').readAsString()));
+  //    } catch(e){break;}
+  //  }
+  //  else if(i < 100){
+  //    try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d00${i}').readAsString()));}
+  //    catch(e){break;}
+  //  }
+  //  else if(i < 1000){
+  //    try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d0${i}').readAsString()));}
+  //    catch(e){break;}
+  //  }
+  //  else{
+  //    try{mapDiary.add(jsonDecode(await File('${fileDirPath}/d${i}').readAsString()));}
+  //    catch(e){break;}
+  //  }
+  //}
+  if(isEditedFile == true){
+    SaveDiaryFile();
   }
+}
 
 
   //데이터 삭제
@@ -1037,40 +1086,39 @@ late var snackBar;
   Future<void> SaveDiaryData2(int year, int month, int day, int labelData, List<int> dayPaljaData, String dayString, String memo, bool isFromSaveLabel) async {
     int dayData = (year * 10000) + (month * 100) + day;
 
-    if(mapDiary.isNotEmpty && dayData <= mapDiary.last['dayData']){  //가장 최근에 작성한 일기와 같거나 이전 날짜면
-    if(dayData == mapDiary.last['dayData']){  //가장 최근에 작성한 일기면 수정 후 저장
-      mapDiary.last['labelData'] = labelData;
-      mapDiary.last['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo;
-      print(1);
-    } else if(mapDiary.length > 1 && dayData < mapDiary.last['dayData'] && dayData > mapDiary[mapDiary.length - 2]['dayData']){ //가장 최근 일기와 바로 직전 일기의 사이면
-      mapDiary.insert(mapDiary.length - 1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
-      print(2);
-    } else {
-      bool isInsertDiary = false;
-      for (int i = mapDiary.length - 2; i >= 0; i--) {
-        if (dayData == mapDiary[i]['dayData']) {  //이미 작성한 날짜면 수정 후 파일 저장
-          mapDiary[i]['labelData'] = labelData;
-          mapDiary[i]['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo;
-          isInsertDiary = true;
-          print(3);
-          break;
-        }
-        if(dayData > mapDiary[i]['dayData'] && dayData < mapDiary[i+1]['dayData']){ //지금 인덱스와 이전 이덱스 사이면 중간에 삽입하고 저장
-          mapDiary.insert(i+1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
-          print(4);
-          isInsertDiary = true;
-          break;
-        }
-      }
-      if(isInsertDiary == false){
-        mapDiary.insert(0, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
-        print(5);
-      }
+    String dayPaljaData7 = dayPaljaData[7].toString();
+    if(dayPaljaData7.length == 1){
+      dayPaljaData7 = '0' + dayPaljaData7;
     }
-  } else { //dayData가 가장 최신이면 맨 앞에 새로 저장
-    mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}' + memo});
-    print(6);
-  }
+
+    if(mapDiary.isNotEmpty && dayData <= mapDiary.last['dayData']){  //가장 최근에 작성한 일기와 같거나 이전 날짜면
+      if(dayData == mapDiary.last['dayData']){  //가장 최근에 작성한 일기면 수정 후 저장
+        mapDiary.last['labelData'] = labelData;
+        mapDiary.last['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData7}'+memo;
+      } else if(mapDiary.length > 1 && dayData < mapDiary.last['dayData'] && dayData > mapDiary[mapDiary.length - 2]['dayData']){ //가장 최근 일기와 바로 직전 일기의 사이면
+        mapDiary.insert(mapDiary.length - 1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData7}'+memo});
+      } else {
+        bool isInsertDiary = false;
+        for (int i = mapDiary.length - 2; i >= 0; i--) {
+          if (dayData == mapDiary[i]['dayData']) {  //이미 작성한 날짜면 수정 후 파일 저장
+            mapDiary[i]['labelData'] = labelData;
+            mapDiary[i]['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData7}'+memo;
+            isInsertDiary = true;
+            break;
+          }
+          if(dayData > mapDiary[i]['dayData'] && dayData < mapDiary[i+1]['dayData']){ //지금 인덱스와 이전 이덱스 사이면 중간에 삽입하고 저장
+            mapDiary.insert(i+1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData7}'+memo});
+            isInsertDiary = true;
+            break;
+          }
+        }
+        if(isInsertDiary == false){
+          mapDiary.insert(0, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData7}'+memo});
+        }
+      }
+    } else { //dayData가 가장 최신이면 맨 앞에 새로 저장
+      mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': '${dayString}${dayPaljaData[6]}${dayPaljaData7}' + memo});
+    }
     SaveDiaryFile();
     if(isFromSaveLabel == false) {
       snackBar('일기를 저장했습니다');

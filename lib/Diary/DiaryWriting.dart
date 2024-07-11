@@ -65,6 +65,8 @@ class _DiaryWritingState extends State<DiaryWriting> {
 
   int koreanGanji = 0;
 
+  List<int> listNowDay = [0,0,0];
+
   String GetDateText(){ //연월일 텍스트
     String dateString = '';
     //dayString += '${widget.diaryYear}년';
@@ -159,6 +161,16 @@ class _DiaryWritingState extends State<DiaryWriting> {
       memoController.text = saveDataManager.mapDiary[diaryIndex]['memo'].substring(4, saveDataManager.mapDiary[diaryIndex]['memo'].length);
       prefixMemo = memoController.text;
       editingMemo = prefixMemo;
+    } else {
+      setState(() {
+        listLabel = [1,1,1,1,1,1,1,1,1];
+        listLabelButtonColor = [Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent, Colors.transparent];
+        listLabelButtonOutlineColor = [style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,style.colorDarkGrey,];//[style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy, style.colorNavy];
+        listSelectedLabelContainer = [SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink(), SizedBox.shrink()];
+        memoController.text = '';
+        prefixMemo = memoController.text;
+        editingMemo = prefixMemo;
+      });
     }
   }
 
@@ -286,8 +298,20 @@ class _DiaryWritingState extends State<DiaryWriting> {
 
     memoFocusNode = FocusNode();
 
+    listNowDay[0] = widget.diaryYear;
+    listNowDay[1] = widget.diaryMonth;
+    listNowDay[2] = widget.diaryDay;
+
+
     diaryIndex = saveDataManager.FindMapDiaryIndex(widget.diaryYear, widget.diaryMonth, widget.diaryDay);
+
     LoadDiary();
+  }
+
+  @override
+  void didChangeDependencies() {
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -304,6 +328,15 @@ class _DiaryWritingState extends State<DiaryWriting> {
       setState(() {
         koreanGanji = ((personalDataManager.etcData%1000)/100).floor() - 1;
       });
+    }
+
+    if(listNowDay[0] != widget.diaryYear || listNowDay[1] != widget.diaryMonth || listNowDay[2] != widget.diaryDay){
+      diaryIndex = saveDataManager.FindMapDiaryIndex(widget.diaryYear, widget.diaryMonth, widget.diaryDay);
+      isEditingMemo = widget.isWriting;
+      listNowDay[0] = widget.diaryYear;
+      listNowDay[1] = widget.diaryMonth;
+      listNowDay[2] = widget.diaryDay;
+      LoadDiary();
     }
 
     return

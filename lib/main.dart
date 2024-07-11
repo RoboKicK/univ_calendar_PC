@@ -861,9 +861,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         Container(  //페이지 이름
                           width: 250,
                           height: style.appBarHeight - 14,
-                          margin: EdgeInsets.zero,
-                          color: Colors.black,
-                          padding: EdgeInsets.only(top:0, bottom:0),
+                          margin: EdgeInsets.only(left:6),
+                          decoration: BoxDecoration(
+                            border: Border.all(color:style.colorDarkGrey.withOpacity(0.3), width:1),
+                            color: Colors.black,
+                          ),
+                          padding: EdgeInsets.only(top:0, bottom:8),
                           child: TextField(
                             cursorColor: Colors.white,
                             maxLength: 10,
