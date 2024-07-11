@@ -18,14 +18,14 @@ class WordSettingWidget extends StatefulWidget {
 
 enum IlganText {Ilgan, Bonwon, Asin }
 enum YugchinText {Yugchin, Yugsin, Sibseong}
-enum WonjinText {Wonjin, Hea}
+enum MyeongsicText { Myeongsic, Wonguc}
 
 //사용자 설정
 class _WordSettingState extends State<WordSettingWidget> {
 
   IlganText? ilganText;// = IlganText.Ilgan;
   YugchinText? yugchinText;// = YugchinText.Yugchin;
-  WonjinText? wonjinText;// = WonjinText.Wonjin;
+  MyeongsicText? myeongsicText;
 
   int isSameGeuc = 1;
   Alignment geucAlign = Alignment.centerRight;  //스위치 동그라미 정렬
@@ -93,10 +93,10 @@ class _WordSettingState extends State<WordSettingWidget> {
       yugchinText = YugchinText.Sibseong;
     }
 
-    if (personalDataManager.mapWordData['wonJin'] case 0) {
-      wonjinText = WonjinText.Wonjin;
-    } else if (personalDataManager.mapWordData['wonJin'] case 1) {
-      wonjinText = WonjinText.Hea;
+    if (personalDataManager.mapWordData['myeongSic'] case 0) {
+      myeongsicText = MyeongsicText.Myeongsic;
+    } else if (personalDataManager.mapWordData['myeongSic'] case 1) {
+      myeongsicText = MyeongsicText.Wonguc;
     }
 
     if(personalDataManager.mapWordData['geukChung'] != null){
@@ -152,19 +152,15 @@ class _WordSettingState extends State<WordSettingWidget> {
                             Radio<IlganText>(
                               //남자 버튼
                                 visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: IlganText.Ilgan,
                                 groupValue: ilganText,
-                                fillColor: ilganText == IlganText.Ilgan
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: ilganText == IlganText.Ilgan? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (IlganText? value) {
                                   setState(() {
                                     ilganText = value;
@@ -182,17 +178,14 @@ class _WordSettingState extends State<WordSettingWidget> {
                                 visualDensity: const VisualDensity(
                                   horizontal:
                                   VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: IlganText.Bonwon,
                                 groupValue: ilganText,
-                                fillColor: ilganText == IlganText.Bonwon
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: ilganText == IlganText.Bonwon? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (IlganText? value) {
                                   setState(() {
                                     ilganText = value;
@@ -208,19 +201,15 @@ class _WordSettingState extends State<WordSettingWidget> {
                             Radio<IlganText>(
                               //여자 버튼
                                 visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: IlganText.Asin,
                                 groupValue: ilganText,
-                                fillColor: ilganText == IlganText.Asin
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: ilganText == IlganText.Asin? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (IlganText? value) {
                                   setState(() {
                                     ilganText = value;
@@ -253,19 +242,15 @@ class _WordSettingState extends State<WordSettingWidget> {
                             Radio<YugchinText>(
                               //남자 버튼
                                 visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: YugchinText.Yugchin,
                                 groupValue: yugchinText,
-                                fillColor: yugchinText == YugchinText.Yugchin
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: yugchinText == YugchinText.Yugchin? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (YugchinText? value) {
                                   setState(() {
                                     yugchinText = value;
@@ -279,21 +264,16 @@ class _WordSettingState extends State<WordSettingWidget> {
                                   style: style.settingText0),
                             ),
                             Radio<YugchinText>(
-                              //여자 버튼
                                 visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: YugchinText.Yugsin,
                                 groupValue: yugchinText,
-                                fillColor: yugchinText == YugchinText.Yugsin
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: yugchinText == YugchinText.Yugsin? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (YugchinText? value) {
                                   setState(() {
                                     yugchinText = value;
@@ -307,21 +287,16 @@ class _WordSettingState extends State<WordSettingWidget> {
                                   style: style.settingText0),
                             ),
                             Radio<YugchinText>(
-                              //여자 버튼
                                 visualDensity: const VisualDensity(
-                                  horizontal:
-                                  VisualDensity.minimumDensity,
-                                  vertical:
-                                  VisualDensity.minimumDensity,
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
                                 ),
                                 value: YugchinText.Sibseong,
                                 groupValue: yugchinText,
-                                fillColor: yugchinText == YugchinText.Sibseong
-                                    ? MaterialStateColor.resolveWith(
-                                        (states) => style.colorMainBlue)
-                                    : MaterialStateColor.resolveWith(
-                                        (states) => style.colorGrey),
-                                splashRadius: 0,
+                                fillColor: yugchinText == YugchinText.Sibseong? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
                                 onChanged: (YugchinText? value) {
                                   setState(() {
                                     yugchinText = value;
@@ -337,78 +312,70 @@ class _WordSettingState extends State<WordSettingWidget> {
                         margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
                         child: Text("육친, 육신 또는 십성을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
                       ),
-                      //Container( //육친 이름
-                      //  width: (widgetWidth - (style.UIMarginLeft * 2)),
-                      //  height: style.saveDataMemoLineHeight,
-                      //  margin: EdgeInsets.only(top: style.UIMarginTop),
-                      //  child: Row(
-                      //    mainAxisAlignment: MainAxisAlignment.start,
-                      //    children: [
-                      //      Container(
-                      //        padding: EdgeInsets.only(
-                      //            bottom: style.UIPaddingBottom),
-                      //        child: Text("원진 ",
-                      //            style: style.settingText0),
-                      //      ),
-                      //      Radio<WonjinText>(
-                      //        //남자 버튼
-                      //          visualDensity: const VisualDensity(
-                      //            horizontal:
-                      //            VisualDensity.minimumDensity,
-                      //            vertical:
-                      //            VisualDensity.minimumDensity,
-                      //          ),
-                      //          value: WonjinText.Wonjin,
-                      //          groupValue: wonjinText,
-                      //          fillColor: wonjinText == WonjinText.Wonjin
-                      //              ? MaterialStateColor.resolveWith(
-                      //                  (states) => style.colorMainBlue)
-                      //              : MaterialStateColor.resolveWith(
-                      //                  (states) => style.colorGrey),
-                      //          splashRadius: 0,
-                      //          onChanged: (WonjinText? value) {
-                      //            setState(() {
-                      //              wonjinText = value;
-                      //              personalDataManager.SaveWordData('wonJin', 0);widget.reloadSetting();
-                      //            });
-                      //          }),
-                      //      Container(
-                      //        padding: EdgeInsets.only(
-                      //            bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
-                      //        child: Text("해 ",
-                      //            style: style.settingText0),
-                      //      ),
-                      //      Radio<WonjinText>(
-                      //        //여자 버튼
-                      //          visualDensity: const VisualDensity(
-                      //            horizontal:
-                      //            VisualDensity.minimumDensity,
-                      //            vertical:
-                      //            VisualDensity.minimumDensity,
-                      //          ),
-                      //          value: WonjinText.Hea,
-                      //          groupValue: wonjinText,
-                      //          fillColor: wonjinText == WonjinText.Hea
-                      //              ? MaterialStateColor.resolveWith(
-                      //                  (states) => style.colorMainBlue)
-                      //              : MaterialStateColor.resolveWith(
-                      //                  (states) => style.colorGrey),
-                      //          splashRadius: 0,
-                      //          onChanged: (WonjinText? value) {
-                      //            setState(() {
-                      //              wonjinText = value;
-                      //              personalDataManager.SaveWordData('wonJin', 1);widget.reloadSetting();
-                      //            });
-                      //          }),
-                      //    ],
-                      //  ),
-                      //),
-                      //Container(  //육친 이름 설명
-                      //  width: (widgetWidth - (style.UIMarginLeft * 2)),
-                      //  height: style.saveDataMemoLineHeight,
-                      //  margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
-                      //  child: Text("원진 또는 해를 표시하는 방법을 선택합니다", style: style.settingInfoText0),
-                      //),
+                      Container( //명식 이름
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(top: style.UIMarginTop),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom),
+                              child: Text("명식 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<MyeongsicText>(
+                              //남자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
+                                value: MyeongsicText.Myeongsic,
+                                groupValue: myeongsicText,
+                                fillColor: myeongsicText == MyeongsicText.Myeongsic? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
+                                onChanged: (MyeongsicText? value) {
+                                  setState(() {
+                                    myeongsicText = value;
+                                    personalDataManager.SaveWordData('myeongSic', 0);
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(
+                                  bottom: style.UIPaddingBottom, left: style.SettingDisWithRadioButton),
+                              child: Text("원국 ",
+                                  style: style.settingText0),
+                            ),
+                            Radio<MyeongsicText>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
+                                value: MyeongsicText.Wonguc,
+                                groupValue: myeongsicText,
+                                fillColor: myeongsicText == MyeongsicText.Wonguc? WidgetStateColor.resolveWith((states) => style.colorMainBlue) : WidgetStateColor.resolveWith((states) => style.colorGrey),
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
+                                onChanged: (MyeongsicText? value) {
+                                  setState(() {
+                                    myeongsicText = value;
+                                    personalDataManager.SaveWordData('myeongSic', 1);
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                      Container(  //명식 이름 설명
+                        width: (widgetWidth - (style.UIMarginLeft * 2)),
+                        height: style.saveDataMemoLineHeight,
+                        margin: EdgeInsets.only(bottom:style.SettingMarginTopWithInfo),
+                        child: Text("명식 또는 원국을 표시하는 방법을 선택합니다", style: style.settingInfoText0),
+                      ),
                       Container(  //천간극
                         height: style.saveDataMemoLineHeight,
                         width: (widgetWidth - (style.UIMarginLeft * 2)),
@@ -462,7 +429,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                             Text("천간의 극을 충으로 표시합니다", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetGeuc();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(overlayColor: Colors.transparent, splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
                       ),
@@ -476,6 +443,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                         height: style.saveDataMemoLineHeight,
                         width: (widgetWidth - (style.UIMarginLeft * 2)),
                         margin: EdgeInsets.only(top: style.UIMarginTop),
+
                         child: Stack(
                           children: [
                             Container(
@@ -525,7 +493,7 @@ class _WordSettingState extends State<WordSettingWidget> {
                             Text("지지합 단순화", style: style.settingText0),
                             ElevatedButton( //천간 합충극 스위치 버튼
                               onPressed: (){SetHab();widget.reloadSetting();}, child: Container(width:(MediaQuery.of(context).size.width - (style.UIMarginLeft * 2)), height:20),
-                              style: ElevatedButton.styleFrom(shadowColor: Colors.transparent, foregroundColor: style.colorBackGround, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
+                              style: ElevatedButton.styleFrom(overlayColor: Colors.transparent, splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0),),
                           ],
                         ),
                       ),

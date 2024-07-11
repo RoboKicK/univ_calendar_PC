@@ -110,9 +110,13 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
   PasteSettingCodeFromClipboard() async {
     ClipboardData? cdata = await Clipboard.getData(Clipboard.kTextPlain);
 
-    setState(() {
-      codeTextController.text = cdata?.text ?? '';
-    });
+    if(cdata?.text == ''){
+      ShowSnackBar('클립보드가 비어있습니다');
+    } else {
+      setState(() {
+        codeTextController.text = cdata?.text ?? '';
+      });
+    }
   }
 
   ApplyCode(){
@@ -512,7 +516,7 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
               Container(  //중간 구분선
                 width: widgetWidth - (style.UIMarginLeft * 2),
                 height: 1,
-                margin: EdgeInsets.only(top: 22),
+                margin: EdgeInsets.only(top: 32),
                 color: style.colorGrey,
               ),
               Container(  //코드 적는 곳
@@ -523,36 +527,58 @@ class _ShareSettingValWidgetState extends State<ShareSettingValWidget> {
                   color: style.colorNavy,
                   borderRadius: BorderRadius.circular(style.textFiledRadius),
                 ),
-                child: Stack(
-                  alignment: Alignment.topRight,
+                child: Row(
                   children: [
-                    Container(  //텍스트 필드
-                    width: widgetWidth - (style.UIMarginLeft * 2), //MediaQuery.of(context).size.width * 0.4,
-                    height: 50,
-                    child: TextField(
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      controller: codeTextController,
-                      keyboardType: TextInputType.none,
-                      cursorColor: Colors.white,
-                      maxLength: 22,
-                      style: Theme.of(context).textTheme.labelLarge,
-                      onEditingComplete: () {
+                    Flexible(
+                      fit: FlexFit.tight,
+                      child: Container(  //텍스트 필드
+                      //width: widgetWidth - (style.UIMarginLeft * 2), //MediaQuery.of(context).size.width * 0.4,
+                      height: 50,
+                      child: TextField(
+                        enableSuggestions: false,
+                        autocorrect: false,
+                        controller: codeTextController,
+                        keyboardType: TextInputType.none,
+                        cursorColor: Colors.white,
+                        maxLength: 22,
+                        style: Theme.of(context).textTheme.labelLarge,
+                        onEditingComplete: () {
 
-                      },
-                      decoration: InputDecoration(
-                        counterText: "",
-                        border: InputBorder.none,
-                        prefix: Text('    '),
-                        hintText: '코드 입력', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
-                        hintStyle: Theme.of(context).textTheme.labelSmall,),
-                      onChanged: (text) {
-                        setState(() {
-
-                        });
-                      },
+                        },
+                        decoration: InputDecoration(
+                          counterText: "",
+                          border: InputBorder.none,
+                          prefix: Text('    '),
+                          hintText: '코드 입력', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
+                          hintStyle: Theme.of(context).textTheme.labelSmall,),
+                        onChanged: (text) {
+                          setState(() {
+                            codeTextController.text;
+                          });
+                        },
+                      ),
+                      ),
                     ),
-                  ),
+                    AnimatedCrossFade(
+                      duration: Duration(milliseconds: 130),
+                      firstChild: SizedBox(width:34, height:20,),
+                      secondChild:  Container(
+                        width:34,
+                        height:20,
+                        child: IconButton(
+                          icon: Icon(Icons.cancel, color: style.colorGrey, size: 20,),
+                          style: ElevatedButton.styleFrom(visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity), backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, overlayColor: Colors.transparent),
+                          onPressed: (){
+                            setState(() {
+                              codeTextController.text = '';
+                            });
+                          },
+                        ),
+                      ),
+                      crossFadeState: codeTextController.text.length == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                      firstCurve: Curves.easeIn,
+                      secondCurve: Curves.easeIn,
+                    ),
                     Container(  //붙여넣기 버튼
                       width: 40,
                       height: style.appBarHeight,

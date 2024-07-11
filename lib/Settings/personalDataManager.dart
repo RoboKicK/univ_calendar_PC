@@ -11,7 +11,7 @@ String fileDirPath = '';
 Map mapUserData = {}; //사용자 정보
 int themeData = 1; //테마 데이터
 
-Map mapWordData = {}; //단어 설정 'ilGan', 'yugChin', 'wonJin', 'geukChung', 'hab'   라디오 버튼 1,2,3
+Map mapWordData = {}; //단어 설정 'ilGan', 'yugChin', 'myeongSic', 'geukChung', 'hab'   라디오 버튼 1,2,3
 
 int calendarDataAllOn =  2272222272337;
 int calendarDataAllOff =  1191111191119;
@@ -31,7 +31,7 @@ int deunSeunData = 0; //1자리: 간지 추가, 10자리: 육친, 100자리: 십
 int etcDataAllOn = 21273222;
 int etcDataAllOff = 11191111;
 int etcData = 0;  //1자리: 만 나이, 10자리: 간지 음양 표시, 100자리: 한글 간지, 1000자리: 인적사항 숨기기(1:안숨김, 2:만세력에서만 숨김, 3:항상 숨김)
-//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 테마
+//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 테마, 백만자리: 저장목록 등에 일주 표시
 //테마: 1부터 베이직, 곰돌이
 
 //사용자 정보 저장하는 클래스
@@ -50,8 +50,11 @@ LoadUserData() async{
   try{mapWordData = await jsonDecode(await File('${fileDirPath}/wordData').readAsString());
   }catch(e){    //단어 설정 파일이 없으면 생성한다
     final file = await CreateSaveFile('wordData');
-    await file.writeAsString(jsonEncode({'ilGan':0, 'yugChin':0, 'wonJin':0, 'geukChung':1, 'hab':1}));
-    mapWordData = {'ilGan':0, 'yugChin':0, 'wonJin':0, 'geukChung':1, 'hab':1};
+    await file.writeAsString(jsonEncode({'ilGan':0, 'yugChin':0, 'myeongSic':0, 'geukChung':1, 'hab':1}));
+    mapWordData = {'ilGan':0, 'yugChin':0, 'myeongSic':0, 'geukChung':1, 'hab':1};
+    if(mapWordData['myeongSic'] == 1){
+      style.myeongsicString = '원국';
+    }
   }
   try{calendarData = await jsonDecode(await File('${fileDirPath}/calendarData').readAsString());
   }catch(e){
@@ -132,7 +135,13 @@ Future<void> SaveWordData(String type, int num) async{
   } else {
     mapWordData[type] = 1;
   }
-
+  if(type == 'myeongSic'){
+    if(num == 0) {
+      style.myeongsicString = '명식';
+    } else {
+      style.myeongsicString = '원국';
+    }
+  }
   await file.writeAsString(jsonEncode(mapWordData));
   //mapWordData = jsonDecode(await file.readAsString());
 }
@@ -269,6 +278,19 @@ Future<void> SaveAllFiles() async{
   await file4.writeAsString(jsonEncode(etcData));
 }
 
+Future<void> ResetAllFiles() async{
+  await File('${fileDirPath}/calendarData').delete();
+  await File('${fileDirPath}/deunSeunData').delete();
+  await File('${fileDirPath}/etcData').delete();
+  await File('${fileDirPath}/sinsalData').delete();
+  await File('${fileDirPath}/etcSinsalData').delete();
+  await File('${fileDirPath}/wordData').delete();
+  await File('${fileDirPath}/userData').delete();
+
+  LoadUserData();
+  mapUserData.clear();
+}
+
 String GetYugchinText(){  //육친 단어를 설정에 따라 반환한다
   String yugchinString = '';
   if(mapWordData['yugChin'] == 0){
@@ -281,15 +303,15 @@ String GetYugchinText(){  //육친 단어를 설정에 따라 반환한다
   return yugchinString;
 }
 
-String GetWonjinText(){
-  String wonjinString = '';
-  if(mapWordData['wonJin'] == 0){
-    wonjinString = '원진';
-  } else{
-    wonjinString = '해';
+String GetMyeongsicText(){
+  String myeongsicString = '';
+  if(mapWordData['myeongSic'] == 0){
+    myeongsicString = '명식';
+  } else if(mapWordData['myeongSic'] == 1){
+    myeongsicString = '원국';
   }
 
-  return wonjinString;
+  return myeongsicString;
 }
 
 String GetIlganText(){

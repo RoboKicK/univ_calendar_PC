@@ -697,6 +697,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                       ),
                                       Text("연공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowYearGongmang,
                                         onChanged: (value) {
                                           setState(() {
@@ -708,6 +709,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                       SizedBox(width:20),
                                       Text("일공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowDayGongmang,
                                         onChanged: (value) {
                                           setState(() {
@@ -719,6 +721,7 @@ class _DeunSeunSettingState extends State<DeunSeunSettingWidget> {
                                       SizedBox(width:20),
                                       Text("록공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowRocGongmang,
                                         onChanged: (value) {
                                           setState(() {

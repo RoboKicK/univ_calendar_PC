@@ -576,9 +576,9 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                 boxShadow: [
                   BoxShadow(
                     color: style.colorBackGround.withOpacity(0.9),
-                    blurRadius: 2.0,
-                    spreadRadius: 2.0,
-                    offset: const Offset(0,0),
+                    spreadRadius: 4,
+                    blurRadius: 4,
+                    offset: Offset(0, -2),
                   )
                 ]
             ),
@@ -819,7 +819,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   //택일모드 기능
   EditBirthData(int editMode, bool isUp){ //mode 0:시간, 1:일, 2:월, 3:연
     if(widget.uemYang != 0){
-      ShowDialogMessage('명식이 양력으로 변경됩니다');
+      ShowDialogMessage('${style.myeongsicString}이 양력으로 변경됩니다');
       //widget.setUemYangBirthType();
     }
     switch(editMode){

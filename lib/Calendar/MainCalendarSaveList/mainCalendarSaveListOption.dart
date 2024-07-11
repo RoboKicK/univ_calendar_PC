@@ -600,9 +600,9 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                             widget.closeOption(false);
                           });
                         },
-                        style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        child: Icon(Icons.close, color:Colors.white, size: style.UIButtonWidth * 0.06),
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
+                        child: Icon(Icons.close, color:Colors.white, size: style.appbarIconSize * 1.2),
                       ),
                     ),
                   ],
@@ -1003,7 +1003,7 @@ class _MainCalendarSaveListOptionState extends State<MainCalendarSaveListOption>
                                         barrierDismissible: false,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            content: Text("명식을 삭제합니다", textAlign: TextAlign.center),
+                                            content: Text("${style.myeongsicString}을 삭제합니다", textAlign: TextAlign.center),
                                             actionsAlignment: MainAxisAlignment.center,
                                             actions:[
                                               ElevatedButton(

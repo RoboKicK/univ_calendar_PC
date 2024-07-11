@@ -8,12 +8,13 @@ import 'dart:io';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UserDataWidget extends StatefulWidget {
-  const UserDataWidget({super.key, required this.diaryFirstSet, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
+  const UserDataWidget({super.key, required this.diaryFirstSet, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting, required this.refreshDiaryUserData});
 
   final diaryFirstSet;
   final double widgetWidth;
   final double widgetHeight;
   final reloadSetting;
+  final refreshDiaryUserData;
 
   @override
   State<UserDataWidget> createState() => _UserDataState();
@@ -590,6 +591,7 @@ class _UserDataState extends State<UserDataWidget> {
                           height: 50,
                           child: Checkbox(
                             value: isUemryoc,
+                            overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                             onChanged: (value) {
                               setState(() {
                                 SetYangrocUemryoc(true, value!);
@@ -608,6 +610,7 @@ class _UserDataState extends State<UserDataWidget> {
                           height: 50,
                           child: Checkbox(
                             value: isYundal,
+                            overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                             onChanged: (value) {
                               setState(() {
                                 SetYangrocUemryoc(false, value!);
@@ -700,6 +703,8 @@ class _UserDataState extends State<UserDataWidget> {
                               listPaljaData,
                               diaryFirstSet: widget.diaryFirstSet
                           );
+
+                          widget.refreshDiaryUserData();
 
                           SnackBar snackBar = SnackBar(
                             content: Text("사용자 정보가 저장되었습니다", style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),
@@ -838,6 +843,8 @@ class _UserDataState extends State<UserDataWidget> {
                               listPaljaData,
                             diaryFirstSet: widget.diaryFirstSet
                           );
+
+                          widget.refreshDiaryUserData();
 
                             SnackBar snackBar = SnackBar(
                               content: Text("사용자 정보가 저장되었습니다", style: Theme.of(context).textTheme.titleLarge, textAlign: TextAlign.center),

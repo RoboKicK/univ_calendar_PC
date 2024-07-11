@@ -112,7 +112,9 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
     return '';
   }
 
-  String searchText = '';
+  TextEditingController searchTextController = TextEditingController();
+  FocusNode searchTextFocusNode = FocusNode();
+
   int koreanGanji = 0;
 
   ScrollController scrollController = ScrollController();
@@ -226,7 +228,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
         context: context,
         builder: (BuildContext context) => AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
-          title: Text('이미 같은 명식이 저장되어 있습니다\n그래도 저장하시겠습니까?'),
+          title: Text('같은 ${style.myeongsicString}이 저장되어 있습니다\n그래도 저장하시겠습니까?', textAlign: TextAlign.center),
           content: Text(birth, textAlign: TextAlign.center),
           buttonPadding: EdgeInsets.only(left:20, right:20, top:0),
           actions: [
@@ -285,28 +287,54 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: style.UIButtonWidth,
-                            height: 50,
-                            child: TextField(
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.white,
-                              maxLength: 10,
-                              style: Theme.of(context).textTheme.labelMedium,
-                              decoration:InputDecoration(
-                                  counterText:"",
-                                  border: InputBorder.none,
-                                  prefix: Text('    '),
-                                  hintText: '이름 또는 날짜',
-                                  hintStyle: Theme.of(context).textTheme.labelSmall),
-                              onChanged: (value){
-                                setState(() {
-                                  searchText = value;
-                                });
-                              },
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: Container(
+                              //width: style.UIButtonWidth,
+                              height: 50,
+                              child: TextField(
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                controller: searchTextController,
+                                focusNode: searchTextFocusNode,
+                                keyboardType: TextInputType.text,
+                                cursorColor: Colors.white,
+                                maxLength: 10,
+                                style: Theme.of(context).textTheme.labelMedium,
+                                decoration:InputDecoration(
+                                    counterText:"",
+                                    border: InputBorder.none,
+                                    prefix: Text('    '),
+                                    hintText: '이름 또는 날짜',
+                                    hintStyle: Theme.of(context).textTheme.labelSmall),
+                                onChanged: (value){
+                                  setState(() {
+                                    searchTextController.text;
+                                  });
+                                },
+                              ),
                             ),
+                          ),
+                          AnimatedCrossFade(
+                            duration: Duration(milliseconds: 130),
+                            firstChild: SizedBox(width:40, height:20,),
+                            secondChild:  Container(
+                              width:40,
+                              height:20,
+                              child: IconButton(
+                                icon: Icon(Icons.cancel, color: style.colorGrey, size: 20,),
+                                style: ElevatedButton.styleFrom(visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity), backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, overlayColor: Colors.transparent),
+                                onPressed: (){
+                                  setState(() {
+                                    searchTextController.text = '';
+                                    FocusScope.of(context).requestFocus(searchTextFocusNode);
+                                  });
+                                },
+                              ),
+                            ),
+                            crossFadeState: searchTextController.text.length == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                            firstCurve: Curves.easeIn,
+                            secondCurve: Curves.easeIn,
                           ),
                         ],
                       )
@@ -317,108 +345,128 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
           ),
         ),
         Expanded(
-          child: Container(  //저장목록
-            //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
-            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-            width: style.UIButtonWidth + 38,
-            margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
-            child: ScrollConfiguration(
-              behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-              child: RawScrollbar(
-                controller: scrollController,
-                thumbColor: style.colorDarkGrey,
-                thickness: 10,
-                radius: Radius.circular(10),
-                child: ListView.separated(//builder(//
-                  scrollDirection: Axis.vertical,
+          child: Stack(
+            children: [
+            Container(
+              //저장목록
+              //높이 = 스크린 높이 - 앱바 높이 - 바텀네비 높이 - 헤드라인 높이 - 헤드라인 밑줄 높이 - 검색창 버튼 높이 - 검색창 버튼 마진 높이 - 리스트뷰 마진 높이 - 임의 보정
+              //height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
+              width: style.UIButtonWidth + 38,
+              margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
+              child: ScrollConfiguration(
+                behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+                child: RawScrollbar(
                   controller: scrollController,
-                  itemCount:saveDataManager.mapRecentPerson.length,
-                  itemBuilder: (context, i){
-                    bool passVal = false;
-                    if(searchText.isEmpty){
-                      passVal = true;
-                    }
-                    else{
-                      String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.GetSelectedRecentBirthData('gender',i) == true?'남':'여'}) ${saveDataManager.GetSelectedRecentBirthData('birthYear',i)}년 ${saveDataManager.GetSelectedRecentBirthData('birthMonth', i)}월 ${saveDataManager.GetSelectedRecentBirthData('birthDay',i)}일 ${GetUemYangText(saveDataManager.GetSelectedRecentBirthData('uemYang', i))} ${GetBirthTimeText(saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), false)}";
-                      if(data.toLowerCase().contains(searchText.toLowerCase())){
+                  thumbColor: style.colorDarkGrey,
+                  thickness: 10,
+                  radius: Radius.circular(10),
+                  child: ListView.separated(//builder(//
+                    scrollDirection: Axis.vertical,
+                    controller: scrollController,
+                    itemCount:saveDataManager.mapRecentPerson.length,
+                    itemBuilder: (context, i){
+                      bool passVal = false;
+                      if(searchTextController.text == ''){
                         passVal = true;
                       }
-                    }
-                    if(passVal == true){
-                      return Container(
-                        width: style.UIButtonWidth,
-                        height: (style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight,
-                        child:Row(
-                          children: [
-                            ElevatedButton(
-                              onPressed: (){
-                                context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i), saveDataManager.GetSelectedRecentBirthData('uemYang',i),
-                                    saveDataManager.GetSelectedRecentBirthData('birthYear',i), saveDataManager.GetSelectedRecentBirthData('birthMonth',i),
-                                    saveDataManager.GetSelectedRecentBirthData('birthDay',i), saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin',i), '', DateTime.utc(3000));
-                              },
-                              style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                  foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: style.UIButtonWidth * 0.9,
-                                    height: style.saveDataNameLineHeight,
-                                    padding: EdgeInsets.only(top:6),
-                                    child: Row(
-                                      children:
-                                      GetPersonNameAndGanjiText(i),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: style.UIButtonWidth * 0.9,
-                                    height: style.saveDataNameLineHeight,
-                                    padding: EdgeInsets.only(top:4),
-                                    child: Row(
-                                      children:
-                                      GetPersonalDataText(i),
-                                    ),
-                                  ),
-                                  Container(
-                                      width: style.UIButtonWidth * 0.9,
-                                      height: style.saveDataNameLineHeight,
-                                      //padding: EdgeInsets.only(top:4),
-                                      child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
-                                  ),
-                              ],
-                            ),
-                          ),
-                            Container(  //저장 버튼
-                              width: style.UIButtonWidth * 0.1,
-                              height: (style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight,
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    print('save');
-                                    bool isSamePerson = saveDataManager.SavePersonIsSameChecker(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i) == true? '남':'여', saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
-                                        saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i), saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), ShowSameCheckerMessage);
-                                    if(isSamePerson == true){
-                                      saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
-                                          saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
-                                          saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
-                                          saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now(), '');                                         ;}
-                                  });
+                      else{
+                        String data = "${saveDataManager.mapRecentPerson[i]['name']}(${saveDataManager.GetSelectedRecentBirthData('gender',i) == true?'남':'여'}) ${saveDataManager.GetSelectedRecentBirthData('birthYear',i)}년 ${saveDataManager.GetSelectedRecentBirthData('birthMonth', i)}월 ${saveDataManager.GetSelectedRecentBirthData('birthDay',i)}일 ${GetUemYangText(saveDataManager.GetSelectedRecentBirthData('uemYang', i))} ${GetBirthTimeText(saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), false)}";
+                        if(data.toLowerCase().contains(searchTextController.text.toLowerCase())){
+                          passVal = true;
+                        }
+                      }
+                      if(passVal == true){
+                        return Container(
+                          width: style.UIButtonWidth,
+                          height: (style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight,
+                          child:Row(
+                            children: [
+                              ElevatedButton(
+                                onPressed: (){
+                                  context.read<Store>().SetPersonInquireInfo(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i), saveDataManager.GetSelectedRecentBirthData('uemYang',i),
+                                      saveDataManager.GetSelectedRecentBirthData('birthYear',i), saveDataManager.GetSelectedRecentBirthData('birthMonth',i),
+                                      saveDataManager.GetSelectedRecentBirthData('birthDay',i), saveDataManager.GetSelectedRecentBirthData('birthHour',i), saveDataManager.GetSelectedRecentBirthData('birthMin',i), '', DateTime.utc(3000));
                                 },
                                 style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                     foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                child: Icon(Icons.save, color:Colors.white),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: style.UIButtonWidth * 0.9,
+                                      height: style.saveDataNameLineHeight,
+                                      padding: EdgeInsets.only(top:6),
+                                      child: Row(
+                                        children:
+                                        GetPersonNameAndGanjiText(i),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: style.UIButtonWidth * 0.9,
+                                      height: style.saveDataNameLineHeight,
+                                      padding: EdgeInsets.only(top:4),
+                                      child: Row(
+                                        children:
+                                        GetPersonalDataText(i),
+                                      ),
+                                    ),
+                                    Container(
+                                        width: style.UIButtonWidth * 0.9,
+                                        height: style.saveDataNameLineHeight,
+                                        //padding: EdgeInsets.only(top:4),
+                                        child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                    ),
+                                ],
                               ),
                             ),
-                          ]
-                        ),
-                      );}
-                    else{
-                      return SizedBox.shrink();
-                    }
-                  },
-                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent: 20, color: style.colorBlack,); }
+                              Container(  //저장 버튼
+                                width: style.UIButtonWidth * 0.1,
+                                height: style.UIButtonWidth * 0.1,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      print('save');
+                                      bool isSamePerson = saveDataManager.SavePersonIsSameChecker(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i) == true? '남':'여', saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                          saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i), saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), ShowSameCheckerMessage);
+                                      if(isSamePerson == true){
+                                        saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
+                                            saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                            saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
+                                            saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now(), '');                                         ;}
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                      overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
+                                  child: Icon(Icons.save, color:Colors.white),
+                                ),
+                              ),
+                            ]
+                          ),
+                        );}
+                      else{
+                        return SizedBox.shrink();
+                      }
+                    },
+                      separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent: 20, color: style.colorBlack,); }
+                  ),
                 ),
               ),
             ),
+              Container(
+                width: style.UIButtonWidth + 18,
+                height: 2,
+                margin: EdgeInsets.only(top: style.UIMarginTop),//style.UIMarginLeft
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: style.colorBackGround.withOpacity(0.9),
+                      spreadRadius: 4,
+                      blurRadius: 4,
+                      offset: Offset(0, -2), // changes position of shadow
+                    ),
+                  ],
+                ),
+              ),
+            ]
           ),
         ),
       ],

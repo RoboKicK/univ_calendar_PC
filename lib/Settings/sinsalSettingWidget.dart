@@ -395,6 +395,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                       ),
                                       Text("연공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowYearGongmang,
                                         onChanged: (value) {
                                           setState(() {
@@ -406,6 +407,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                       SizedBox(width:20),
                                       Text("일공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowDayGongmang,
                                         onChanged: (value) {
                                           setState(() {
@@ -417,6 +419,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                       SizedBox(width:20),
                                       Text("록공망 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowRocGongmang,
                                         onChanged: (value) {
                                           setState(() {
@@ -596,6 +599,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children: [
                                                     Text("천을귀인", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                       value: isShowCheonuel,
                                                       onChanged: (value) {
                                                         setState(() {
@@ -610,6 +614,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children: [
                                                     Text("문창귀인 ", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                       value: isShowMunchang,
                                                       onChanged: (value) {
                                                         setState(() {
@@ -624,6 +629,10 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children:[
                                                     Text("백호대살 ", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                                                      visualDensity: VisualDensity(
+                                                          horizontal: VisualDensity.minimumDensity
+                                                      ),
                                                       value: isShowBaecho,
                                                       onChanged: (value) {
                                                         setState(() {
@@ -661,6 +670,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children: [
                                                     Text("괴강살 ", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                       value: isShowGuegang,
                                                       onChanged: (value) {
                                                         setState(() {
@@ -675,6 +685,7 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children: [
                                                     Text("현침살 ", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                       value: isShowHyeonchim,
                                                       onChanged: (value) {
                                                         setState(() {
@@ -689,6 +700,10 @@ class _SinsalSettingState extends State<SinsalSettingWidget> {
                                                   children:[
                                                     Text("양인살 ", style: style.settingText0,),
                                                     Checkbox(
+                                                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                                                      visualDensity: VisualDensity(
+                                                          horizontal: VisualDensity.minimumDensity
+                                                      ),
                                                       value: isShowYangin,
                                                       onChanged: (value) {
                                                         setState(() {

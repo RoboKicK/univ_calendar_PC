@@ -492,11 +492,14 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
               Container(  //그룹 이름
                 width: style.UIButtonWidth * 0.9,
                 height: style.saveDataNameLineHeight,
+                padding: EdgeInsets.only(top:4),
+                //color:Colors.green,
                 child: Text(groupName, style: Theme.of(context).textTheme.headlineSmall),
               ),
               Container(  //닫기 버튼
                 width: style.UIButtonWidth * 0.1,
-                height: style.saveDataNameLineHeight + 22,
+                height: style.saveDataNameLineHeight*1.1,
+                //color:Colors.yellow,
                 alignment: Alignment.topCenter,
                 child: ElevatedButton(
                   onPressed: () {
@@ -504,12 +507,15 @@ class _MainCalendarGroupSaveListOptionState extends State<MainCalendarGroupSaveL
                       widget.closeOption(false);
                     });
                   },
-                  style: ElevatedButton.styleFrom(padding: EdgeInsets.only(top:20), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                      foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                  child: Icon(Icons.close, color:Colors.white, size: style.UIButtonWidth * 0.06),
+                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                      overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
+                  child: Icon(Icons.close, color:Colors.white, size: style.appbarIconSize * 1.2),
                 ),
               ),
             ],
+          ),
+          SizedBox(
+            height: 14,
           ),
           Expanded( //
             child: Column(

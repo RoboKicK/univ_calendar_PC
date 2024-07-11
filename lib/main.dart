@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'bodyWidgetManager.dart';
+import 'package:desktop_window/desktop_window.dart';
 import 'style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:io';
@@ -17,6 +18,7 @@ import 'Calendar/MainCalendarSaveList/mainCalendarGroupSaveListOption.dart' as m
 import 'Calendar/MainCalendarChange/mainCalendarChange.dart' as mainCalendarChange;
 import 'Calendar/MainCalendarSaveList/mainCalendarSaveList.dart' as mainCalendarSaveList;
 import 'Calendar/mainCalendarRecentList.dart' as mainCalendarRecentList;
+import 'Diary/IljinDiaryManager.dart' as iljinDiaryManager;
 
 import 'package:provider/provider.dart';
 import 'bodyWidgetManager.dart' as bodyWidgetManager;
@@ -137,8 +139,9 @@ void main() async {
 
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowTitle('루시아 원 만세력 - 내부 테스트 ver');
-    //setWindowMaxSize(const Size(max_width, max_height));
-    setWindowMinSize(Size(1280, 720));
+
+    setWindowMinSize(const Size(1180, 660));
+
   }
 
   //windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -167,7 +170,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   var appBarTitle = ['  루시아 원 만세력 - 베타 테스트 버전', '  일진일기'];
-  int _nowMainTap = 0;  //만세력, 일진일기 구분
   bool _isShowSettingPage = false;
 
   int nowPageNum = 0;
@@ -213,6 +215,15 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   int mapPersonLength = 0;
   int mapRecentPersonLength = 0;
   int listMapGroupLength = 0;
+  int mapDiaryLength = 0;
+  bool isRegiedUserData = false;
+
+  int nowSideLayerNum = 0;
+
+  Color groupMemoButtonEffectColor = Colors.transparent;
+  Color diaryButtonEffectColor = Colors.transparent;
+  Color sideLayerButtonEffectColor = Colors.transparent;
+  Color settingButtonEffectColor = Colors.transparent;
 
   ShowSnackBar(String text){
     SnackBar snackBar = SnackBar(
@@ -234,9 +245,13 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //설정 페이지 온오프
-  ShowSettingPage(){
+  ShowSettingPage({isCompulsionClose = false}){
     setState(() {
-      _isShowSettingPage = !_isShowSettingPage;
+      if(isCompulsionClose == true){
+        _isShowSettingPage = false;
+      } else {
+        _isShowSettingPage = !_isShowSettingPage;
+      }
       if(_isShowSettingPage == false){
         SetSettingWidget(false);
       }
@@ -392,20 +407,21 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //설정 위젯 보이기 안보이기
-  SetSettingWidget(bool isShow){
+  SetSettingWidget(bool isShow, {int directGoPageNum = 0}){
     if(isShow == true){
-      settingWidget = TapRegion(
-        //onTapOutside: (click) {
-        //  ShowSettingPage();
-        //},
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height - 6,
-          alignment: Alignment.center,
-          color: Colors.grey.withOpacity(0.1),
-          child: settingManagerWidget.SettingManagerWidget(setSettingPage: ShowSettingPage, reloadSetting: ReloadSetting, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort, refreshListMapGroupLength: RefreshListMapGroupLength,),
-        ),
-      );
+      setState(() {
+        settingWidget = TapRegion(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 6,
+            alignment: Alignment.center,
+            color: Colors.grey.withOpacity(0.1),
+            child: settingManagerWidget.SettingManagerWidget(setSettingPage: ShowSettingPage, reloadSetting: ReloadSetting, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
+              refreshListMapGroupLength: RefreshListMapGroupLength, directGoPageNum: directGoPageNum, refreshDiaryUserData: RefreshDiaryUserData, refreshMapRecentLength: RefreshRecentPersonLength,
+            refreshMapDiaryLength: RefreshMapDiaryLength,),
+          ),
+        );
+      });
     } else {
       settingWidget = SizedBox.shrink();
     }
@@ -582,8 +598,16 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //사이드 레이어 온오프
-  SetSideLayerWidget(){
-    isShowSideLayer = !isShowSideLayer;
+  SetSideLayerWidget(int targetSideLayerNum, {bool isRefreshUserData = false}){
+
+    if(isRefreshUserData == true && isShowSideLayer == true && nowSideLayerNum == targetSideLayerNum){
+      isShowSideLayer = true;
+    } else {
+      if (isShowSideLayer == false || targetSideLayerNum == nowSideLayerNum) {
+        isShowSideLayer = !isShowSideLayer;
+      }
+    }
+    nowSideLayerNum = targetSideLayerNum;
   }
   //현재 보고있는 페이지 번호 전송
   int SendNowPageNum(){
@@ -603,9 +627,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
     });
   }
   //사이드 옵션 위젯 설정
-  SetSideOptionWidget(Widget _widget){
+  SetSideOptionWidget(Widget _widget, {bool isCompulsionOn = false}){
     setState(() {
       sideOptionLayerWidget = _widget;
+      if(isCompulsionOn == true){
+        SetSideOptionLayerWidget(true);
+      }
       rebuildAllChildren(context);
     });
   }
@@ -617,8 +644,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         return;
       }
 
-      listCalendarTexts[nowCalendarHeadLine] = Text(calendarHeadLineTitle[nowCalendarHeadLine], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey));
-      listCalendarTexts[buttonNum] = Text(calendarHeadLineTitle[buttonNum], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Colors.white));
+      listCalendarTextColor[nowCalendarHeadLine] = style.colorGrey;
+      listCalendarTexts[nowCalendarHeadLine] = Text(calendarHeadLineTitle[nowCalendarHeadLine], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[nowCalendarHeadLine]));
+      listCalendarTextColor[buttonNum] = Colors.white;
+      listCalendarTexts[buttonNum] = Text(calendarHeadLineTitle[buttonNum], style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: listCalendarTextColor[buttonNum]));
 
       underLineOpacity[nowCalendarHeadLine] = 0.0;
       underLineOpacity[buttonNum] = 1.0;
@@ -666,8 +695,28 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
     });
   }
 
+  //일기목록 실시간 갱신
+  RefreshMapDiaryLength(){
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      setState(() {
+        mapDiaryLength = saveDataManager.mapDiary.length;
+      });
+    });
+  }
+
+  //일진일기 사용자 등록 실시간 갱신
+  RefreshDiaryUserData(){
+    setState(() {
+      if(personalDataManager.mapUserData.isNotEmpty) {
+        isRegiedUserData = true;
+        SetSideLayerWidget(1, isRefreshUserData: true);
+      }
+    });
+  }
+
   @override initState(){
     super.initState();
+
     findGangi.FindGanjiData();
     saveDataManager.SetFileDirectoryPath();
     personalDataManager.SetFileDirectoryPath();
@@ -688,6 +737,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
     mapPersonLength = saveDataManager.mapPerson.length;
     mapRecentPersonLength = saveDataManager.mapRecentPerson.length;
+  }
+
+  @override void didChangeDependencies() {
+
+    //DesktopWindow.toggleFullScreen();
+    super.didChangeDependencies();
   }
 
   @override
@@ -739,7 +794,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                       children: [
                         Container(  //묶음(group) 저장
                           width: 40,
-                          height: style.appBarHeight,
+                          height: style.appBarHeight * 0.8,
                           margin: EdgeInsets.only(left: 00),
                           child: ElevatedButton(
                             onPressed: (){
@@ -749,52 +804,57 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                               });
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
                             child: Icon(Icons.save, size: style.appbarIconSize*1.1, color:Colors.white),
                           ),
                         ),
                         Container(  //묶음(group) 메모
                           width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(right: 10),
                           child: ElevatedButton(
                             onPressed: (){
                               setState(() {
                                 if(listPageSaveDate[nowPageNum] != DateTime.utc(3000)){
                                   context.read<Store>().SetEditWorldGroupMemo(listPageSaveDate[nowPageNum], listUniquePageNum[nowPageNum]);  //calendarMain에서 읽는다
                                 } else {
-                                  ShowSnackBar('묶음 메모를 사용하려면\n명식 묶음을 먼저 불러와야 합니다');
+                                  ShowSnackBar('묶음 메모를 사용하려면\n${style.myeongsicString} 묶음을 먼저 불러와야 합니다');
                                 }
                               });
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
                             child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
+                        Container(
+                          width:2,
+                          height: style.appBarHeight * 0.3,
+                          color:style.colorDarkGrey,
+                        ),
                         Container(  //한 페이지 비우기
                           width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(left: 00),
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(left: 10),
                           child: ElevatedButton(
                             onPressed: (){
                               SetClearPageNum(nowPageNum);
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
                             child: Icon(Icons.clear, size: style.appbarIconSize*1.3, color:Colors.white),
                           ),
                         ),
                         Container(  //모든 페이지 비우기
                           width: 40,
-                          height: style.appBarHeight,
+                          height: style.appBarHeight * 0.8,
                           margin: EdgeInsets.only(left: 00),
                           child: ElevatedButton(
                             onPressed: (){
                               SetClearPageNum(30);
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
                             child: SvgPicture.asset('assets/close_all_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
@@ -841,8 +901,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         //  margin: EdgeInsets.only(left: 00),
                         //  child: ElevatedButton(
                         //    onPressed: (){
-                        //      saveDataManager.mapPerson.clear();
-                        //      saveDataManager.listMapGroup.clear();
+                        //      print(MediaQuery.of(context).size.width);
+                        //      print(MediaQuery.of(context).size.height);
                         //    },
                         //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                         //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
@@ -866,64 +926,125 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                     ),
                     Row(
                       children: [
-                        //Container(  //화면 새로고침
-                        //  width: 40,
-                        //  height: style.appBarHeight,
-                        //  margin: EdgeInsets.only(right: 00),
-                        //  child: ElevatedButton(
-                        //    onPressed: (){
-                        //      setState(() {
-                        //        rebuildAllChildren(context);
-                        //      });
-                        //    },
-                        //    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                        //        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                        //    child: Icon(Icons.settings, size: 20, color:Colors.white),
-                        //  ),
-                        //),
                         Container(  //묶음(group) 메모장
                           width: 40,
-                          height: style.appBarHeight,
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: isShowTempMemoNote == true? style.colorBlack : groupMemoButtonEffectColor,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
                           child: ElevatedButton(
-                            onPressed: (){
+                            onHover: (hover){
                               setState(() {
-                                  List<dynamic> listPerson = [];
-                                  SetGroupMemoWidget(listPerson, true);
+                                if(hover == true){
+                                  groupMemoButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                                } else {
+                                  groupMemoButtonEffectColor = Colors.transparent;
+                                }
                               });
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            onPressed: (){
+                              setState(() {
+                                List<dynamic> listPerson = [];
+                                SetGroupMemoWidget(listPerson, true);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
                             child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
+                          ),
+                        ),
+                        Container(
+                          width:2,
+                          height: style.appBarHeight * 0.3,
+                          color:style.colorDarkGrey,
+                        ),
+                        Container(  //일진일기
+                          width: 40,
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(left: 10, right:2),
+                          decoration: BoxDecoration(
+                            color: (nowSideLayerNum == 1 && isShowSideLayer == true)? style.colorBlack : diaryButtonEffectColor,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
+                          child: ElevatedButton(
+                            onHover: (hover){
+                              setState(() {
+                                if(hover == true){
+                                  diaryButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                                } else {
+                                  diaryButtonEffectColor = Colors.transparent;
+                                }
+                              });
+                            },
+                            onPressed: (){
+                              setState(() {
+                                SetSideLayerWidget(1);
+                                  //List<dynamic> listPerson = [];
+                                  //SetGroupMemoWidget(listPerson, false, true);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
+                            child: SvgPicture.asset('assets/diary_navi_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                         Container(  //저장목록들, 간지변환 버튼
                           width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(right: 00),
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            color: (nowSideLayerNum == 0 && isShowSideLayer == true)? style.colorBlack : sideLayerButtonEffectColor,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
                           child: ElevatedButton(
-                            onPressed: (){
+                            onHover: (hover){
                               setState(() {
-                                SetSideLayerWidget();
+                                if(hover == true){
+                                  sideLayerButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                                } else {
+                                  sideLayerButtonEffectColor = Colors.transparent;
+                                }
                               });
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            onPressed: (){
+                              setState(() {
+                                SetSideLayerWidget(0);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
                             child: SvgPicture.asset('assets/burger_icon.svg', width: style.appbarIconSize*0.8, height: style.appbarIconSize*0.8),
                           ),
                         ),
+                        Container(
+                          width:2,
+                          height: style.appBarHeight * 0.3,
+                          color:style.colorDarkGrey,
+                        ),
                         Container(  //설정 버튼
                           width: 40,
-                          height: style.appBarHeight,
-                          margin: EdgeInsets.only(right: 00),
+                          height: style.appBarHeight * 0.8,
+                          margin: EdgeInsets.only(left: 10),
+                          decoration: BoxDecoration(
+                            color: _isShowSettingPage == true? style.colorBlack : settingButtonEffectColor,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
                           child: ElevatedButton(
+                            onHover: (hover){
+                              setState(() {
+                                if(hover == true){
+                                  settingButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                                } else {
+                                  settingButtonEffectColor = Colors.transparent;
+                                }
+                              });
+                            },
                             onPressed: (){
                               _isShowSettingPage = !_isShowSettingPage;
                               setState(() {
                                 SetSettingWidget(_isShowSettingPage);
                               });
                             },
-                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
                             child: SvgPicture.asset('assets/setting_navi_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
@@ -936,14 +1057,14 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                   children: [
                     Container(
                       width: 20,
-                      height: style.appBarHeight,
+                      height: 20,
                       margin: EdgeInsets.only(right: 8),
                       child: ElevatedButton(
                         onPressed: (){
                           AddPage(true);
                         },
                         style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                        foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
                         child: Icon(Icons.add_circle, size: 20, color: Colors.white ),
                       ),
                     ),
@@ -1018,7 +1139,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                     curve: Curves.easeOut,
                     child: AnimatedCrossFade(  //사이드 명식 차일드
                       duration: Duration(milliseconds: 300),
-                      firstChild: Column(
+                      firstChild: [
+                        Column(
                         children: [
                           Container(
                             width: style.UIButtonWidth,
@@ -1032,10 +1154,10 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                                     alignment: Alignment.topCenter,
                                     decoration: BoxDecoration(border: Border(bottom: BorderSide(width:4, color:style.colorMainBlue.withOpacity(underLineOpacity[0])))),
                                     child: TextButton(
-                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: MaterialStateProperty.all(Colors.transparent),
-                                            padding: MaterialStatePropertyAll(EdgeInsets.all(0))),
-                                        child:listCalendarTexts[0]
-                                        , onPressed:(){HeadLineButtonAction(0);})
+                                        style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: WidgetStateProperty.all(Colors.transparent),
+                                            padding: WidgetStatePropertyAll(EdgeInsets.all(0))),
+                                        child:listCalendarTexts[0],
+                                        onPressed:(){HeadLineButtonAction(0);})
                                 ),
                                 Container(
                                     height: style.headLineHeight,
@@ -1073,9 +1195,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             index: nowCalendarHeadLine,
                             children: listSideLayerWidget,
                             alignment: Alignment.topCenter,
-                          )
+                          ),
                         ],
                       ),
+                        iljinDiaryManager.Iljindiarymanager(isRegiedUserData: isRegiedUserData, SetSettingWidget: SetSettingWidget, SetSideOptionWidget: SetSideOptionWidget, CloseOption: SetSideOptionLayerWidget,),
+                      ]
+                      [nowSideLayerNum],
                       secondChild:Container(
                         width:0,
                         height: MediaQuery.of(context).size.height - style.appBarHeight,

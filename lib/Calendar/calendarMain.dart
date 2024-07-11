@@ -284,7 +284,7 @@ class _CalendarMainState extends State<CalendarMain> {
                         }
                       },
                       decoration: InputDecoration(
-                        labelText: '명식 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
+                        labelText: '${style.myeongsicString} 묶음을 저장합니다', labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: style.colorBlack, height: -0.4),
                         hintText: '묶음 이름', hintStyle:  TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: style.colorGrey),
                         counterText:'',
                         focusedBorder:UnderlineInputBorder(
@@ -340,7 +340,7 @@ class _CalendarMainState extends State<CalendarMain> {
         }
       }
       else {
-        ShowSnackBar('묶음 저장은 명식이 2개 이상이어야 합니다');
+        ShowSnackBar('묶음 저장은 ${style.myeongsicString}이 2개 이상이어야 합니다');
       }
     });
     //저장 후 정리
@@ -671,7 +671,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   String infoText = '생년월일 8자를 입력해 주세요(ex. 1987 01 31)\n'
       '태어난 시간을 4자로 입력해 주세요(ex. 07 05)\n'
       '태어난 시간을 모를 경우 빈칸으로 두세요\n'
-      '1901년 이전 명식은 절입시간 오차 가능성이 있습니다';
+      '1901년 이전 ${style.myeongsicString}은 절입시간 오차 가능성이 있습니다';
 
   bool isShowPersonalBirth = true;
   bool isOnFromGroupData = false; //명식 묶음으로 켜지면 true로 바뀌면서 더이상 안 켜지게 함
@@ -965,7 +965,7 @@ class _CalendarWidget extends State<CalendarWidget> {
   );
   Color? personListButtonColor0, personListButtonColor1;
 
-  MaterialStateColor? genderColorMale, genderColorFemale;
+  WidgetStateColor? genderColorMale, genderColorFemale;
 
   double widgetWidth = 1200;
   int nowWidgetCount = 0;
@@ -1013,6 +1013,8 @@ class _CalendarWidget extends State<CalendarWidget> {
 
   double appBarHeight = 40;
 
+  Color memoButtonEffectColor = Colors.transparent;
+  Color chooseDayButtonEffectColor = Colors.transparent;
 
   //그룹 저장할 때 명식 정보 보냄
   Map ReportPersonData(){
@@ -1085,16 +1087,17 @@ class _CalendarWidget extends State<CalendarWidget> {
       closeButtonWidget = SizedBox(width: 50,height: 50,);
     } else {
       closeButtonWidget = Container(
-        width: 40,
-        height: appBarHeight,
-        margin: EdgeInsets.only(top:0, right:4),
+        width: style.UIButtonWidth * 0.1,
+        height: style.UIButtonWidth * 0.1,
+        margin: EdgeInsets.only(top:0, right:7),
         child:
         ElevatedButton(
           onPressed: (){
             widget.closeWidget(widgetNum);
           },
           child: Icon(Icons.close, color: Colors.white, size: style.appbarIconSize * 1.2),//Text('×', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),Icon(Icons.close),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+              overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
         ),
       );
     }
@@ -1106,9 +1109,9 @@ class _CalendarWidget extends State<CalendarWidget> {
       backButtonWidget = SizedBox.shrink();
     } else {
       backButtonWidget = Container(
-        width: 40,
-        height: appBarHeight,
-        margin: EdgeInsets.only(top:0, left:4),
+        width: style.UIButtonWidth * 0.1,
+        height: style.UIButtonWidth * 0.1,
+        margin: EdgeInsets.only(top:0, left:7),
         alignment: Alignment.center,
         child:
         ElevatedButton(
@@ -1116,7 +1119,8 @@ class _CalendarWidget extends State<CalendarWidget> {
             BackButtonAction();
           },
           child: Icon(Icons.arrow_back, color:Colors.white),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+              overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
         ),
       );
     }
@@ -1126,10 +1130,10 @@ class _CalendarWidget extends State<CalendarWidget> {
   SetWidgetSaveButton(){
     if(nowState == 1){
       saveButtonWidget = Container(
-        width: 40,
+        width: style.UIButtonWidth * 0.11,
         height: appBarHeight,
         padding: EdgeInsets.only(top:4),
-        margin: EdgeInsets.only(top:0),//, right:10),
+        margin: EdgeInsets.only(right:4),//, right:10),
         child:
         ElevatedButton(
           onPressed: (){
@@ -1143,7 +1147,8 @@ class _CalendarWidget extends State<CalendarWidget> {
             }
           },
           child: Icon(Icons.save, color:Colors.white, size: style.appbarIconSize*1.1,),//Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+              overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
         ),
       );
     } else {
@@ -1152,50 +1157,13 @@ class _CalendarWidget extends State<CalendarWidget> {
   }
 
   //메모 버튼 설정
-  SetWidgetMemoButton(){
-    if(nowState == 1){
-      if(calendarMemoWidgetHeight == 0) {
-        memoButtonWidget = Container(
-          width: 40,
-          height: appBarHeight,
-          padding: EdgeInsets.only(top: 4),
-          margin: EdgeInsets.only(top: 0),
-          //, right:10),
-          child: ElevatedButton(
-            onPressed: () {
-              MemoButtonAction();
-            },
-            child: SvgPicture.asset('assets/memo_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),// Icon(Icons.chat, color: Colors.white), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-          ),
-        );
-      } else {
-        memoButtonWidget = Container(
-          width: 40,
-          height: appBarHeight,
-          //padding: EdgeInsets.only(top: 4),
-          margin: EdgeInsets.only(top: 4),
-          decoration: BoxDecoration(
-            color: style.colorBlack,
-            borderRadius: BorderRadius.circular(style.textFiledRadius),
-          ),
-          //, right:10),
-          child: ElevatedButton(
-            onPressed: () {
-              MemoButtonAction();
-            },
-              child: SvgPicture.asset('assets/memo_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),//child: Icon(Icons.chat, color: style.colorMainBlue), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
-            style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-          ),
-        );
-      }
-    } else {
-      memoButtonWidget = SizedBox(width: 50,height: 50,);
-      calendarMemoWidget = SizedBox.shrink();
-    }
-  }
+  //SetWidgetMemoButton(){
+  //  if(nowState == 1){
+  //  } else {
+  //    memoButtonWidget = SizedBox(width: 50,height: 50,);
+  //    calendarMemoWidget = SizedBox.shrink();
+  //  }
+  //}
 
   //메모 버튼 기능
   MemoButtonAction(){
@@ -1250,7 +1218,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           ),
         );
       }
-      SetWidgetMemoButton();
+      //SetWidgetMemoButton();
 
       calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
           name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
@@ -1289,77 +1257,17 @@ class _CalendarWidget extends State<CalendarWidget> {
     }
   }*/
 
-  //택일모드 버튼 설정
-  SetWidgetChooseDayButton(){
-    if(nowState == 1){
-      if(isShowChooseDayButtons == false){
-        chooseDayButtonWidget = Container(
-          width: 40,
-          padding: EdgeInsets.only(top:4),
-          child: ElevatedButton(
-              child: SvgPicture.asset('assets/calendar_appbar_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
-            onPressed: (){
-              if(uemYangType != 0){// != 0 || (uemYangType == 0 && isChangeUemYangBirthType == true)){
-                ShowDialogMessage('택일 모드는 양력 명식만 가능합니다');
-                //ShowDialogMessage('양력 명식으로 전환됩니다');//SetUemYangBirthType();
-              } else {
-                setState(() {
-                  isShowChooseDayButtons = !isShowChooseDayButtons;
-                  SetWidgetChooseDayButton();
-                  calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
-                      name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-                      birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
-                    setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
-                    refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight);
-                });
-              }
-            },
-            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-          ),
-        );
-      } else {
-        chooseDayButtonWidget = Container(
-          width: 40,
-          margin: EdgeInsets.only(top:4),
-          decoration: BoxDecoration(
-            color: style.colorBlack,
-            borderRadius: BorderRadius.circular(style.textFiledRadius),
-          ),
-          child: ElevatedButton(
-            child: SvgPicture.asset('assets/calendar_appbar_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
-            onPressed: (){
-              setState(() {
-                isShowChooseDayButtons = !isShowChooseDayButtons;
-                SetWidgetChooseDayButton();
-                calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
-                    name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
-                    birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
-                  setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
-                    refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight);
-              });
-            },
-            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-          ),
-        );
-      }
-    } else {
-      chooseDayButtonWidget = SizedBox(width: 50,height: 50);
-    }
-  }
-
   ShowSameCheckerMessage(String birth, String name, bool gender, int uemYangType, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin){
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
           actionsAlignment: MainAxisAlignment.center,
-          title: Text('이미 같은 명식이 저장되어 있습니다\n그래도 저장하시겠습니까?'),
+          title: Text('같은 ${style.myeongsicString}이 저장되어 있습니다\n그래도 저장하시겠습니까?', textAlign: TextAlign.center),
           content: Text(birth, textAlign: TextAlign.center),
           buttonPadding: EdgeInsets.only(left:20, right:20, top:0),
           actions: [
             ElevatedButton(
-                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: WidgetStateProperty.all(Colors.grey), elevation: WidgetStateProperty.all(1.0)),
                 onPressed: (){
                   personSaveDate = DateTime.now();
                   saveDataManager.SavePersonData2(targetName, genderVal, uemYangType, targetBirthYear, targetBirthMonth, targetBirthDay, targetBirthHour, targetBirthMin, personSaveDate, calendarMemoController.text);
@@ -1367,7 +1275,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                 },
                 child: Text('저장')),
             ElevatedButton(
-                style: ButtonStyle(overlayColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: MaterialStateProperty.all(Colors.grey), elevation: MaterialStateProperty.all(1.0)),
+                style: ButtonStyle(overlayColor: WidgetStateProperty.all(Colors.grey.withOpacity(0.3)), shadowColor: WidgetStateProperty.all(Colors.grey), elevation: WidgetStateProperty.all(1.0)),
                 onPressed: (){
                   Navigator.pop(context);
                 },
@@ -1394,9 +1302,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         SetWidgetCalendarResultBirthText();
         SetWidgetSaveButton();
         SetWidgetBackButton();
-        //SetWidgetMarkButton();
-        SetWidgetChooseDayButton();
-        SetWidgetMemoButton();
+        calendarMemoWidget = SizedBox.shrink();
       });
     }
   }
@@ -1488,9 +1394,7 @@ class _CalendarWidget extends State<CalendarWidget> {
       SetWidgetBackButton();
       SetWidgetSaveButton();
       SetWidgetCalendarResultBirthText();
-      SetWidgetChooseDayButton();
-      SetWidgetMemoButton();
-
+      //calendarMemoWidget = SizedBox.shrink();
       //if (personDataNum != '') {
       //  isSaved = 0;
 //
@@ -1762,8 +1666,71 @@ class _CalendarWidget extends State<CalendarWidget> {
                     //  child: calendarBirthTextWidget,
                     //),
                     saveButtonWidget,
-                    memoButtonWidget,
-                    chooseDayButtonWidget,
+                    nowState == 1? Container(
+                      width: style.UIButtonWidth * 0.11,
+                      height: appBarHeight,
+                      margin: EdgeInsets.only(top: 4, right: 2),
+                      decoration: BoxDecoration(
+                        color: calendarMemoWidgetHeight == 0? memoButtonEffectColor : style.colorBlack,
+                        borderRadius: BorderRadius.circular(style.textFiledRadius),
+                      ),
+                      //, right:10),
+                      child: ElevatedButton(
+                        onHover:(hover){
+                          setState(() {
+                            if(hover == true){
+                              memoButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                            } else {
+                              memoButtonEffectColor = Colors.transparent;
+                            }
+                          });
+                        },
+                        onPressed: () {
+                          MemoButtonAction();
+                        },
+                        child: SvgPicture.asset(calendarMemoWidgetHeight == 0? 'assets/memo_icon.svg' : 'assets/memo_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),// Icon(Icons.chat, color: Colors.white), //Text('←', style: TextStyle(fontSize: 24, color: Colors.white)),//Icon(Icons.b),
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                      ),
+                    ) : SizedBox(width: 50,height: 50,),//memoButtonWidget,
+                    nowState == 1? Container(
+                      width: style.UIButtonWidth * 0.11,
+                      height: appBarHeight,
+                      margin: EdgeInsets.only(top:4, right:2),
+                      decoration: BoxDecoration(
+                        color: isShowChooseDayButtons == true? style.colorBlack : chooseDayButtonEffectColor,
+                        borderRadius: BorderRadius.circular(style.textFiledRadius),
+                      ),
+                      child: ElevatedButton(
+                        child: SvgPicture.asset(isShowChooseDayButtons == true? 'assets/calendar_appbar_icon_select.svg' : 'assets/calendar_appbar_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
+                        onHover:(hover){
+                          setState(() {
+                            if(hover == true){
+                              chooseDayButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                            } else {
+                              chooseDayButtonEffectColor = Colors.transparent;
+                            }
+                          });
+                        },
+                        onPressed: (){
+                          if(uemYangType != 0){// != 0 || (uemYangType == 0 && isChangeUemYangBirthType == true)){
+                            ShowDialogMessage('택일 모드는 양력 ${style.myeongsicString}만 가능합니다');
+                            //ShowDialogMessage('양력 명식으로 전환됩니다');//SetUemYangBirthType();
+                          } else {
+                            setState(() {
+                              isShowChooseDayButtons = !isShowChooseDayButtons;
+                              calendarResultWidget = mainCalendarInquireResult.MainCalendarInquireResult(
+                                  name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
+                                  birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
+                                  setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
+                                  refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight);
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                            foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                      ),
+                    ) : SizedBox(width:50, height:50), //chooseDayButtonWidget,
                     //Container(  //테스트 버튼
                     //  width:10, height:10, child:ElevatedButton(onPressed: (){}, child:Text('X'),),
                     //),
@@ -1817,108 +1784,136 @@ class _CalendarWidget extends State<CalendarWidget> {
                     height: style.fullSizeButtonHeight,
                     margin: EdgeInsets.only(top: 8),//style.UIMarginTopTop),
                     decoration: BoxDecoration(
-                      //border: Border.all(color: focusBoxColorNum == 0? style.colorMainBlue:Colors.transparent, width: 2, strokeAlign: BorderSide.strokeAlignInside),
                       color: style.colorNavy,
                       borderRadius: BorderRadius.circular(style.textFiledRadius),
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          //이름 텍스트필드
-                          width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
-                          height: 50,
-                          child: TextField(
-                            focusNode: nameTextFocusNode,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            controller: nameController,
-                            keyboardType: TextInputType.text,
-                            cursorColor: Colors.white,
-                            maxLength: 10,
-                            onEditingComplete:() {
-                              if(genderState == 3) {
-                                FocusScope.of(context).requestFocus(maleFocusNode);
-                              } else if(birthController.text == '') {
-                                FocusScope.of(context).requestFocus(birthTextFocusNode);
-                              } else if(hourController.text == ''){
-                                FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                              }
-                            },
-                            style: Theme.of(context).textTheme.labelLarge,
-                            decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '이름', hintStyle: Theme.of(context).textTheme.labelSmall,),
+                        Flexible(
+                          fit: FlexFit.tight,
+                          child: Container(
+                            //이름 텍스트필드
+                            //width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
+                            height: 50,
+                            child: TextField(
+                              focusNode: nameTextFocusNode,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              controller: nameController,
+                              keyboardType: TextInputType.text,
+                              cursorColor: Colors.white,
+                              maxLength: 10,
+                              onEditingComplete:() {
+                                if(genderState == 3) {
+                                  FocusScope.of(context).requestFocus(maleFocusNode);
+                                } else if(birthController.text == '') {
+                                  FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                } else if(hourController.text == ''){
+                                  FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                }
+                              },
+                              onChanged: (value){
+                                setState(() {
+                                  nameController.text;
+                                });
+                              },
+                              style: Theme.of(context).textTheme.labelLarge,
+                              decoration: InputDecoration(counterText: "", border: InputBorder.none, prefix: Text('    '), hintText: '이름', hintStyle: Theme.of(context).textTheme.labelSmall,),
+                            ),
                           ),
                         ),
-                        Container(
-                          width: style.UIButtonWidth * 0.45,
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Radio<Gender>(//남자 버튼
-                                  visualDensity: const VisualDensity(
-                                    horizontal: VisualDensity.minimumDensity,
-                                    vertical: VisualDensity.minimumDensity,
-                                  ),
-                                  value: Gender.Male,
-                                  focusNode: maleFocusNode,
-                                  groupValue: gender,
-                                  fillColor: genderColorMale,
-                                  splashRadius: 16,
-                                  hoverColor: Colors.white.withOpacity(0.1),
-                                  focusColor: Colors.white.withOpacity(0.1),
-                                  onChanged: (Gender? value) {
-                                    setState(() {
-                                      genderState = 0;
-                                      gender = value;
-                                      SetGenderRadioButtonColor(value);
-                                      if(nameController.text == ''){
-                                        FocusScope.of(context).requestFocus(nameTextFocusNode);
-                                      } else if(birthController.text == '') {
-                                        FocusScope.of(context).requestFocus(birthTextFocusNode);
-                                      } else if(hourController.text == ''){
-                                        FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                                      }
-                                    });
-                                  }),
-                              Container(
-                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
-                                margin: EdgeInsets.only(left: 4, right: 4),
-                                child: Text("남자 ", style: Theme.of(context).textTheme.labelMedium),
-                              ),
-                              Radio<Gender>(
-                                //여자 버튼
-                                  visualDensity: const VisualDensity(
-                                    horizontal: VisualDensity.minimumDensity,
-                                    vertical: VisualDensity.minimumDensity,
-                                  ),
-                                  value: Gender.Female,
-                                  groupValue: gender,
-                                  fillColor: genderColorFemale,
-                                  focusNode: femaleFocusNode,
-                                  splashRadius: 16,
-                                  hoverColor: Colors.white.withOpacity(0.1),
-                                  focusColor: Colors.white.withOpacity(0.1),
-                                  onChanged: (Gender? value) {
-                                    setState(() {
-                                      genderState = 1;
-                                      gender = value;
-                                      SetGenderRadioButtonColor(value);
-                                      if(nameController.text == ''){
-                                        FocusScope.of(context).requestFocus(nameTextFocusNode);
-                                      } else if(birthController.text == '') {
-                                        FocusScope.of(context).requestFocus(birthTextFocusNode);
-                                      } else if(hourController.text == ''){
-                                        FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                                      }
-                                    });
-                                  }),
-                              Container(
-                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
-                                margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
-                                child: Text("여자 ", style: Theme.of(context).textTheme.labelMedium),
-                              ),
-                            ],
+                        AnimatedCrossFade(
+                          duration: Duration(milliseconds: 130),
+                          firstChild: Container(width:34, height:20,margin:EdgeInsets.only(right:2)),
+                          secondChild:  Container(
+                            width:34,
+                            height:20,
+                            margin:EdgeInsets.only(right:2),
+                            decoration: BoxDecoration(
+                              border: Border(right: BorderSide(width: 2, color:style.colorDarkGrey.withOpacity(0.2),)),
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.cancel, color: style.colorGrey, size: 20,),
+                              style: ElevatedButton.styleFrom(visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity), backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, overlayColor: Colors.transparent),
+                              onPressed: (){
+                                setState(() {
+                                  nameController.text = '';
+                                });
+                                FocusScope.of(context).requestFocus(nameTextFocusNode);
+                              },
+                            ),
                           ),
+                          crossFadeState: nameController.text.length == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          firstCurve: Curves.easeIn,
+                          secondCurve: Curves.easeIn,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Radio<Gender>(//남자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
+                                value: Gender.Male,
+                                focusNode: maleFocusNode,
+                                groupValue: gender,
+                                fillColor: genderColorMale,
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
+                                onChanged: (Gender? value) {
+                                  setState(() {
+                                    genderState = 0;
+                                    gender = value;
+                                    SetGenderRadioButtonColor(value);
+                                    if(nameController.text == ''){
+                                      FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                    } else if(birthController.text == '') {
+                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                    } else if(hourController.text == ''){
+                                      FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                    }
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
+                              margin: EdgeInsets.only(left: 4, right: 4),
+                              child: Text("남자 ", style: Theme.of(context).textTheme.labelMedium),
+                            ),
+                            Radio<Gender>(
+                              //여자 버튼
+                                visualDensity: const VisualDensity(
+                                  horizontal: VisualDensity.minimumDensity,
+                                  vertical: VisualDensity.minimumDensity,
+                                ),
+                                value: Gender.Female,
+                                groupValue: gender,
+                                fillColor: genderColorFemale,
+                                focusNode: femaleFocusNode,
+                                splashRadius: 16,
+                                hoverColor: Colors.white.withOpacity(0.1),
+                                focusColor: Colors.white.withOpacity(0.1),
+                                onChanged: (Gender? value) {
+                                  setState(() {
+                                    genderState = 1;
+                                    gender = value;
+                                    SetGenderRadioButtonColor(value);
+                                    if(nameController.text == ''){
+                                      FocusScope.of(context).requestFocus(nameTextFocusNode);
+                                    } else if(birthController.text == '') {
+                                      FocusScope.of(context).requestFocus(birthTextFocusNode);
+                                    } else if(hourController.text == ''){
+                                      FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                                    }
+                                  });
+                                }),
+                            Container(
+                              padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
+                              margin: EdgeInsets.only(right: style.UIMarginLeft, left: 4),
+                              child: Text("여자 ", style: Theme.of(context).textTheme.labelMedium),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -1934,83 +1929,110 @@ class _CalendarWidget extends State<CalendarWidget> {
                     ),
                     child: Row(
                       children: [
-                        Container(
-                          width: style.UIButtonWidth * 0.55, //MediaQuery.of(context).size.width * 0.4,
-                          height: 50,
-                          child: TextField(
-                            obscureText: isShowPersonalBirth == false? true : false,
-                            focusNode: birthTextFocusNode,
-                            enableSuggestions: false,
-                            autocorrect: false,
-                            controller: birthController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
-                              BirthSpacer(),
-                            ],
-                            cursorColor: Colors.white,
-                            maxLength: 10,
-                            style: Theme.of(context).textTheme.labelLarge,
-                            onEditingComplete: () {
-                              FocusScope.of(context).requestFocus(birthHourTextFocusNode);
-                            },
-                            decoration: InputDecoration(
-                              counterText: "",
-                              border: InputBorder.none,
-                              prefix: Text('    '),
-                              hintText: '생년월일', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
-                              hintStyle: Theme.of(context).textTheme.labelSmall,),
-                            onChanged: (text) {
-                              setState(() {
-                                SeasonDayMessage();
-                              });
-                            },
+                        Flexible(
+                          fit:FlexFit.tight,
+                          child: Container(
+                            height: 50,
+                            child: TextField(
+                              obscureText: isShowPersonalBirth == false? true : false,
+                              focusNode: birthTextFocusNode,
+                              enableSuggestions: false,
+                              autocorrect: false,
+                              controller: birthController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(RegExp(r'[0-9 ]')),
+                                BirthSpacer(),
+                              ],
+                              cursorColor: Colors.white,
+                              maxLength: 10,
+                              style: Theme.of(context).textTheme.labelLarge,
+                              onEditingComplete: () {
+                                FocusScope.of(context).requestFocus(birthHourTextFocusNode);
+                              },
+                              decoration: InputDecoration(
+                                counterText: "",
+                                border: InputBorder.none,
+                                prefix: Text('    '),
+                                hintText: '생년월일', // (${DateFormat('yyyy MM dd').format(DateTime.now())})',
+                                hintStyle: Theme.of(context).textTheme.labelSmall,),
+                              onChanged: (text) {
+                                setState(() {
+                                  birthController.text;
+                                  SeasonDayMessage();
+                                });
+                              },
+                            ),
                           ),
                         ),
-                        Container(
-                          width: style.UIButtonWidth * 0.45,
-                          height: 50,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                width: 32,
-                                height: 50,
-                                child: Checkbox(
-                                  value: isUemryoc,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      SetYangrocUemryoc(true, value!);
-                                      SeasonDayMessage();
-                                    });
-                                  },
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
-                                //margin: EdgeInsets.only(right: marginVal),
-                                child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
-                              ),
-                              SizedBox(
-                                width: 32,
-                                height: 50,
-                                child: Checkbox(
-                                  value: isYundal,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      SetYangrocUemryoc(false, value!);
-                                      SeasonDayMessage();
-                                    });
-                                  },
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
-                                margin: EdgeInsets.only(right: style.UIMarginLeft),
-                                child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
-                              ),
-                            ],
+                        AnimatedCrossFade(
+                          duration: Duration(milliseconds: 130),
+                          firstChild: Container(width:34, height:20),
+                          secondChild:  Container(
+                            width:34,
+                            height:20,
+                            decoration: BoxDecoration(
+                              border: Border(right: BorderSide(width: 2, color:style.colorDarkGrey.withOpacity(0.2),)),
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.cancel, color: style.colorGrey, size: 20,),
+                              style: ElevatedButton.styleFrom(visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity), backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, overlayColor: Colors.transparent),
+                              onPressed: (){
+                                setState(() {
+                                  birthController.text = '';
+                                });
+                                FocusScope.of(context).requestFocus(birthTextFocusNode);
+                              },
+                            ),
                           ),
+                          crossFadeState: birthController.text.length == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          firstCurve: Curves.easeIn,
+                          secondCurve: Curves.easeIn,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              width: 30.5,
+                              height: 50,
+                              child: Checkbox(
+                                overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                                visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity),
+                                value: isUemryoc,
+                                onChanged: (value) {
+                                  setState(() {
+                                    SetYangrocUemryoc(true, value!);
+                                    SeasonDayMessage();
+                                  });
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
+                              margin: EdgeInsets.only(right: 1),
+                              child: Text("음력 ", style: Theme.of(context).textTheme.labelMedium),
+                            ),
+                            SizedBox(
+                              width: 31,
+                              height: 50,
+                              child: Checkbox(
+                                overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
+                                visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity),
+                                value: isYundal,
+                                onChanged: (value) {
+                                  setState(() {
+                                    SetYangrocUemryoc(false, value!);
+                                    SeasonDayMessage();
+                                  });
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(bottom: 4),//style.UIPaddingBottom),
+                              margin: EdgeInsets.only(right: style.UIMarginLeft),
+                              child: Text("윤달 ", style: Theme.of(context).textTheme.labelMedium),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -2075,16 +2097,16 @@ class _CalendarWidget extends State<CalendarWidget> {
                                       iconSize: 0.0,
                                       underline: SizedBox.shrink(),
                                       dropdownColor: Colors.black, //style.colorMainBlue,//colorBackGround,
+                                      borderRadius: BorderRadius.circular(style.textFiledRadius),
                                       items: popUpVal
                                           .map((value) => DropdownMenuItem(
                                         value: value,
                                         child: Container(
-                                          child: Text(value),
                                           width: style.UIButtonWidth * 0.4, //135
                                           alignment: Alignment.center,
+                                          child: Text(value),
                                         ),
-                                      ))
-                                          .toList(),
+                                      )).toList(),
                                       onChanged: (value) {
                                         setState(() {
                                           popUpSelect = value as String;

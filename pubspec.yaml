@@ -46,7 +46,6 @@ dev_dependencies:
   shared_preferences: ^2.0.11
   provider: ^6.0.1
   intl: ^0.18.1
-  fluttertoast: ^8.2.4
   table_calendar: ^3.0.9
   desktop_window: ^0.4.0
   msix: ^3.16.6

@@ -119,7 +119,8 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
     return saveDateText;
   }
 
-  String searchText = '';
+  TextEditingController searchTextController = TextEditingController();
+  FocusNode searchTextFocusNode = FocusNode();
 
   ScrollController scrollController = ScrollController();
 
@@ -166,28 +167,54 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
                       ),
                       child: Row(
                         children: [
-                          Container(
-                            width: style.UIButtonWidth,//MediaQuery.of(context).size.width * 0.4,
-                            height: 50,
-                            child: TextField(
-                              enableSuggestions: false,
-                              autocorrect: false,
-                              keyboardType: TextInputType.text,
-                              cursorColor: Colors.white,
-                              maxLength: 10,
-                              style: Theme.of(context).textTheme.labelMedium,
-                              decoration:InputDecoration(
-                                  counterText:"",
-                                  border: InputBorder.none,
-                                  prefix: Text('    '),
-                                  hintText: '이름, 날짜 또는 메모',
-                                  hintStyle: Theme.of(context).textTheme.labelSmall),
-                              onChanged: (value){
-                                setState(() {
-                                  searchText = value;
-                                });
-                              },
+                          Flexible(
+                            fit: FlexFit.tight,
+                            child: Container(
+                              //width: style.UIButtonWidth,//MediaQuery.of(context).size.width * 0.4,
+                              height: 50,
+                              child: TextField(
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                controller: searchTextController,
+                                focusNode: searchTextFocusNode,
+                                keyboardType: TextInputType.text,
+                                cursorColor: Colors.white,
+                                maxLength: 10,
+                                style: Theme.of(context).textTheme.labelMedium,
+                                decoration:InputDecoration(
+                                    counterText:"",
+                                    border: InputBorder.none,
+                                    prefix: Text('    '),
+                                    hintText: '이름, 날짜 또는 메모',
+                                    hintStyle: Theme.of(context).textTheme.labelSmall),
+                                onChanged: (value){
+                                  setState(() {
+                                    searchTextController.text;
+                                  });
+                                },
+                              ),
                             ),
+                          ),
+                          AnimatedCrossFade(
+                            duration: Duration(milliseconds: 130),
+                            firstChild: SizedBox(width:40, height:20,),
+                            secondChild:  Container(
+                              width:40,
+                              height:20,
+                              child: IconButton(
+                                icon: Icon(Icons.cancel, color: style.colorGrey, size: 20,),
+                                style: ElevatedButton.styleFrom(visualDensity: VisualDensity(horizontal: VisualDensity.minimumDensity, vertical: VisualDensity.minimumDensity), backgroundColor: Colors.transparent, surfaceTintColor: Colors.transparent, overlayColor: Colors.transparent),
+                                onPressed: (){
+                                  setState(() {
+                                    searchTextController.text = '';
+                                    FocusScope.of(context).requestFocus(searchTextFocusNode);
+                                  });
+                                },
+                              ),
+                            ),
+                            crossFadeState: searchTextController.text.length == 0? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                            firstCurve: Curves.easeIn,
+                            secondCurve: Curves.easeIn,
                           ),
                         ],
                       )
@@ -198,103 +225,122 @@ class _MainCalendarGroupSaveListState extends State<MainCalendarGroupSaveList> w
           ),
         ),
         Expanded(
-          child: Container(  //저장목록
-            width: style.UIButtonWidth + 38,
-            height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
-            margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
-            child: ScrollConfiguration(
-              behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
-              child: RawScrollbar(
-                controller: scrollController,
-                thumbColor: style.colorDarkGrey,
-                thickness: 10,
-                radius: Radius.circular(10),
-                child: ListView.separated(
-                    scrollDirection: Axis.vertical,
-                    controller: scrollController,
-                    itemCount:saveDataManager.listMapGroup.length,
-                    itemBuilder: (context, i){
-                      bool passVal = false;
-                      //검색 조회
-                      if(searchText.isEmpty){
-                        passVal = true;
-                      }
-                      else{
-                        String data = "${saveDataManager.listMapGroup[i][0]['groupName']} ${saveDataManager.listMapGroup[i][0]['memo']} ${saveDataManager.listMapGroup[i][0]['saveDate'].year}년 ${saveDataManager.listMapGroup[i][0]['saveDate'].month}월 ${saveDataManager.listMapGroup[i][0]['saveDate'].day}일 ";
-                        for(int j = 1; j < saveDataManager.listMapGroup[i].length; j++){
-                          data = data + "${saveDataManager.listMapGroup[i][j]['name']}(${saveDataManager.GetSelectedBirthDataFromGroup('gender', i, j) == true?'남':'여'}) ${saveDataManager.GetSelectedBirthDataFromGroup('birthYear',i,j)}년 ${saveDataManager.GetSelectedBirthDataFromGroup('birthMonth', i,j)}월 ${saveDataManager.GetSelectedBirthDataFromGroup('birthDay',i,j)}일 ${GetUemYangText(saveDataManager.GetSelectedBirthDataFromGroup('uemYang', i,j))} ${GetBirthTimeText(saveDataManager.GetSelectedBirthDataFromGroup('birthHour',i,j), saveDataManager.GetSelectedBirthDataFromGroup('birthMin', i,j), false)}";
-                        }
-                        if(data.toLowerCase().contains(searchText.toLowerCase())){
+          child: Stack(
+            children: [
+              Container(  //저장목록
+              width: style.UIButtonWidth + 38,
+              //height: MediaQuery.of(context).size.height - style.appBarHeight - 16 - 50 - 44,
+              margin: EdgeInsets.only(top: style.UIMarginTop, left:20),
+              child: ScrollConfiguration(
+                behavior: MyCustomScrollBehavior().copyWith(overscroll: false),
+                child: RawScrollbar(
+                  controller: scrollController,
+                  thumbColor: style.colorDarkGrey,
+                  thickness: 10,
+                  radius: Radius.circular(10),
+                  child: ListView.separated(
+                      scrollDirection: Axis.vertical,
+                      controller: scrollController,
+                      itemCount:saveDataManager.listMapGroup.length,
+                      itemBuilder: (context, i){
+                        bool passVal = false;
+                        //검색 조회
+                        if(searchTextController.text == ''){
                           passVal = true;
                         }
-                      }
-                      //리스트뷰
-                      if(passVal == true){
-                        return Container(
-                          width: style.UIButtonWidth,
-                          height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                          child: Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: (){
-                                  widget.setGroupLoadWidget(false);
-                                  widget.groupDataLoad(i);
-                                },
-                                style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                    foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: style.UIButtonWidth * 0.9,
-                                      height: style.saveDataNameLineHeight,
-                                      padding: EdgeInsets.only(top:8),
-                                      //color:Colors.green,
-                                      child: Container(
-                                          height: style.saveDataNameTextLineHeight,
-                                          //color:Colors.green,
-                                          child:Text(saveDataManager.listMapGroup[i][0]['groupName'], style: Theme.of(context).textTheme.titleLarge)
-                                      ),
-                                    ),
-                                    Container(
-                                      width: style.UIButtonWidth * 0.9,
-                                      height: style.saveDataMemoLineHeight,
-                                      padding: EdgeInsets.only(top:4),
-                                      //color:Colors.yellow,
-                                      child: Text(GetInquireDateText(saveDataManager.listMapGroup[i][0]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(  //옵션 버튼
-                                width: style.UIButtonWidth * 0.1,
-                                height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    widget.setSideOptionLayerWidget(true);
-                                    widget.setSideOptionWidget(Container(
-                                      width: style.UIButtonWidth + 30,
-                                      height: MediaQuery.of(context).size.height - style.appBarHeight,
-                                      child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(listMapGroup: saveDataManager.listMapGroup[i], refreshListMapGroupLength: widget.refreshListMapGroupLength,
-                                          closeOption: widget.setSideOptionLayerWidget, refreshGroupName: widget.refreshGroupName, isMemoOpen:false, saveGroupTempMemo: widget.saveGroupTempMemo, key:UniqueKey()),
-                                    ));
+                        else{
+                          String data = "${saveDataManager.listMapGroup[i][0]['groupName']} ${saveDataManager.listMapGroup[i][0]['memo']} ${saveDataManager.listMapGroup[i][0]['saveDate'].year}년 ${saveDataManager.listMapGroup[i][0]['saveDate'].month}월 ${saveDataManager.listMapGroup[i][0]['saveDate'].day}일 ";
+                          for(int j = 1; j < saveDataManager.listMapGroup[i].length; j++){
+                            data = data + "${saveDataManager.listMapGroup[i][j]['name']}(${saveDataManager.GetSelectedBirthDataFromGroup('gender', i, j) == true?'남':'여'}) ${saveDataManager.GetSelectedBirthDataFromGroup('birthYear',i,j)}년 ${saveDataManager.GetSelectedBirthDataFromGroup('birthMonth', i,j)}월 ${saveDataManager.GetSelectedBirthDataFromGroup('birthDay',i,j)}일 ${GetUemYangText(saveDataManager.GetSelectedBirthDataFromGroup('uemYang', i,j))} ${GetBirthTimeText(saveDataManager.GetSelectedBirthDataFromGroup('birthHour',i,j), saveDataManager.GetSelectedBirthDataFromGroup('birthMin', i,j), false)}";
+                          }
+                          if(data.toLowerCase().contains(searchTextController.text.toLowerCase())){
+                            passVal = true;
+                          }
+                        }
+                        //리스트뷰
+                        if(passVal == true){
+                          return Container(
+                            width: style.UIButtonWidth,
+                            height: style.saveDataNameLineHeight + style.saveDataMemoLineHeight,
+                            child: Row(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (){
+                                    widget.setGroupLoadWidget(false);
+                                    widget.groupDataLoad(i);
                                   },
                                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
                                       foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
-                                  child: SvgPicture.asset('assets/info_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: style.UIButtonWidth * 0.9,
+                                        height: style.saveDataNameLineHeight,
+                                        padding: EdgeInsets.only(top:8),
+                                        //color:Colors.green,
+                                        child: Container(
+                                            height: style.saveDataNameTextLineHeight,
+                                            //color:Colors.green,
+                                            child:Text(saveDataManager.listMapGroup[i][0]['groupName'], style: Theme.of(context).textTheme.titleLarge)
+                                        ),
+                                      ),
+                                      Container(
+                                        width: style.UIButtonWidth * 0.9,
+                                        height: style.saveDataMemoLineHeight,
+                                        padding: EdgeInsets.only(top:4),
+                                        //color:Colors.yellow,
+                                        child: Text(GetInquireDateText(saveDataManager.listMapGroup[i][0]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis),//GetFirstLineText(saveDataManager.mapPersonSortedMark[i]['memo']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      else{
-                        return SizedBox.shrink();
-                      }
-                    },
-                    separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent: 20, color: style.colorBlack,); }
+                                Container(  //옵션 버튼
+                                  width: style.UIButtonWidth * 0.1,
+                                  height: style.UIButtonWidth * 0.1,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      widget.setSideOptionLayerWidget(true);
+                                      widget.setSideOptionWidget(Container(
+                                        width: style.UIButtonWidth + 30,
+                                        height: MediaQuery.of(context).size.height - style.appBarHeight,
+                                        child: mainCalendarGroupSaveListOption.MainCalendarGroupSaveListOption(listMapGroup: saveDataManager.listMapGroup[i], refreshListMapGroupLength: widget.refreshListMapGroupLength,
+                                            closeOption: widget.setSideOptionLayerWidget, refreshGroupName: widget.refreshGroupName, isMemoOpen:false, saveGroupTempMemo: widget.saveGroupTempMemo, key:UniqueKey()),
+                                      ));
+                                    },
+                                    style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                        overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
+                                    child: SvgPicture.asset('assets/info_icon.svg', width: style.appbarIconSize, height: style.appbarIconSize),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        else{
+                          return SizedBox.shrink();
+                        }
+                      },
+                      separatorBuilder: (BuildContext context, int index) { return Divider(thickness: 1, height: 0, endIndent: 20, color: style.colorBlack,); }
+                  ),
                 ),
               ),
             ),
+              Container(
+                width: style.UIButtonWidth + 18,
+                height: 2,
+                margin: EdgeInsets.only(top: style.UIMarginTop),//style.UIMarginLeft
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: style.colorBackGround.withOpacity(0.9),
+                      spreadRadius: 4,
+                      blurRadius: 4,
+                      offset: Offset(0, -2), // changes position of shadow
+                    ),
+                  ],
+                ),
+              ),
+            ]
           ),
         ),
       ],

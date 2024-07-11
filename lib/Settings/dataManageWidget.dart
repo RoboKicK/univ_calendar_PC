@@ -303,17 +303,19 @@ class _DataManageWidgetState extends State<DataManageWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text("단일 명식 ", style: style.settingText0,),
+                    Text("단일 ${style.myeongsicString} ", style: style.settingText0,),
                     Checkbox(
                       value: isExportPersonData,
+                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                       onChanged: (value) {
                         setState(() {isExportPersonData = value!;});
                       },
                     ),
                     SizedBox(width:20),
-                    Text("묶음 명식 ", style: style.settingText0,),
+                    Text("묶음 ${style.myeongsicString} ", style: style.settingText0,),
                     Checkbox(
                       value: isExportGroupData,
+                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                       onChanged: (value) {
                         setState(() {isExportGroupData = value!;});
                       },
@@ -322,6 +324,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
                     Text("일진 일기 ", style: style.settingText0,),
                     Checkbox(
                       value: isExportDiary,
+                      overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                       onChanged: (value) {setState(() {isExportDiary = value!;
                         });
                       },
@@ -353,7 +356,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
               Container(
                 width: widgetWidth - (style.UIMarginLeft * 2),
                 height: 1,
-                margin: EdgeInsets.only(top: 22),
+                margin: EdgeInsets.only(top: 32),
                 color: style.colorGrey,
               ),
               Container(  //데이터 불러오기 설명
@@ -373,7 +376,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
                 child: TextButton(
                     style: ButtonStyle(
                       //splashFactory: NoSplash.splashFactory,
-                      overlayColor: MaterialStateProperty.all(style.colorMainBlue.withOpacity(0.0)),
+                      overlayColor: WidgetStateProperty.all(style.colorMainBlue.withOpacity(0.0)),
                     ),
                     child: Text(
                       '불러오기',
@@ -387,9 +390,9 @@ class _DataManageWidgetState extends State<DataManageWidget> {
               ),
               Container(
                 width: (widgetWidth - (style.UIMarginLeft * 2)),
-                height: 200,
+                height: 46,
                 margin: EdgeInsets.only(top:style.SettingMarginTopWithInfo1),
-                child: Text("· 생년월일과 저장일자가 같은 명식은 덮어씁니다\n· 묶음 이름과 저장일자가 같은 묶음은 덮어씁니다", style: style.settingInfoText0,),
+                child: Text("· 생년월일과 저장일자가 같은 ${style.myeongsicString}은 덮어씁니다\n· 묶음 이름과 저장일자가 같은 묶음은 덮어씁니다", style: style.settingInfoText0,),
               ),
               //Container(
               //  width: (widgetWidth - (style.UIMarginLeft * 2)),

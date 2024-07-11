@@ -460,24 +460,24 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
                 && _listPaljaData[(a * 2) + 1] + 7 == _listPaljaData[(b * 2) + 1]) { //자미원진, 인유원진, 진해원진
               if (listHabChungString[a].length > 4) {
                 if (listHabChungString[a].substring(listHabChungString[a].length - 5, listHabChungString[a].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n') {
-                  listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n') {
+                  listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n';
                   listContainerHeightCount[a]++;
                 }
               }
               else {
-                listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n';
                 listContainerHeightCount[a]++;
               }
               if (listHabChungString[b].length > 4) {
                 if (listHabChungString[b].substring(listHabChungString[b].length - 5, listHabChungString[b].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n') {
-                  listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n') {
+                  listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n';
                   listContainerHeightCount[b]++;
                 }
               }
               else {
-                listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n';
                 listContainerHeightCount[b]++;
               }
             }
@@ -485,24 +485,24 @@ class HabChungHyeongPa {  //합충형파 계산해주는 클래스
                 && _listPaljaData[(a * 2) + 1] + 5 == _listPaljaData[(b * 2) + 1]) { //축오원진, 묘신원진, 사술원진
               if (listHabChungString[a].length > 4) {
                 if (listHabChungString[a].substring(listHabChungString[a].length - 5, listHabChungString[a].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n') {
-                  listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n') {
+                  listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n';
                   listContainerHeightCount[a]++;
                 }
               }
               else {
-                listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                listHabChungString[a] = listHabChungString[a] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(b * 2) + 1]]} 원진\n';
                 listContainerHeightCount[a]++;
               }
               if (listHabChungString[b].length > 4) {
                 if (listHabChungString[b].substring(listHabChungString[b].length - 5, listHabChungString[b].length) !=
-                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n') {
-                  listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                    '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n') {
+                  listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n';
                   listContainerHeightCount[b]++;
                 }
               }
               else {
-                listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} ${personalDataManager.GetWonjinText()}\n';
+                listHabChungString[b] = listHabChungString[b] + '${style.stringJiji[style.uemYangStringTypeNum][_listPaljaData[(a * 2) + 1]]} 원진\n';
                 listContainerHeightCount[b]++;
               }
             }

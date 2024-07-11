@@ -695,6 +695,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                       ),
                                       Text("합 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowCheonganHab,
                                         onChanged: (value) {
                                           setState(() {
@@ -706,6 +707,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                       SizedBox(width:20),
                                       Text("충 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowCheonganChung,
                                         onChanged: (value) {
                                           setState(() {
@@ -717,6 +719,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                       SizedBox(width:20),
                                       Text("극 ", style: style.settingText0,),
                                       Checkbox(
+                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                         value: isShowCheonganGeuc,
                                         onChanged: (value) {
                                           setState(() {
@@ -1018,6 +1021,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                               ),
                                               Text("자묘형 ", style: style.settingText0,),
                                               Checkbox(
+                                                overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                 value: isShowJamyoHyeong,
                                                 onChanged: (value) {
                                                   setState(() {
@@ -1029,6 +1033,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                               SizedBox(width:20),
                                               Text("인사신 ", style: style.settingText0,),
                                               Checkbox(
+                                                overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                 value: isShowInsasin,
                                                 onChanged: (value) {
                                                   setState(() {
@@ -1040,6 +1045,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                               SizedBox(width:20),
                                               Text("축술미 ", style: style.settingText0,),
                                               Checkbox(
+                                                overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                 value: isShowChucsulmi,
                                                 onChanged: (value) {
                                                   setState(() {
@@ -1442,6 +1448,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                       ),
                                                       Text(personalDataManager.GetYugchinText() + " ", style: style.settingText0,),
                                                       Checkbox(
+                                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                         value: isShowJijangganYugchin,
                                                         onChanged: (value) {
                                                           setState(() {
@@ -1453,6 +1460,7 @@ class _CalendarSettingState extends State<CalendarSettingWidget> {
                                                       SizedBox(width:20),
                                                       Text("월률분야 ", style: style.settingText0,),
                                                       Checkbox(
+                                                        overlayColor: WidgetStateColor.resolveWith((states) => Colors.transparent),
                                                         value: isShowJijangganDay,
                                                         onChanged: (value) {
                                                           setState(() {

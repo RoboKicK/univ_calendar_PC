@@ -598,7 +598,7 @@ class SibiSinsal{//12신살 계산해주는 클래스
     }
 
     //기타 신살 추가
-    if(isManseroc == true && ((isShowDrawerSinsal == 1 && (personalDataManager.etcSinsalData /10 ).floor() != (personalDataManager.etcSinsalDataAllOff/10).floor()) || isShowDrawerSinsal == 2)){
+    if(isManseroc == true && ((isShowDrawerSinsal == 1 && (personalDataManager.etcSinsalData %10 ).floor() != (personalDataManager.etcSinsalDataAllOff%10).floor()))){
       List<String> listMinorSinsal = [];
 
       listMinorSinsal = FindMinorSinsal(_listPaljaData, isShowDrawerSinsal);

@@ -14,14 +14,17 @@ import 'etcSettingWidget.dart' as etcSettingWidget;
 import 'themeSettingWidget.dart' as themeSettingWidget;
 import 'dataManageWidget.dart' as dataManageWidget;
 import 'shareSettingValWidget.dart' as shareSettingValWidget;
+import 'resetSettingWidget.dart' as resetSettingWidget;
 
 class SettingManagerWidget extends StatefulWidget {
-  const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting, required this. refreshMapPersonLengthAndSort, required this.refreshListMapGroupLength});
+  const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting, required this. refreshMapPersonLengthAndSort, required this.refreshListMapGroupLength,
+    required this.directGoPageNum, required this.refreshDiaryUserData, required this.refreshMapRecentLength, required this.refreshMapDiaryLength});
 
   final setSettingPage;
   final reloadSetting;
+  final int directGoPageNum;
 
-  final refreshMapPersonLengthAndSort, refreshListMapGroupLength;
+  final refreshMapPersonLengthAndSort, refreshListMapGroupLength, refreshDiaryUserData, refreshMapRecentLength, refreshMapDiaryLength;
 
   @override
   State<SettingManagerWidget> createState() => _SettingManagerState();
@@ -155,7 +158,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   }
 
   double widgetWidth = 500;
-  double widgetHeight = 560+46;
+  double widgetHeight = 560+46+56;  //기본 사이즈 + 설정 공유 + 테마
 
   Widget nextPage = SizedBox.shrink();
   Widget backSpaceButton = SizedBox.shrink();
@@ -163,14 +166,14 @@ class _SettingManagerState extends State<SettingManagerWidget> {
   Widget mainPage = SizedBox.shrink();
   Widget nowPage = SizedBox.shrink();
 
-  SetNextPageWidget(int num){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타, 7:테마, 8:저장목록, 9:설정 공유
+  SetNextPageWidget(int num, {bool isDirectGo = false}){ //0:처음으로, 1:사용자 설정, 2:단어, 3:만세력, 4:대운세운, 5:신살, 6:기타, 7:테마, 8:저장목록, 9:설정 공유
     setState(() {
       switch(num){
         case 0: {
           nextPage = SizedBox.shrink();
         }
         case 1: {
-          nextPage = userDataWidget.UserDataWidget(diaryFirstSet: null, widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+          nextPage = userDataWidget.UserDataWidget(diaryFirstSet: null, widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting, refreshDiaryUserData: widget.refreshDiaryUserData);
         }
         case 2: {
           nextPage = wordSettingWidget.WordSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
@@ -196,16 +199,19 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         case 9: {
           nextPage = shareSettingValWidget.ShareSettingValWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
+        case 10: {
+          nextPage = resetSettingWidget.ResetSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
+            refreshListMapGroupLength: widget.refreshListMapGroupLength, refreshMapRecentLength: widget.refreshMapRecentLength, refreshMapDiaryLength: widget.refreshMapDiaryLength,);
+        }
       }
       if(num == 0){
         SetBackSpaceButtonWidget(false);
         koreanGanji = ((personalDataManager.etcData % 1000) / 100).floor() - 1;
 
-
-
         mainPage = Container(
           width: widgetWidth,
           height: widgetHeight,
+          margin: EdgeInsets.only(top: 8, bottom:8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(style.textFiledRadius),
           ),
@@ -218,7 +224,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   Container(  //사용자 카테고리 텍스트
                     height: settingTextContainerHeight,
                     width: widgetWidth,
-                    margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop),
+                    margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop-8),
                     child: Text("개인 설정", style: style.settingInfoText0),  //"사용자"
                   ),
                   Container(  //사용자 버튼
@@ -439,7 +445,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                     height: settingTextContainerHeight,
                     width: widgetWidth,
                     margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                    child: Text("데이터 관리",
+                    child: Text("데이터",
                         style: style.settingInfoText0),
                   ),
                   Container(  //저장 목록 버튼
@@ -469,7 +475,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   Container(  //설정 버튼
                     height: settingButtonContainerHeight,
                     width: widgetWidth,
-                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
                     child: Stack(
                       children: [
                         OutlinedButton(
@@ -490,6 +496,30 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                       ],
                     ),
                   ),
+                  Container(  //초기화 버튼
+                    height: settingButtonContainerHeight,
+                    width: widgetWidth,
+                    margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                    child: Stack(
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            SetNextPageWidget(10);
+                          },
+                          style: OutlinedButton.styleFrom(
+                              foregroundColor: style.colorBackGround,
+                              side: BorderSide(color: Colors.transparent),
+                              padding: EdgeInsets.only(left: 0),
+                              fixedSize: Size.fromWidth(
+                                  MediaQuery.of(context).size.width -
+                                      (style.UIMarginLeft * 2)),
+                              alignment: Alignment.centerLeft),
+                          child: Text('데이터 초기화',
+                              style: style.settingText0),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -498,7 +528,9 @@ class _SettingManagerState extends State<SettingManagerWidget> {
 
         nowPage = mainPage;
       } else {
-        SetBackSpaceButtonWidget(true);
+        if(isDirectGo == false) {
+          SetBackSpaceButtonWidget(true);
+        }
         nowPage = nextPage;
       }
     });
@@ -537,6 +569,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
     mainPage = Container(
       width: widgetWidth,
       height: widgetHeight,
+      margin: EdgeInsets.only(top: 8, bottom:8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(style.textFiledRadius),
       ),
@@ -549,7 +582,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
               Container(  //사용자 카테고리 텍스트
                 height: settingTextContainerHeight,
                 width: widgetWidth,
-                margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop),
+                margin: EdgeInsets.only(left: style.UIMarginLeft, top:style.UIMarginTopTop - 8),
                 child: Text("개인 설정", style: style.settingInfoText0),  //"사용자"
               ),
               Container(  //사용자 버튼
@@ -770,7 +803,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                 height: settingTextContainerHeight,
                 width: widgetWidth,
                 margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
-                child: Text("데이터 관리",
+                child: Text("데이터",
                     style: style.settingInfoText0),
               ),
               Container(  //저장 목록 버튼
@@ -800,7 +833,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
               Container(  //설정 버튼
                 height: settingButtonContainerHeight,
                 width: widgetWidth,
-                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft, bottom: style.UIMarginTopTop),
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft),
                 child: Stack(
                   children: [
                     OutlinedButton(
@@ -821,12 +854,40 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   ],
                 ),
               ),
+              Container(  //초기화 버튼
+                height: settingButtonContainerHeight,
+                width: widgetWidth,
+                margin: EdgeInsets.only(top: style.SettingMarginTop, left: style.UIMarginLeft, bottom: style.UIMarginTopTop - 8),
+                child: Stack(
+                  children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        SetNextPageWidget(10);
+                      },
+                      style: OutlinedButton.styleFrom(
+                          foregroundColor: style.colorBackGround,
+                          side: BorderSide(color: Colors.transparent),
+                          padding: EdgeInsets.only(left: 0),
+                          fixedSize: Size.fromWidth(
+                              MediaQuery.of(context).size.width -
+                                  (style.UIMarginLeft * 2)),
+                          alignment: Alignment.centerLeft),
+                      child: Text('데이터 초기화',
+                          style: style.settingText0),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
-    nowPage = mainPage;
+    if(widget.directGoPageNum == 0) {
+      nowPage = mainPage;
+    } else {
+      SetNextPageWidget(widget.directGoPageNum, isDirectGo: true);
+    }
     super.didChangeDependencies();
   }
 
@@ -864,7 +925,11 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                       margin: EdgeInsets.only(top: 6,right:6),
                       child: ElevatedButton(
                         onPressed: () {
-                          widget.setSettingPage();
+                          if(widget.directGoPageNum == 0) {
+                            widget.setSettingPage();
+                          } else {
+                            widget.setSettingPage(isCompulsionClose:true);
+                          }
                         },
                         style: ElevatedButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.transparent),
                         child: Icon(Icons.close, color: Colors.white),

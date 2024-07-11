@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
+import '../findGanji.dart' as findGanji;
+import '../Settings/personalDataManager.dart';
 
 String fileDirPath = '';
 
@@ -364,35 +366,95 @@ late var snackBar;
     }
   } catch(e) {};
 }
-  ClearListMapGroup(){
-  listMapGroup.clear();
-}
   LoadSavedDiary() async {
-  if(mapDiary.length != 0)
-    return;
+    if(mapDiary.length != 0)
+      return;
 
-  for(int i = 0; i <= diaryDataLimitCount; i++){
-    if(i < 10){
-      try {
-        mapDiary.add(
-            jsonDecode(await File('${fileDirPath}/j000${i}').readAsString()));
-      } catch(e){break;}
-    }
-    else if(i < 100){
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j00${i}').readAsString()));}
-      catch(e){break;}
-    }
-    else if(i < 1000){
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j0${i}').readAsString()));}
-      catch(e){break;}
-    }
-    else{
-      try{mapDiary.add(jsonDecode(await File('${fileDirPath}/j${i}').readAsString()));}
-      catch(e){break;}
+    String saveDataString = '';
+    bool isEditedFile = false;
+
+    try {
+      saveDataString = jsonDecode(await File('${fileDirPath}/diaryData').readAsString());
+
+      if(saveDataString.isNotEmpty) {
+        int startNum = 0;
+        int endNum = 3;
+
+        int dayData = 0;
+        int labelData = 0;
+        String memo = '';
+
+        while (true) {
+          if (saveDataString.length < endNum + 2) {
+            break;
+          }
+
+          if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+            dayData = int.parse(saveDataString.substring(startNum, endNum - 2));
+            startNum = endNum;
+
+            labelData = int.parse(saveDataString.substring(startNum, startNum + 9));
+
+            startNum = startNum + 11;
+            endNum = startNum + 2;
+
+            while(true) {
+              if (saveDataString.substring(endNum - 2, endNum) == '{{') {
+                memo = saveDataString.substring(startNum, endNum - 2);
+
+                if(memo.length < 4) {
+                  isEditedFile = true;
+
+                  memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
+                } else  if(int.tryParse(memo.substring(3, 4)) == null){
+                  isEditedFile = true;
+
+                  memo = memo.substring(0, 2) + '0' + memo.substring(2, memo.length);
+                }
+
+                startNum = endNum;
+                endNum = startNum + 2;
+
+                mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': memo});
+                break;
+              } else {
+                endNum++;
+              }
+            }
+          } else {
+            endNum++;
+          }
+        }
+      }
+    } catch(e) {};
+
+    if(isEditedFile == true){
+      SaveDiaryFile();
     }
   }
-}
 
+
+  //데이터 삭제
+  Future<void> DeleteFile(int num) async {
+    switch(num){
+      case 0: { //단일 명식 삭제
+        await File('${fileDirPath}/personData').delete();
+        mapPerson.clear();
+      }
+      case 1: { //궁합 명식 삭제
+        await File('${fileDirPath}/groupData').delete();
+        listMapGroup.clear();
+      }
+      case 2: { //최근 명식 삭제
+        await File('${fileDirPath}/recentPersonData').delete();
+        mapRecentPerson.clear();
+      }
+      case 3: { //일진 일기 삭제
+        await File('${fileDirPath}/diaryData').delete();
+        mapDiary.clear();
+      }
+    }
+  }
   //북마크 순으로 정렬
   //SortPersonFromMark() {
   //  mapPersonSortedMark.clear();
@@ -420,7 +482,7 @@ late var snackBar;
 
     SaveGroupFile();
 
-    snackBar('명식 묶음이 저장되었습니다');
+    snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'} 묶음이 저장되었습니다');
   }
 
   Future<void> SaveGroupFile() async {
@@ -564,7 +626,7 @@ late var snackBar;
   listMapGroup.removeAt(FindListMapGroupIndex(groupName, saveDate));
   SaveGroupFile();
 
-  snackBar('명식 묶음이 삭제되었습니다');
+  snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'} 묶음이 삭제되었습니다');
 }
 
   //-- 여기부터 단일 명식 저장
@@ -597,7 +659,7 @@ late var snackBar;
     mapPerson.add(personData);
     SavePersonFile();
 
-    snackBar('명식이 저장되었습니다');
+    snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'}이 저장되었습니다');
   }
 
   //단일 명식을 json파일로 저장
@@ -634,17 +696,6 @@ late var snackBar;
       //if(mapPerson[i]['gender'] == gender && mapPerson[i]['uemYang'] == uemYang && mapPerson[i]['birthYear'] == birthYear && mapPerson[i]['birthMonth'] == birthMonth && mapPerson[i]['birthDay'] == birthDay && mapPerson[i]['birthHour'] == birthHour && mapPerson[i]['birthMin'] == birthMin){
       if(mapPerson[i]['birthData'] == birthData ){ //mapPerson[i]['name'] == name &&
         String uemYangMessage = '';
-        //int genderInt = ((birthData / 10000000000000) % 10).floor();
-        //int uemYang = ((birthData / 1000000000000) % 10).floor();
-        //int birthYear = ((birthData / 100000000) % 10000).floor();
-        //int birthMonth = ((birthData / 1000000) % 100).floor();
-        //int birthDay = ((birthData / 10000) % 100).floor();
-        //int birthHour = ((birthData / 100) % 100).floor();
-        //int birthMin = birthData % 100;
-        //String genderString = '남';
-        //if(genderInt == 2){
-        //  genderString = '여';
-        //}
 
         if(uemYang == 0){
           uemYangMessage = '양력';
@@ -674,12 +725,22 @@ late var snackBar;
               birthHourMessage = birthHourMessage + ':${birthMin}';
             }
           }
+          //썸머타임 조회
+          if(uemYang == 0) {
+            if (findGanji.CheckSummerTime(birthYear, birthMonth, birthDay, birthHour, birthMin) == true) {
+              birthHourMessage = birthHourMessage + ' (써머타임 -60분)';
+            }
+          } else {
+            List<int> listYangBirth = findGanji.LunarToSolar(birthYear, birthMonth, birthDay, uemYang == 1? false:true);
+            if(findGanji.CheckSummerTime(birthYear, birthMonth, birthDay, birthHour, birthMin) == true)
+              birthHourMessage = birthHourMessage + ' (써머타임 -60분)';
+          }
         }
         if(birthMessage == '') {
-          birthMessage = '${mapPerson[i]['name']}(${genderString}) ${birthYear}년 ${birthMonth}월 ${birthDay}일(${uemYangMessage}) ${birthHourMessage}';
+          birthMessage = '${mapPerson[i]['name']}(${genderString})\n${birthYear}년 ${birthMonth}월 ${birthDay}일(${uemYangMessage}) ${birthHourMessage}';
         }
         else{
-          birthMessage = birthMessage + '\n${mapPerson[i]['name']}(${genderString}) ${birthYear}년 ${birthMonth}월 ${birthDay}일 (${uemYangMessage}) ${birthHourMessage}';
+          birthMessage = birthMessage + '\n${mapPerson[i]['name']}\n(${genderString}) ${birthYear}년 ${birthMonth}월 ${birthDay}일 (${uemYangMessage}) ${birthHourMessage}';
         }
 
         sameDataChecker = false;  //중복 명식이 있으면 false
@@ -722,7 +783,7 @@ late var snackBar;
     mapPerson.removeAt(FindMapPersonIndex(name, ConvertToBirthData(gender, uemYang, birthYear, birthMonth, birthDay, birthHour, birthMin), saveDate));
     SavePersonFile();
 
-    snackBar('명식이 삭제되었습니다');
+    snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'}이 삭제되었습니다');
   }
 
   //mapPerson에서 해당 인덱스 찾기
@@ -793,7 +854,7 @@ late var snackBar;
 
     if(isEditData == true || listGroupPersonIndex.isNotEmpty){
       WidgetsBinding.instance!.addPostFrameCallback((_) {
-        snackBar('명식이 수정되었습니다');
+        snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'}이 수정되었습니다');
       });
     }
   }
@@ -972,208 +1033,89 @@ late var snackBar;
   await file.writeAsString(jsonEncode(jsonString));
 }
 
-  //일진일기를 최초 저장할 때 사용
-  Future<void> SaveDiaryData(int year, int month, int day, int labelData, List<int> dayPaljaData, String dayString, String memo,{bool isEditDiary = false, String editFileNum = ''}) async {
-    if(isEditDiary == true){  //수정할 때
-      final file = File('${fileDirPath}/${editFileNum}');
-      int index = int.parse(editFileNum.substring(1, 5));
+  //일진일기를 최초 저장할 때 사용2
+  Future<void> SaveDiaryData2(int year, int month, int day, int labelData, List<int> dayPaljaData, String dayString, String memo, bool isFromSaveLabel) async {
+    int dayData = (year * 10000) + (month * 100) + day;
 
-      mapDiary[index]['labelData'] = labelData;
-      mapDiary[index]['memo'] = memo;
-
-      await file.writeAsString(jsonEncode({'num':editFileNum,'year': mapDiary[index]['year'], 'month':mapDiary[index]['month'], 'day': mapDiary[index]['day'], 'dayPaljaData': mapDiary[index]['dayPaljaData'],
-        'dayString': mapDiary[index]['dayString'], 'labelData':mapDiary[index]['labelData'], 'memo':mapDiary[index]['memo']}));
-    }
-    else {  //새로 저장할 때
-      int count = mapDiary.length;
-      int index = 0;
-      int saveDayVal = (year * 10000) + (month * 100) + day;  //오늘 저장할 데이터의 날짜를 이용한 값
-      int dayVal = 0;
-      if(count != 0){
-        dayVal = (mapDiary.last['year'] * 10000) + (mapDiary.last['month'] * 100) + mapDiary.last['day']; //이전에 저장되었던 데이터들의 날짜 값/ 가장 최근값
-      }
-
-      //새로 저장할 일기의 순서를 조회함
-      if(count != 0){
-        if(dayVal < saveDayVal){  //가장 최근 날짜로 저장할 때
-          index = count;
+    if(mapDiary.isNotEmpty && dayData <= mapDiary.last['dayData']){  //가장 최근에 작성한 일기와 같거나 이전 날짜면
+    if(dayData == mapDiary.last['dayData']){  //가장 최근에 작성한 일기면 수정 후 저장
+      mapDiary.last['labelData'] = labelData;
+      mapDiary.last['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo;
+      print(1);
+    } else if(mapDiary.length > 1 && dayData < mapDiary.last['dayData'] && dayData > mapDiary[mapDiary.length - 2]['dayData']){ //가장 최근 일기와 바로 직전 일기의 사이면
+      mapDiary.insert(mapDiary.length - 1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
+      print(2);
+    } else {
+      bool isInsertDiary = false;
+      for (int i = mapDiary.length - 2; i >= 0; i--) {
+        if (dayData == mapDiary[i]['dayData']) {  //이미 작성한 날짜면 수정 후 파일 저장
+          mapDiary[i]['labelData'] = labelData;
+          mapDiary[i]['memo'] = '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo;
+          isInsertDiary = true;
+          print(3);
+          break;
         }
-        //else if(dayVal == saveDayVal){  //가장 최근에 저장했던 걸 수정할 때
-        //  index = count - 1;
-        //}
-        else {  //저장목록 중간에 껴야할 때
-          for(int i = 0; i < count; i++){
-            dayVal = (mapDiary[i]['year'] * 10000) + (mapDiary[i]['month'] * 100) + mapDiary[i]['day'];
-            if(dayVal > saveDayVal){  //새 데이터가 저장 데이터보다 옛날 날짜면
-              index = i;
-              break;
-            }
-          }
+        if(dayData > mapDiary[i]['dayData'] && dayData < mapDiary[i+1]['dayData']){ //지금 인덱스와 이전 이덱스 사이면 중간에 삽입하고 저장
+          mapDiary.insert(i+1, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
+          print(4);
+          isInsertDiary = true;
+          break;
         }
       }
-      //새로 저장할 일기의 순서에 따라 저장하는 방법이 다름
-      if(index == count || count == 0){ //가장 최근 날짜의 데이터 저장
-        String fileNum = '';
-        if(index < 10){ //일기는 d로 시작
-          fileNum = 'j000${index}';
-        }
-        else if(index < 100){
-          fileNum = 'j00${index}';
-        }
-        else if(index < 1000){
-          fileNum = 'j0${index}';
-        }
-        else{
-          fileNum = 'j${index}';
-        }
-        mapDiary.add({'num':fileNum, 'year':year, 'month':month, 'day':day, 'labelData':labelData, 'dayPaljaData':dayPaljaData, 'dayString':dayString, 'memo':memo});
-        final file = await CreateSaveFile(fileNum);
-        await file.writeAsString(jsonEncode({'num':fileNum,'year':year, 'month':month,
-          'day':day, 'labelData':labelData, 'dayPaljaData':dayPaljaData, 'dayString':dayString, 'memo':memo}));
-      }
-      else { //이전 날짜의 일기라서 맵데이터 중간에 껴야할 때
-        Map newOne = {'num':'a', 'year':0, 'month':0, 'day':0, 'labelData':0,'memo':''};
-        mapDiary.add(newOne);
-        for(int i = mapDiary.length - 1; i > index; i--){
-          String fileNum = '';
-          if(i < 10){ //일기는 d로 시작
-            fileNum = 'j000${i}';
-          }
-          else if(i < 100){
-            fileNum = 'j00${i}';
-          }
-          else if(i < 1000){
-            fileNum = 'j0${i}';
-          }
-          else{
-            fileNum = 'j${i}';
-          }
-          mapDiary[i]['num'] = fileNum;
-          mapDiary[i]['year'] = mapDiary[i-1]['year'];
-          mapDiary[i]['month'] = mapDiary[i-1]['month'];
-          mapDiary[i]['day'] = mapDiary[i-1]['day'];
-          mapDiary[i]['labelData'] = mapDiary[i-1]['labelData'];
-          mapDiary[i]['memo'] = mapDiary[i-1]['memo'];
-          mapDiary[i]['dayPaljaData'] = mapDiary[i-1]['dayPaljaData'];
-          mapDiary[i]['dayString'] = mapDiary[i-1]['dayString'];
-          try{
-            await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'year': mapDiary[i-1]['year'], 'month':mapDiary[i-1]['month'], 'day': mapDiary[i-1]['day'],
-              'dayPaljaData':mapDiary[i-1]['dayPaljaData'], 'dayString':mapDiary[i-1]['dayString'], 'labelData':mapDiary[i-1]['labelData'], 'memo':mapDiary[i-1]['memo']}));
-          }catch(e){return;}
-          //mapDiary[i] = jsonDecode(await File('${fileDirPath}/${fileNum}').readAsString());
-        }
-        String fileNum = '';
-        if(index < 10){ //일기는 d로 시작
-          fileNum = 'j000${index}';
-        }
-        else if(index < 100){
-          fileNum = 'j00${index}';
-        }
-        else if(index < 1000){
-          fileNum = 'j0${index}';
-        }
-        else{
-          fileNum = 'j${index}';
-        }
-        mapDiary[index]['num'] = fileNum;
-        mapDiary[index]['year'] = year;
-        mapDiary[index]['month'] = month;
-        mapDiary[index]['day'] = day;
-        mapDiary[index]['labelData'] = labelData;
-        mapDiary[index]['memo'] = memo;
-        mapDiary[index]['dayPaljaData'] = dayPaljaData;
-        mapDiary[index]['dayString'] = dayString;
-        final file = File('${fileDirPath}/${fileNum}');
-        await file.writeAsString(jsonEncode({'num':fileNum,'year':year, 'month':month,
-          'day':day, 'dayPaljaData':dayPaljaData, 'dayString':dayString, 'labelData':labelData, 'memo':memo}));
+      if(isInsertDiary == false){
+        mapDiary.insert(0, {'dayData': dayData, 'labelData': labelData, 'memo':'${dayString}${dayPaljaData[6]}${dayPaljaData[7]}'+memo});
+        print(5);
       }
     }
+  } else { //dayData가 가장 최신이면 맨 앞에 새로 저장
+    mapDiary.add({'dayData': dayData, 'labelData': labelData, 'memo': '${dayString}${dayPaljaData[6]}${dayPaljaData[7]}' + memo});
+    print(6);
+  }
+    SaveDiaryFile();
+    if(isFromSaveLabel == false) {
+      snackBar('일기를 저장했습니다');
+    }
+  }
+
+  //일진일기를 json파일로 저장
+  Future<void> SaveDiaryFile() async {
+  String jsonString = '';
+
+  for(int i = 0; i < mapDiary.length; i++){
+    jsonString = jsonString + mapDiary[i]['dayData'].toString() + '{{' + mapDiary[i]['labelData'].toString() + '{{' + mapDiary[i]['memo'] + '{{';
+  }
+
+  final file = await CreateSaveFile('diaryData');
+
+  await file.writeAsString(jsonEncode(jsonString));
 }
 
-  //일진일기 쓸 날자에 작성된 파일 있는지 조회
-  String FineDiaryNum(int year, int month, int day){
-    String fileNum = '';
-    for(int i = 0; i < mapDiary.length; i++){
-      if(mapDiary[i]['day'] == day){
-        if(mapDiary[i]['month'] == month){
-          if(mapDiary[i]['year'] == year){
-            fileNum = mapDiary[i]['num'];
-            break;
-          }
-        }
-      }
+//mapDiary에서 해당 인덱스 찾기
+int FindMapDiaryIndex(int year, int month, int day){
+  int dayData = (year * 10000) + (month * 100) + day;
+  for(int i = mapDiary.length - 1; i >= 0; i--){
+    if(mapDiary[i]['dayData'] == dayData){
+      return i;
     }
-    return fileNum;
   }
 
-  //일기 삭제
-  DeleteDiaryData(String num) async {
-    int index = int.parse(num.substring(1,5));
+  return -1;
+}
 
-    if(index == mapDiary.length-1){  //map의 마지막 파일이면
-      String fileNum = '';
-      if(index < 10){ //일기는 d로 시작
-        fileNum = 'j000${index}';
-      }
-      else if(index < 100){
-        fileNum = 'j00${index}';
-      }
-      else if(index < 1000){
-        fileNum = 'j0${index}';
-      }
-      else{
-        fileNum = 'j${index}';
-      }
-      File('${fileDirPath}/${fileNum}').deleteSync(recursive: true);
-      mapDiary.removeLast();
+//일기 삭제
+DeleteDiaryData(int year, int month, int day) async {
+
+  int dayData = (year * 10000) + (month * 100) + day;
+  for(int i = mapDiary.length - 1; i >= 0; i--){
+    if(mapDiary[i]['dayData'] == dayData){
+      mapDiary.removeAt(i);
+      SaveDiaryFile();
+      return;
     }
-    else{
-      for(int i = index; i < mapDiary.length-1; i++){
-        String fileNum = '';
-        if(index < 10){ //일기는 d로 시작
-          fileNum = 'j000${i}';
-        }
-        else if(index < 100){
-          fileNum = 'j00${i}';
-        }
-        else if(index < 1000){
-          fileNum = 'j0${i}';
-        }
-        else{
-          fileNum = 'j${i}';
-        }
-        mapDiary[i]['year'] = mapDiary[i+1]['year'];
-        mapDiary[i]['month'] = mapDiary[i+1]['month'];
-        mapDiary[i]['day'] = mapDiary[i+1]['day'];
-        mapDiary[i]['labelData'] = mapDiary[i+1]['labelData'];
-        mapDiary[i]['memo'] = mapDiary[i+1]['memo'];
-        mapDiary[i]['dayPaljaData'] = mapDiary[i+1]['dayPaljaData'];
-        mapDiary[i]['dayString'] = mapDiary[i+1]['dayString'];
-        try{
-          await File('${fileDirPath}/${fileNum}').writeAsString(jsonEncode({'num':fileNum, 'year': mapDiary[i]['year'], 'month':mapDiary[i]['month'], 'day': mapDiary[i]['day'],
-            'dayPaljaData':mapDiary[i]['dayPaljaData'], 'dayString':mapDiary[i]['dayString'], 'labelData':mapDiary[i]['labelData'], 'memo':mapDiary[i]['memo']}));
-        }catch(e){return{};}
-      }
-      String delFileNum = '';
-      if(mapDiary.length < 11){
-        delFileNum = 'j000${mapDiary.length - 1}';
-      }
-      else if(mapDiary.length < 101){
-        delFileNum = 'j00${mapDiary.length - 1}';
-      }
-      else if(mapDiary.length < 1001){
-        delFileNum = 'j0${mapDiary.length - 1}';
-      }
-      else{
-        delFileNum = 'j${mapDiary.length - 1}';
-      }
-
-      File('${fileDirPath}/${delFileNum}').deleteSync(recursive: true);
-      mapDiary.removeLast();
-    }
-
-    snackBar('일기가 삭제되었습니다');
   }
+
+  snackBar('일기가 삭제되었습니다');
+}
 
 
 
