@@ -366,7 +366,8 @@ class _DiarysavelistState extends State<Diarysavelist> {
                           onPressed: () {
                             SetSelectedCheongan(0);
                           },
-                          child: Text(style.stringCheongan[koreanGanji][0], style:TextStyle(fontSize: style.UIOhengDiaryListSize, fontFamily: 'NotoSansKR-Bold', fontWeight: style.UIOhengDeunFontWeight, color: Colors.white)),
+                          child: Text(style.stringCheongan[koreanGanji][0], style:TextStyle(fontSize: style.UIOhengDiaryListSize, fontFamily: 'NotoSansKR-Bold',
+                              fontWeight: style.UIOhengDeunFontWeight, color: Colors.white)),
                           style: ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(0))),
                         )
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'bodyWidgetManager.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'style.dart' as style;
@@ -737,6 +738,24 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
     mapPersonLength = saveDataManager.mapPerson.length;
     mapRecentPersonLength = saveDataManager.mapRecentPerson.length;
+
+    WidgetsBinding.instance!.addPostFrameCallback((_){
+      if(DateTime.now().year > 2025 || (DateTime.now().month == 12 && DateTime.now().day > 30))
+      {
+        Future.delayed(const Duration(milliseconds: 3000), () {
+          exit(0);
+        });
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('테스트 기한이 만료되었으므로\n프로그램이 종료됩니다', textAlign: TextAlign.center,),
+            );
+          },
+        );
+      }
+    });
   }
 
   @override void didChangeDependencies() {

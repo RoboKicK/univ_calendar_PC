@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "univ_calendar_pc" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "univ_calendar_pc" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 com.wujuhaneulbyeol. All rights reserved." "\0"
             VALUE "OriginalFilename", "univ_calendar_pc.exe" "\0"
             VALUE "ProductName", "univ_calendar_pc" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

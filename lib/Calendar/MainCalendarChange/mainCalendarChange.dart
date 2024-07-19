@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:univ_calendar_pc/main.dart';
+import 'package:LuciaOneCalendar/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'mainCalendarFindGanjiChange.dart' as mainCalendarFindGanjiChange;
 import '../../style.dart' as style;

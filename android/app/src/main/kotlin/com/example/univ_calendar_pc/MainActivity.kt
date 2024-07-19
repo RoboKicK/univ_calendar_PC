@@ -1,4 +1,4 @@
-package com.example.univ_calendar_pc
+package com.wujuhaneulbyeol.LuciaOneCalendar
 
 import io.flutter.embedding.android.FlutterActivity
 

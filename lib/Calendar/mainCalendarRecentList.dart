@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:univ_calendar_pc/main.dart';
+import 'package:LuciaOneCalendar/main.dart';
 import '../../style.dart' as style;
 import '../../../SaveData/saveDataManager.dart' as saveDataManager;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
