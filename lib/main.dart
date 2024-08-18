@@ -20,6 +20,8 @@ import 'Calendar/MainCalendarChange/mainCalendarChange.dart' as mainCalendarChan
 import 'Calendar/MainCalendarSaveList/mainCalendarSaveList.dart' as mainCalendarSaveList;
 import 'Calendar/mainCalendarRecentList.dart' as mainCalendarRecentList;
 import 'Diary/IljinDiaryManager.dart' as iljinDiaryManager;
+import 'revealWindowClass.dart' as revealWindowClass;
+import 'Help/HelpManagerWidget.dart' as helpManagerWidget;
 
 import 'package:provider/provider.dart';
 import 'bodyWidgetManager.dart' as bodyWidgetManager;
@@ -172,6 +174,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
 
   var appBarTitle = ['  루시아 원 만세력 - 베타 테스트 버전', '  일진일기'];
   bool _isShowSettingPage = false;
+  bool _isShowHelpPage = false;
 
   int nowPageNum = 0;
   double calendarButtonSize = 16;
@@ -185,7 +188,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   int nowPageCount = 3;
   List<Widget> listPageSelectButton = [];
   List<int> listUniquePageNum = [0,1,2];
-  List<String> listPageName = ['페이지 1','페이지 2','페이지 3','페이지 4','페이지 5','페이지 6','페이지 7','페이지 8','페이지 9'];  //페이지 이름
+  List<String> listPageName = ['묶음 1','묶음 2','묶음 3','묶음 4','묶음 5','묶음 6','묶음 7','묶음 8','묶음 9'];  //페이지 이름
   List<String> listPageNameController = ['','','','','','','','',''];
   List<String> listPageMemo = ['','','','','','','','',''];
   List<DateTime> listPageSaveDate = [DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000),DateTime.utc(3000)];
@@ -196,6 +199,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   Widget settingWidget = SizedBox.shrink();
   Widget groupLoadWidget = SizedBox.shrink();
   String groupTempMemo = '';
+  Widget helpWidget = SizedBox.shrink();
 
   bool isShowSideLayer = false;
   bool isShowSideOptionLayer = false;
@@ -225,6 +229,9 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   Color diaryButtonEffectColor = Colors.transparent;
   Color sideLayerButtonEffectColor = Colors.transparent;
   Color settingButtonEffectColor = Colors.transparent;
+  Color helpButtonEffectColor = Colors.transparent;
+
+  revealWindowClass.RevealWindowClass revealWindowClassWidget = revealWindowClass.RevealWindowClass();
 
   ShowSnackBar(String text){
     SnackBar snackBar = SnackBar(
@@ -308,7 +315,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listPageWidget.insert(0,bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
-              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
           SetNowCalendarNum(nowPageNum + 1);
           for(int i = nowPageCount - 1; i > 0; i--){
             if(listPageNameController[i - 1] != ''){
@@ -328,11 +335,11 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key: GlobalKey(), pageNum: uniquePageNum, saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
-              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
         }
         nowPageCount++;
       } else {
-        ShowSnackBar('페이지는 9개까지 사용 가능합니다');
+        ShowSnackBar('묶음은 9개까지 사용 가능합니다');
       }
     });
   }
@@ -352,7 +359,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
-              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
         }
         nowPageNum = 0;
         nowPageCount = firstPageCount;
@@ -363,7 +370,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         }
 
         SetNowCalendarNum(0);
-        ShowSnackBar('모든 페이지를 비웠습니다');
+        ShowSnackBar('모든 묶음을 비웠습니다');
       });
     } else {
       setState(() {
@@ -376,7 +383,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           listPageWidget.insert(num,bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[num], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
-              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave));
+              setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
           for(int i = 0; i < 3; i++){
             listPageNameController[i] = '';
             listPageSaveDate[i] = DateTime.utc(3000);
@@ -402,7 +409,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
           nowPageCount--;
         }
 
-        ShowSnackBar('현재 페이지를 비웠습니다');
+        ShowSnackBar('현재 묶음을 비웠습니다');
       });
     }
   }
@@ -419,7 +426,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
             color: Colors.grey.withOpacity(0.1),
             child: settingManagerWidget.SettingManagerWidget(setSettingPage: ShowSettingPage, reloadSetting: ReloadSetting, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshListMapGroupLength: RefreshListMapGroupLength, directGoPageNum: directGoPageNum, refreshDiaryUserData: RefreshDiaryUserData, refreshMapRecentLength: RefreshRecentPersonLength,
-            refreshMapDiaryLength: RefreshMapDiaryLength,),
+            refreshMapDiaryLength: RefreshMapDiaryLength, RevealWindow: RevealWindow,),
           ),
         );
       });
@@ -458,7 +465,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   //그룹 불러오기
   GroupDataLoad(int groupIndex){
     if(nowPageCount == limitPageCount){ //최대 페이지
-      ShowSnackBar('페이지는 9개까지 사용 가능합니다\n페이지 하나를 비워주세요');
+      ShowSnackBar('묶음은 9개까지 사용 가능합니다\묶음 하나를 비워주세요');
     } else {
       setState(() {
         AddPage(false);
@@ -706,14 +713,71 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   }
 
   //일진일기 사용자 등록 실시간 갱신
-  RefreshDiaryUserData(){
+  RefreshDiaryUserData({bool setOnlyRegiedUserData = false}){
+    print(setOnlyRegiedUserData);
     setState(() {
-      if(personalDataManager.mapUserData.isNotEmpty) {
-        isRegiedUserData = true;
-        SetSideLayerWidget(1, isRefreshUserData: true);
+      if(setOnlyRegiedUserData == true){
+        isRegiedUserData = false;
+        if(nowSideLayerNum == 1){
+          isShowSideLayer = false;
+        }
+      } else {
+        if (personalDataManager.mapUserData.isNotEmpty) {
+          isRegiedUserData = true;
+          SetSideLayerWidget(1, isRefreshUserData: true);
+        }
       }
     });
   }
+
+  //인포윈도우 온오프
+  RevealWindow(bool gender, int ganjiPosNum, bool cheongan, int ganjiNum, int sajuNum, String yugchinString, int sibiunseongNum) {
+    setState(() {
+      //revealWindowWidget = revealWindow.RevealWindow(gender: gender, ganjiPosNum: ganjiPosNum, cheongan: cheongan, sajuNum: sajuNum, ganjiNum: ganjiNum, yugchinNum: yugchinNum, sibiunseongNum: sibiunseongNum);
+      revealWindowClassWidget.GetRevealWindow(gender, ganjiPosNum, cheongan, ganjiNum, sajuNum, yugchinString, sibiunseongNum);
+    });
+  }
+
+  //인포윈도우 갱신
+  SetStateRevealWindow(){
+    setState(() {
+      revealWindowClassWidget.revealWidget;
+    });
+  }
+
+  //도움말 설정 위젯 보이기 안 보이기
+  SetHelpWidget(bool isShow){
+    if(isShow == true){
+      setState(() {
+        helpWidget = TapRegion(
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 6,
+            alignment: Alignment.center,
+            color: Colors.grey.withOpacity(0.1),
+            child: helpManagerWidget.HelpManagerWidget(showHelpPage: ShowHelpPage),
+          ),
+        );
+      });
+    } else {
+      helpWidget = SizedBox.shrink();
+    }
+  }
+
+  //도움말 페이지 온오프
+  ShowHelpPage({isCompulsionClose = false}){
+    setState(() {
+      if(isCompulsionClose == true){
+        _isShowHelpPage = false;
+      } else {
+        _isShowHelpPage = !_isShowHelpPage;
+      }
+      if(_isShowHelpPage == false){
+        SetHelpWidget(false);
+      }
+    });
+  }
+
 
   @override initState(){
     super.initState();
@@ -726,7 +790,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
       listPageWidget.add(bodyWidgetManager.BodyWidgetManager(key:GlobalKey(), pageNum: listUniquePageNum[i], saveSuccess: GroupSaveSuccess, loadSuccess: GroupLoadSuccess, getNowPageNum: SendNowPageNum,
           setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
           refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
-        setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave,));
+        setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
     }
 
     saveDataManager.snackBar = ShowSnackBar;
@@ -756,6 +820,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         );
       }
     });
+
+    revealWindowClassWidget.Init(SetStateRevealWindow);
   }
 
   @override void didChangeDependencies() {
@@ -1045,7 +1111,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                         Container(  //설정 버튼
                           width: 40,
                           height: style.appBarHeight * 0.8,
-                          margin: EdgeInsets.only(left: 10),
+                          margin: EdgeInsets.only(left: 10, right:2),
                           decoration: BoxDecoration(
                             color: _isShowSettingPage == true? style.colorBlack : settingButtonEffectColor,
                             borderRadius: BorderRadius.circular(style.textFiledRadius),
@@ -1063,11 +1129,48 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                             onPressed: (){
                               _isShowSettingPage = !_isShowSettingPage;
                               setState(() {
+                                if(_isShowHelpPage == true){
+                                  _isShowHelpPage = false;
+                                  SetHelpWidget(_isShowHelpPage);
+                                }
                                 SetSettingWidget(_isShowSettingPage);
                               });
                             },
                             style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
                             child: SvgPicture.asset('assets/setting_navi_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
+                          ),
+                        ),
+                        Container(  //도움말 버튼
+                          width: 40,
+                          height: style.appBarHeight * 0.8,
+                          //margin: EdgeInsets.only(right:40),
+                          padding: EdgeInsets.only(bottom:4),
+                          decoration: BoxDecoration(
+                            color: _isShowHelpPage == true? style.colorBlack : helpButtonEffectColor,
+                            borderRadius: BorderRadius.circular(style.textFiledRadius),
+                          ),
+                          child: ElevatedButton(
+                            onHover: (hover){
+                              setState(() {
+                                if(hover == true){
+                                  helpButtonEffectColor = style.colorBlack.withOpacity(0.6);
+                                } else {
+                                  helpButtonEffectColor = Colors.transparent;
+                                }
+                              });
+                            },
+                            onPressed: (){
+                              _isShowHelpPage = !_isShowHelpPage;
+                              setState(() {
+                                if(_isShowSettingPage == true){
+                                  _isShowSettingPage = false;
+                                  SetSettingWidget(_isShowSettingPage);
+                                }
+                                SetHelpWidget(_isShowHelpPage);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,),
+                            child: Text('?', style: TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w900, fontFamily: 'NotoSans-Regular', height:1),),//SvgPicture.asset('assets/setting_navi_icon_select.svg', width: style.appbarIconSize, height: style.appbarIconSize),
                           ),
                         ),
                       ],
@@ -1132,9 +1235,20 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                 children: [
                   Flexible(
                     fit: FlexFit.tight,
-                    child: IndexedStack( //메인 페이지
-                      index: nowPageNum,
-                      children: listPageWidget,
+                    child: Container(
+                      child: Stack(
+                        children: [
+                          IndexedStack( //메인 페이지
+                            index: nowPageNum,
+                            children: listPageWidget,
+                          ),
+                          Container(  //인포윈도우 위젯
+                            height: MediaQuery.of(context).size.height - style.appBarHeight,
+                            alignment: Alignment.bottomRight,
+                            child: revealWindowClassWidget.revealWidget,//revealWindowWidget,//groupLoadWidget,
+                          ),
+                        ]
+                      ),
                     ),
                   ),
                   AnimatedContainer(  //사이드 메모, 정보 위젯
@@ -1220,7 +1334,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                           ),
                         ],
                       ),
-                        iljinDiaryManager.Iljindiarymanager(isRegiedUserData: isRegiedUserData, SetSettingWidget: SetSettingWidget, SetSideOptionWidget: SetSideOptionWidget, CloseOption: SetSideOptionLayerWidget,),
+                        iljinDiaryManager.Iljindiarymanager(isRegiedUserData: isRegiedUserData, SetSettingWidget: SetSettingWidget, SetSideOptionWidget: SetSideOptionWidget, CloseOption: SetSideOptionLayerWidget, RevealWindow: RevealWindow,),
                       ]
                       [nowSideLayerNum],
                       secondChild:Container(
@@ -1242,11 +1356,11 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
                 alignment: Alignment.center,
                 child: settingWidget,
               ),
-              Container(  //그룹 불러오기 위젯
+              Container(  //도움말 위젯
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height - style.appBarHeight,
                 alignment: Alignment.center,
-                child: groupLoadWidget,
+                child: helpWidget,
               ),
             ]
           )

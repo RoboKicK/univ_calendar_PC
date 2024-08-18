@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 class MainCalendarInquireResult extends StatefulWidget {
   const MainCalendarInquireResult({super.key, required this.name, required this.gender, required this.uemYang, required this.birthYear, required this.birthMonth, required this.birthDay, required this.birthHour, required this.birthMin,
     required this.saveDate, required this.widgetWidth, required this.isEditSetting, required this.isShowChooseDayButtons, required this.setWidgetCalendarResultBirthTextFromChooseDayMode, required this.setUemYangBirthType,
-  required this.refreshMapRecentPersonLength, required this.calendarMemoWidgetHeight});
+  required this.refreshMapRecentPersonLength, required this.calendarMemoWidgetHeight, required this.RevealWindow});
 
   final String name;
   final bool gender;
@@ -37,6 +37,7 @@ class MainCalendarInquireResult extends StatefulWidget {
   final setUemYangBirthType;
   final refreshMapRecentPersonLength;
   final double calendarMemoWidgetHeight;
+  final RevealWindow;
 
   @override
   State<MainCalendarInquireResult> createState() => _MainCalendarInquireResultState();
@@ -163,22 +164,81 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   }
 
   Widget GetSajuTitle(){
-
     if(listSajuTitle.length == 0){
-      listSajuTitle.add(Text('연주', style: Theme.of(context).textTheme.titleSmall));
-      listSajuTitle.add(Text('월주', style: Theme.of(context).textTheme.titleSmall));
-      listSajuTitle.add(Text('일주', style: Theme.of(context).textTheme.titleSmall));
-      listSajuTitle.add(Text('시주', style: Theme.of(context).textTheme.titleSmall));
+      listSajuTitle.add(
+        Container(
+          width: 50,
+          child: ElevatedButton(
+              onPressed: (){
+                widget.RevealWindow(widget.gender, 30, true, 30, 0, '', 30);
+              },
+              child: Text('연주', style: Theme.of(context).textTheme.titleSmall),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+            backgroundColor: Colors.transparent, elevation:0.0, ),
+          ),
+        )
+      );
+      listSajuTitle.add(
+          Container(
+            width: 50,
+            child: ElevatedButton(
+              onPressed: (){
+                widget.RevealWindow(widget.gender, 30, true, 30, 1, '', 30);
+              },
+              child: Text('월주', style: Theme.of(context).textTheme.titleSmall),
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+                backgroundColor: Colors.transparent, elevation:0.0, ),
+            ),
+          )
+      );
+      listSajuTitle.add(
+          Container(
+            width: 50,
+            child: ElevatedButton(
+              onPressed: (){
+                widget.RevealWindow(widget.gender, 30, true, 30, 2, '', 30);
+              },
+              child: Text('일주', style: Theme.of(context).textTheme.titleSmall),
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+                backgroundColor: Colors.transparent, elevation:0.0, ),
+            ),
+          )
+      );
+      listSajuTitle.add(
+          Container(
+            width: 50,
+            child: ElevatedButton(
+              onPressed: (){
+                widget.RevealWindow(widget.gender, 30, true, 30, 3, '', 30);
+              },
+              child: Text('시주', style: Theme.of(context).textTheme.titleSmall),
+              style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+                backgroundColor: Colors.transparent, elevation:0.0, ),
+            ),
+          )
+      );
     }
     while((listPaljaData.length / 2).floor() < listSajuTitle.length){
       listSajuTitle.removeLast();
     }
 
     if(listPaljaData.length > 8 && listSajuTitle.length < 5){
-      listSajuTitle.add(Text('대운', style: Theme.of(context).textTheme.titleSmall));
+      listSajuTitle.add(
+          Container(
+            width: 50,
+            alignment: Alignment.center,
+            child: Text('대운', style: Theme.of(context).textTheme.titleSmall),
+          )
+      );
     }
     if(listPaljaData.length > 10 && listSajuTitle.length < 6){
-      listSajuTitle.add(Text('세운', style: Theme.of(context).textTheme.titleSmall));
+      listSajuTitle.add(
+          Container(
+            width: 50,
+            alignment: Alignment.center,
+            child: Text('세운', style: Theme.of(context).textTheme.titleSmall),
+          )
+      );
     }
 
     return Container(
@@ -291,10 +351,10 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
   Widget GetYugchinWidget(bool isCheongan, List<int> listPalja){
     if(isShowDrawerYugchin == 1){ //((personalDataManager.calendarData % 10000000000000) / 1000000000000).floor() == 2 &&
       if(isCheongan == true){
-        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: true, isLastWidget: false, widgetWidth: widgetWidth);
+        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: true, isLastWidget: false, widgetWidth: widgetWidth, RevealWindow: widget.RevealWindow,);
       } else {
         containerColorNum = (containerColorNum + 1) % 2;
-        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[containerColorNum], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: false, isLastWidget: lastWidgetNum == 1?true:false, widgetWidth: widgetWidth);
+        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[containerColorNum], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: false, isLastWidget: lastWidgetNum == 1?true:false, widgetWidth: widgetWidth, RevealWindow: widget.RevealWindow);
       }
     }
     else{
@@ -547,11 +607,12 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                       calendarResultPaljaWidget.CalendarResultPaljaWidget(
                           containerColor: listContainerColor[1],
                           listPaljaData: listPaljaData,
+                        gender: widget.gender,
                           isShowDrawerUemyangSign: isShowDrawerUemyang,
                           isShowDrawerKoreanGanji: isShowDrawerKoreanGanji,
                           isLastWidget: lastWidgetNum == 0 ? true : false,
                           widgetWidth: widgetWidth,
-                        isShowChooseDayButtons: widget.isShowChooseDayButtons,
+                        isShowChooseDayButtons: widget.isShowChooseDayButtons, RevealWindow: widget.RevealWindow,
                       ), //팔자 오행
                       GetChooseDayWidget(), //택일 버튼
                     ],
@@ -616,11 +677,12 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
                         calendarResultPaljaWidget.CalendarResultPaljaWidget(
                             containerColor: listContainerColor[1],
                             listPaljaData: listPaljaData,
+                            gender: widget.gender,
                             isShowDrawerUemyangSign: isShowDrawerUemyang,
                             isShowDrawerKoreanGanji: isShowDrawerKoreanGanji,
                             isLastWidget: lastWidgetNum == 0 ? true : false,
                             widgetWidth: widgetWidth,
-                          isShowChooseDayButtons: widget.isShowChooseDayButtons,), //팔자 오행
+                          isShowChooseDayButtons: widget.isShowChooseDayButtons, RevealWindow: widget.RevealWindow,), //팔자 오행
                         GetYugchinWidget(false, listPaljaData),
                         GetJijangganWidget(listPaljaData),
                         Get12UnseongWidget(listPaljaData),

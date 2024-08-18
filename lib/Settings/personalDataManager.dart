@@ -10,6 +10,7 @@ String fileDirPath = '';
 
 Map mapUserData = {}; //사용자 정보
 int themeData = 1; //테마 데이터
+//테마: 1부터 베이직, 곰돌이
 
 Map mapWordData = {}; //단어 설정 'ilGan', 'yugChin', 'myeongSic', 'geukChung', 'hab'   라디오 버튼 1,2,3
 
@@ -31,8 +32,7 @@ int deunSeunData = 0; //1자리: 간지 추가, 10자리: 육친, 100자리: 십
 int etcDataAllOn = 21273222;
 int etcDataAllOff = 11191111;
 int etcData = 0;  //1자리: 만 나이, 10자리: 간지 음양 표시, 100자리: 한글 간지, 1000자리: 인적사항 숨기기(1:안숨김, 2:만세력에서만 숨김, 3:항상 숨김)
-//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 테마, 백만자리: 저장목록 등에 일주 표시
-//테마: 1부터 베이직, 곰돌이
+//만자리:인적사항 숨기기(1:이름과 성별 + 2:나이 + 4:생년월일시), 십만자리: 조회 중 꺼지지 않음, 백만자리: 저장목록 등에 일주 표시, 천만자리: 간지 눌러 도움말 표시
 
 //사용자 정보 저장하는 클래스
 
@@ -86,9 +86,12 @@ LoadUserData() async{
   }
   }catch(e){
     final file = await CreateSaveFile('etcData');
-    etcData = etcDataAllOff;
+    etcData = 22191121;
     if(etcData < 10000000){
       etcData = etcData + 20000000;
+    }
+    if(etcData < 100000000){
+      etcData = etcData + 200000000;
     }
     await file.writeAsString(jsonEncode(etcData));
   }
@@ -279,16 +282,32 @@ Future<void> SaveAllFiles() async{
 }
 
 Future<void> ResetAllFiles() async{
-  await File('${fileDirPath}/calendarData').delete();
-  await File('${fileDirPath}/deunSeunData').delete();
-  await File('${fileDirPath}/etcData').delete();
-  await File('${fileDirPath}/sinsalData').delete();
-  await File('${fileDirPath}/etcSinsalData').delete();
-  await File('${fileDirPath}/wordData').delete();
-  await File('${fileDirPath}/userData').delete();
+  try {
+    await File('${fileDirPath}/calendarData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/deunSeunData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/etcData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/sinsalData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/etcSinsalData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/wordData').delete();
+  } catch(e) {}
+  try {
+    await File('${fileDirPath}/userData').delete();
+  } catch(e) {}
+
+  mapUserData.removeWhere((key, value) => key == 'name' || value == 'gender' || value == 'uemYang' || value == 'birthYear' || value == 'birthMonth' || value == 'birthDay'
+      || value == 'birthHour' || value == 'birthMin' || value == 'listPaljaData');
 
   LoadUserData();
-  mapUserData.clear();
 }
 
 String GetYugchinText(){  //육친 단어를 설정에 따라 반환한다

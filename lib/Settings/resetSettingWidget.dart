@@ -14,13 +14,13 @@ import '../SaveData/saveDataManager.dart' as saveDataManager;
 
 class ResetSettingWidget extends StatefulWidget {
   const ResetSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting, required this.refreshMapPersonLengthAndSort,
-    required this.refreshListMapGroupLength, required this.refreshMapRecentLength, required this.refreshMapDiaryLength});
+    required this.refreshListMapGroupLength, required this.refreshMapRecentLength, required this.refreshMapDiaryLength, required this.refreshDiaryUserData});
 
   final double widgetWidth;
   final double widgetHeight;
 
   final reloadSetting;
-  final refreshMapPersonLengthAndSort, refreshListMapGroupLength, refreshMapRecentLength, refreshMapDiaryLength;
+  final refreshMapPersonLengthAndSort, refreshListMapGroupLength, refreshMapRecentLength, refreshMapDiaryLength, refreshDiaryUserData;
 
   @override
   State<ResetSettingWidget> createState() => _ResetSettingWidgetState();
@@ -152,6 +152,7 @@ class _ResetSettingWidgetState extends State<ResetSettingWidget> {
                     onPressed: () {
                       setState(() {
                         personalDataManager.ResetAllFiles();
+                        widget.refreshDiaryUserData(setOnlyRegiedUserData: true);
                         ShowSnackBar('개인 설정을 초기화했습니다');
                       });
                     }),

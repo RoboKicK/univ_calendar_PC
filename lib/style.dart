@@ -134,6 +134,7 @@ var colorGreen = Color(0xff32cd32);
 var colorYellow = Color(0xffffb020);
 var colorBlack = Color(0xff373737);
 var colorRealBlack = Color(0xff111111);
+var colorRevealWindow = Color(0xffffd07a);
 
 var colorBoxGray0 = Color(0xfff0f0f0); //밝음
 var colorBoxGray1 = Color(0xffe1e1e1); //어두움

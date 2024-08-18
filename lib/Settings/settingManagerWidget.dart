@@ -18,11 +18,12 @@ import 'resetSettingWidget.dart' as resetSettingWidget;
 
 class SettingManagerWidget extends StatefulWidget {
   const SettingManagerWidget({super.key, required this.setSettingPage, required this.reloadSetting, required this. refreshMapPersonLengthAndSort, required this.refreshListMapGroupLength,
-    required this.directGoPageNum, required this.refreshDiaryUserData, required this.refreshMapRecentLength, required this.refreshMapDiaryLength});
+    required this.directGoPageNum, required this.refreshDiaryUserData, required this.refreshMapRecentLength, required this.refreshMapDiaryLength, required this.RevealWindow});
 
   final setSettingPage;
   final reloadSetting;
   final int directGoPageNum;
+  final RevealWindow;
 
   final refreshMapPersonLengthAndSort, refreshListMapGroupLength, refreshDiaryUserData, refreshMapRecentLength, refreshMapDiaryLength;
 
@@ -191,7 +192,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
           nextPage = etcSettingWidget.EtcSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
         }
         case 7: {
-          nextPage = themeSettingWidget.ThemeSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting);
+          nextPage = themeSettingWidget.ThemeSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting, RevealWindow: widget.RevealWindow);
         }
         case 8: {
           nextPage = dataManageWidget.DataManageWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort, refreshListMapGroupLength: widget.refreshListMapGroupLength,);
@@ -201,7 +202,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
         }
         case 10: {
           nextPage = resetSettingWidget.ResetSettingWidget(widgetWidth: widgetWidth, widgetHeight: widgetHeight, reloadSetting: widget.reloadSetting, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort,
-            refreshListMapGroupLength: widget.refreshListMapGroupLength, refreshMapRecentLength: widget.refreshMapRecentLength, refreshMapDiaryLength: widget.refreshMapDiaryLength,);
+            refreshListMapGroupLength: widget.refreshListMapGroupLength, refreshMapRecentLength: widget.refreshMapRecentLength, refreshMapDiaryLength: widget.refreshMapDiaryLength, refreshDiaryUserData: widget.refreshDiaryUserData,);
         }
       }
       if(num == 0){
@@ -263,7 +264,8 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                       ],
                     ),
                   ),
-                  Container(  //테마
+                /*
+                Container(  //테마
                     height: settingButtonContainerHeight,
                     width: widgetWidth,
                     margin: EdgeInsets.only(top: style.SettingMarginTop,left: style.UIMarginLeft),
@@ -287,6 +289,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                       ],
                     ),
                   ),
+                  */
                   Container(
                     //만세력 카테고리 텍스트
                     height: settingTextContainerHeight,
@@ -542,7 +545,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
           Container(
             width: 24,
             height: 24,
-            margin: EdgeInsets.only(left:6, top:6),
+            margin: EdgeInsets.only(left:10, top:12),
             child: ElevatedButton(
               onPressed: () {
                 SetNextPageWidget(0);
@@ -621,6 +624,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   ],
                 ),
               ),
+              /*
               Container(  //테마
                 height: settingButtonContainerHeight,
                 width: widgetWidth,
@@ -645,6 +649,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                   ],
                 ),
               ),
+              */
               Container(
                 //만세력 카테고리 텍스트
                 height: settingTextContainerHeight,
@@ -922,7 +927,7 @@ class _SettingManagerState extends State<SettingManagerWidget> {
                     Container(
                       width: 24,
                       height: 24,
-                      margin: EdgeInsets.only(top: 6,right:6),
+                      margin: EdgeInsets.only(top: 12,right:10),
                       child: ElevatedButton(
                         onPressed: () {
                           if(widget.directGoPageNum == 0) {

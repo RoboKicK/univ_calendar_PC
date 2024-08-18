@@ -12,16 +12,17 @@ import '../../SaveData/saveDataManager.dart' as saveDataManager;
 
 
 class DiaryWriting extends StatefulWidget {
-  const DiaryWriting({super.key, required this.listTodayPalja, required this.userIlganNum, required this.userYeonjiNum,
-    required this.diaryYear, required this.diaryMonth, required this.diaryDay, required this.dayString, required this.isWriting, required this.CloseOption});
+  const DiaryWriting({super.key, required this.listTodayPalja, required this.userGender, required this.userIlganNum, required this.userYeonjiNum,
+    required this.diaryYear, required this.diaryMonth, required this.diaryDay, required this.dayString, required this.isWriting, required this.CloseOption, required this.RevealWindow,});
 
   final List<int> listTodayPalja;
+  final bool userGender;
   final int userIlganNum;
   final int userYeonjiNum;
   final int diaryYear, diaryMonth, diaryDay;
   final String dayString;
   final int isWriting;
-  final CloseOption;
+  final CloseOption, RevealWindow;
 
   @override
   State<DiaryWriting> createState() => _DiaryWritingState();
@@ -195,9 +196,9 @@ class _DiaryWritingState extends State<DiaryWriting> {
         ],
       ),
     ));//
-    listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: widget.listTodayPalja, stanIlganNum: widget.userIlganNum,isManseryoc:false, isCheongan: true, isLastWidget: false));
-    listTodayPaljaWidget.add(calendarResultPaljaWidget.CalendarResultPaljaWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray1, listPaljaData: widget.listTodayPalja, isShowDrawerUemyangSign: 0, isShowDrawerKoreanGanji: koreanGanji, isLastWidget: false, isShowChooseDayButtons: false));
-    listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: widget.listTodayPalja, stanIlganNum: widget.userIlganNum, isManseryoc:false, isCheongan: false, isLastWidget: false));
+    listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: widget.listTodayPalja, stanIlganNum: widget.userIlganNum,isManseryoc:false, isCheongan: true, isLastWidget: false, RevealWindow: widget.RevealWindow));
+    listTodayPaljaWidget.add(calendarResultPaljaWidget.CalendarResultPaljaWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray1, listPaljaData: widget.listTodayPalja, gender: widget.userGender, isShowDrawerUemyangSign: 0, isShowDrawerKoreanGanji: koreanGanji, isLastWidget: false, isShowChooseDayButtons: false, RevealWindow: widget.RevealWindow,));
+    listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: widget.listTodayPalja, stanIlganNum: widget.userIlganNum, isManseryoc:false, isCheongan: false, isLastWidget: false, RevealWindow: widget.RevealWindow));
     listTodayPaljaWidget.add(sibiunseong.Sibiunseong().Get12Unseong(context, style.colorBoxGray1, widget.listTodayPalja, widget.userIlganNum, false, style.UIButtonWidth+27));
     listTodayPaljaWidget.add(sibiSinsal.SibiSinsal().Get12Sinsal(context, style.colorBoxGray0, widget.listTodayPalja, widget.userYeonjiNum, false, 0, true, style.UIButtonWidth+27));
 

@@ -4,7 +4,7 @@ import 'yugchinClass.dart' as yugchinClass;
 import '../../Settings/personalDataManager.dart' as personalDataManager;
 
 class YugchinWidget extends StatefulWidget {
-  const YugchinWidget({super.key, required this.containerColor, required this.listPaljaData, required this.stanIlganNum, required this.isManseryoc, required this.isCheongan, required this.isLastWidget, required this.widgetWidth});
+  const YugchinWidget({super.key, required this.containerColor, required this.listPaljaData, required this.stanIlganNum, required this.isManseryoc, required this.isCheongan, required this.isLastWidget, required this.widgetWidth, required this.RevealWindow});
 
   final Color containerColor;
   final List<int> listPaljaData;
@@ -13,6 +13,7 @@ class YugchinWidget extends StatefulWidget {
   final bool isCheongan;
   final bool isLastWidget;
   final double widgetWidth;
+  final RevealWindow;
 
   @override
   State<YugchinWidget> createState() => _YugchinWidgetState();
@@ -79,39 +80,82 @@ class _YugchinWidgetState extends State<YugchinWidget> {
     }
 
     if(widget.listPaljaData.length > 10){
+
       listYugchinCheonganWidget.add(Container(
         width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
         alignment: Alignment.center,
-        child: Text(listCheonganYugchinString[5], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        child: ElevatedButton(
+          onPressed: (){
+            widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[5], 30);
+          },
+          child: Text(listCheonganYugchinString[5], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+            backgroundColor: Colors.transparent, elevation:0.0, ),
+        ),
       ));
     }
     if(widget.listPaljaData.length > 8){
       listYugchinCheonganWidget.add(Container(
         width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
         alignment: Alignment.center,
-        child: Text(listCheonganYugchinString[4], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        child: ElevatedButton(
+          onPressed: (){
+            widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[4], 30);
+          },
+          child: Text(listCheonganYugchinString[4], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+            backgroundColor: Colors.transparent, elevation:0.0, ),
+        ),
       ));
     }
 
     listYugchinCheonganWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganYugchinString[3], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[3], 30);
+        },
+        child: Text(listCheonganYugchinString[3], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinCheonganWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganYugchinString[2], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[2], 30);
+        },
+        child: Text(listCheonganYugchinString[2], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinCheonganWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganYugchinString[1], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[1], 30);
+        },
+        child: Text(listCheonganYugchinString[1], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinCheonganWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganYugchinString[0], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganYugchinString[0], 30);
+        },
+        child: Text(listCheonganYugchinString[0], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
 
     return listYugchinCheonganWidget;
@@ -146,36 +190,78 @@ class _YugchinWidgetState extends State<YugchinWidget> {
       listYugchinJijiWidget.add(Container(
         width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
         alignment: Alignment.center,
-        child: Text(listCheonganJijiString[5], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        child: ElevatedButton(
+          onPressed: (){
+            widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[5], 30);
+          },
+          child: Text(listCheonganJijiString[5], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+            backgroundColor: Colors.transparent, elevation:0.0, ),
+        ),
       ));
     }
     if(widget.listPaljaData.length > 8){
       listYugchinJijiWidget.add(Container(
         width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
         alignment: Alignment.center,
-        child: Text(listCheonganJijiString[4], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        child: ElevatedButton(
+          onPressed: (){
+            widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[4], 30);
+          },
+          child: Text(listCheonganJijiString[4], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+          style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+            backgroundColor: Colors.transparent, elevation:0.0, ),
+        ),
       ));
     }
 
     listYugchinJijiWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganJijiString[3], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[3], 30);
+        },
+        child: Text(listCheonganJijiString[3], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinJijiWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganJijiString[2], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[2], 30);
+        },
+        child: Text(listCheonganJijiString[2], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinJijiWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganJijiString[1], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[1], 30);
+        },
+        child: Text(listCheonganJijiString[1], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
     listYugchinJijiWidget.add(Container(
       width: (widget.widgetWidth - (style.UIMarginLeft * 2))/divideVal,
       alignment: Alignment.center,
-      child: Text(listCheonganJijiString[0], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+      child: ElevatedButton(
+        onPressed: (){
+          widget.RevealWindow(true, 30, true, 30, 30, listCheonganJijiString[0], 30);
+        },
+        child: Text(listCheonganJijiString[0], style: Theme.of(context).textTheme.bodySmall, textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false)),
+        style: ElevatedButton.styleFrom(alignment: Alignment.center, splashFactory: NoSplash.splashFactory, padding:EdgeInsets.zero,
+          backgroundColor: Colors.transparent, elevation:0.0, ),
+      ),
     ));
 
     return listYugchinJijiWidget;

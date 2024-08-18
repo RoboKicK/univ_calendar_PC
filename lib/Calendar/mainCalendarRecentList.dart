@@ -392,7 +392,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                 child: Column(
                                   children: [
                                     Container(
-                                      width: style.UIButtonWidth * 0.9,
+                                      width: style.UIButtonWidth * 0.8,
                                       height: style.saveDataNameLineHeight,
                                       padding: EdgeInsets.only(top:6),
                                       child: Row(
@@ -401,7 +401,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                       ),
                                     ),
                                     Container(
-                                      width: style.UIButtonWidth * 0.9,
+                                      width: style.UIButtonWidth * 0.8,
                                       height: style.saveDataNameLineHeight,
                                       padding: EdgeInsets.only(top:4),
                                       child: Row(
@@ -410,7 +410,7 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                       ),
                                     ),
                                     Container(
-                                        width: style.UIButtonWidth * 0.9,
+                                        width: style.UIButtonWidth * 0.8,
                                         height: style.saveDataNameLineHeight,
                                         //padding: EdgeInsets.only(top:4),
                                         child: Text(GetInquireDateText(saveDataManager.mapRecentPerson[i]['saveDate']), style: Theme.of(context).textTheme.displayMedium, overflow: TextOverflow.ellipsis)
@@ -418,26 +418,65 @@ class _MainCalendarRecentListState extends State<MainCalendarRecentList> {
                                 ],
                               ),
                             ),
-                              Container(  //저장 버튼
-                                width: style.UIButtonWidth * 0.1,
-                                height: style.UIButtonWidth * 0.1,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      print('save');
-                                      bool isSamePerson = saveDataManager.SavePersonIsSameChecker(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i) == true? '남':'여', saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
-                                          saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i), saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), ShowSameCheckerMessage);
-                                      if(isSamePerson == true){
-                                        saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
-                                            saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
-                                            saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
-                                            saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now(), '');                                         ;}
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
-                                      overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
-                                  child: Icon(Icons.save, color:Colors.white),
-                                ),
+                              Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Container(  //저장 버튼
+                                        width: style.UIButtonWidth * 0.1,
+                                        height: ((style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight) * 0.33333,
+                                        alignment: Alignment.topCenter,
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              print('save');
+                                              bool isSamePerson = saveDataManager.SavePersonIsSameChecker(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i) == true? '남':'여', saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                                  saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i), saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), ShowSameCheckerMessage);
+                                              if(isSamePerson == true){
+                                                saveDataManager.SavePersonData2(saveDataManager.mapRecentPerson[i]['name'], saveDataManager.GetSelectedRecentBirthData('gender', i),
+                                                    saveDataManager.GetSelectedRecentBirthData('uemYang', i), saveDataManager.GetSelectedRecentBirthData('birthYear', i),
+                                                    saveDataManager.GetSelectedRecentBirthData('birthMonth', i), saveDataManager.GetSelectedRecentBirthData('birthDay', i),
+                                                    saveDataManager.GetSelectedRecentBirthData('birthHour', i), saveDataManager.GetSelectedRecentBirthData('birthMin', i), DateTime.now(), '');                                         ;}
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                              overlayColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(style.textFiledRadius))),
+                                          child: Icon(Icons.save, color:Colors.white),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: style.UIButtonWidth * 0.1,
+                                        height: ((style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight) * 0.66666,
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Container(  //지우기 버튼
+                                        width: style.UIButtonWidth * 0.1,
+                                        height: ((style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight) * 0.33333,
+                                        alignment: Alignment.topCenter,
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              saveDataManager.DeleteRecentPersonData(i);
+                                              mapRecentPerson = saveDataManager.mapRecentPerson;
+                                            });
+                                          },
+                                          style: ElevatedButton.styleFrom(padding: EdgeInsets.all(0), backgroundColor: Colors.transparent, elevation: 0, splashFactory: NoSplash.splashFactory,
+                                              foregroundColor: style.colorBackGround, surfaceTintColor: Colors.transparent),
+                                          child: Icon(Icons.close, color:Colors.white),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: style.UIButtonWidth * 0.1,
+                                        height: ((style.saveDataNameLineHeight * 1.9) + style.saveDataMemoLineHeight) * 0.66666,
+                                      )
+                                    ],
+                                  ),
+                                ],
                               ),
                             ]
                           ),

@@ -20,7 +20,8 @@ import 'MainCalendarSaveList/mainCalendarSaveListOption.dart' as mainCalendarSav
 class CalendarMain extends StatefulWidget {
   const CalendarMain({super.key, required this.isEditSetting, required this.pageNum, required this.saveSuccess, required this.loadSuccess, required this.getNowPageNum,
     required this.setNowPageName, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort,
-    required this.refreshMapRecentPersonLength, required this.refreshListMapGroupLength, required this.refreshGroupName, required this.setGroupMemoWidget, required this.getGroupTempMemo, required this.setGroupSaveDateAfterSave});
+    required this.refreshMapRecentPersonLength, required this.refreshListMapGroupLength, required this.refreshGroupName, required this.setGroupMemoWidget, required this.getGroupTempMemo,
+    required this.setGroupSaveDateAfterSave, required this.RevealWindow});
 
   final bool isEditSetting;
   final int pageNum;
@@ -30,6 +31,7 @@ class CalendarMain extends StatefulWidget {
   final setSideOptionLayerWidget, setSideOptionWidget;
   final refreshMapPersonLengthAndSort, refreshMapRecentPersonLength, refreshListMapGroupLength, refreshGroupName;
   final setGroupMemoWidget, getGroupTempMemo, setGroupSaveDateAfterSave;
+  final RevealWindow;
 
   @override
   State<CalendarMain> createState() => _CalendarMainState();
@@ -98,14 +100,14 @@ class _CalendarMainState extends State<CalendarMain> {
           listCalendarWidget.insert(0, CalendarWidget(key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1,
                   isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap, setSideOptionLayerWidget: widget.setSideOptionLayerWidget,
               setSideOptionWidget: widget.setSideOptionWidget, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort, refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength,
-              ));
+              RevealWindow: widget.RevealWindow,));
         } else {
           //오른쪽 추가
           listKey.add(mapNumAndKey);
           listCalendarWidget.add(CalendarWidget( key: mapNumAndKey['globalKey'], closeWidget: CloseCalendarWidget, widgetNum: mapNumAndKey['widgetNum'], nowWidgetCount: listKey.length - 1,
               isEditSetting: isEditSetting, getCalendarWidgetCount: GetCalendarWidgetCount, loadPersonData: listGroupMap, setSideOptionLayerWidget: widget.setSideOptionLayerWidget,
               setSideOptionWidget: widget.setSideOptionWidget, refreshMapPersonLengthAndSort: widget.refreshMapPersonLengthAndSort, refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength,
-              ));
+              RevealWindow: widget.RevealWindow));
           WidgetsBinding.instance!.addPostFrameCallback((_) {
             PageScrollToEdge(false);
           });
@@ -606,7 +608,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
 class CalendarWidget extends StatefulWidget {
   const CalendarWidget({super.key, required this.closeWidget, required this.widgetNum, required this.nowWidgetCount, required this.isEditSetting, required this.getCalendarWidgetCount,
     required this.loadPersonData, required this.setSideOptionLayerWidget, required this.setSideOptionWidget, required this.refreshMapPersonLengthAndSort,
-    required this.refreshMapRecentPersonLength,
+    required this.refreshMapRecentPersonLength, required this.RevealWindow,
 });
 
   final int widgetNum, nowWidgetCount;
@@ -616,6 +618,7 @@ class CalendarWidget extends StatefulWidget {
   final dynamic loadPersonData;
   final setSideOptionLayerWidget, setSideOptionWidget;
   final refreshMapPersonLengthAndSort, refreshMapRecentPersonLength;
+  final RevealWindow;
 
   @override
   State<CalendarWidget> createState() => _CalendarWidget();
@@ -1224,7 +1227,7 @@ class _CalendarWidget extends State<CalendarWidget> {
           name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
           birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
           setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
-          refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight);
+          refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight, RevealWindow: widget.RevealWindow);
     });
   }
 
@@ -1390,7 +1393,7 @@ class _CalendarWidget extends State<CalendarWidget> {
         name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
         birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: personSaveDate, widgetWidth: _widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
           setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
-          refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight,);
+          refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight, RevealWindow: widget.RevealWindow);
       SetWidgetBackButton();
       SetWidgetSaveButton();
       SetWidgetCalendarResultBirthText();
@@ -1723,7 +1726,7 @@ class _CalendarWidget extends State<CalendarWidget> {
                                   name: targetName, gender: genderVal, uemYang: uemYangType, birthYear: targetBirthYear, birthMonth: targetBirthMonth,
                                   birthDay: targetBirthDay, birthHour: targetBirthHour, birthMin: targetBirthMin, saveDate: DateTime.utc(3000), widgetWidth: widgetWidth, isEditSetting: isEditSetting, isShowChooseDayButtons : isShowChooseDayButtons,
                                   setWidgetCalendarResultBirthTextFromChooseDayMode: SetWidgetCalendarResultBirthTextFromChooseDayMode, setUemYangBirthType: SetUemYangBirthType,
-                                  refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight);
+                                  refreshMapRecentPersonLength: widget.refreshMapRecentPersonLength, calendarMemoWidgetHeight: calendarMemoWidgetHeight, RevealWindow: widget.RevealWindow);
                             });
                           }
                         },

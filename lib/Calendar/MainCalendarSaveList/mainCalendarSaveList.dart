@@ -267,13 +267,16 @@ class _MainCalendarSaveListState extends State<MainCalendarSaveList> with Ticker
   @override
   void initState() {
     super.initState();
-
+    sortNum = saveDataManager.sortNumMapPerson;
+    SetNowSortText();
     CheckPersonalDataHide();
   }
 
   @override
   Widget build(BuildContext context) {
 
+    sortNum = saveDataManager.sortNumMapPerson;
+    SetNowSortText();
     CheckPersonalDataHide();
 
     koreanGanji = ((personalDataManager.etcData%1000)/100).floor() - 1;

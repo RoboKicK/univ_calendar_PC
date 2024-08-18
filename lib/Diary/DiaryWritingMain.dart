@@ -15,14 +15,14 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class DiaryWritingMain extends StatefulWidget {
-  const DiaryWritingMain({super.key, required this.widgetWidth, required this.isRegiedUserData, required this.SetSettingWidget, required this.SetSideOptionWidget, required this.CloseOption});
+  const DiaryWritingMain({super.key, required this.widgetWidth, required this.isRegiedUserData, required this.SetSettingWidget, required this.SetSideOptionWidget, required this.CloseOption, required this.RevealWindow});
 
   final double widgetWidth;
 
   final bool isRegiedUserData;
   final SetSettingWidget;
   final SetSideOptionWidget;
-  final CloseOption;
+  final CloseOption, RevealWindow;
 
   @override
   State<DiaryWritingMain> createState() => _DiaryWritingMainState();
@@ -137,6 +137,7 @@ class _DiaryWritingMainState extends State<DiaryWritingMain> {
     koreanGanji = ((personalDataManager.etcData%1000)/100).floor() - 1;
 
     List<Widget> listTodayPaljaWidget = [];
+
     if(mapUserData.isNotEmpty){
       listTodayPaljaWidget.add(Container(
         width: style.UIButtonWidth,
@@ -155,9 +156,9 @@ class _DiaryWritingMainState extends State<DiaryWritingMain> {
           ],
         ),
       ));//연주 월주 일주 시주
-      listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: listTodayPalja, stanIlganNum: userIlganNum,isManseryoc:false, isCheongan: true, isLastWidget: false));
-      listTodayPaljaWidget.add(calendarResultPaljaWidget.CalendarResultPaljaWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray1, listPaljaData: listTodayPalja, isShowDrawerUemyangSign: 0, isShowDrawerKoreanGanji: koreanGanji, isLastWidget: false, isShowChooseDayButtons: false));
-      listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: listTodayPalja, stanIlganNum: userIlganNum, isManseryoc:false, isCheongan: false, isLastWidget: false));
+      listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: listTodayPalja, stanIlganNum: userIlganNum,isManseryoc:false, isCheongan: true, isLastWidget: false, RevealWindow: widget.RevealWindow,));
+      listTodayPaljaWidget.add(calendarResultPaljaWidget.CalendarResultPaljaWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray1, gender: mapUserData['gender'], listPaljaData: listTodayPalja, isShowDrawerUemyangSign: 0, isShowDrawerKoreanGanji: koreanGanji, isLastWidget: false, isShowChooseDayButtons: false, RevealWindow: widget.RevealWindow,));
+      listTodayPaljaWidget.add(yugchinWidget.YugchinWidget(widgetWidth: style.UIButtonWidth+27, containerColor: style.colorBoxGray0, listPaljaData: listTodayPalja, stanIlganNum: userIlganNum, isManseryoc:false, isCheongan: false, isLastWidget: false, RevealWindow: widget.RevealWindow));
       listTodayPaljaWidget.add(sibiunseong.Sibiunseong().Get12Unseong(context, style.colorBoxGray1, listTodayPalja, userIlganNum, false, style.UIButtonWidth+27));
       listTodayPaljaWidget.add(sibiSinsal.SibiSinsal().Get12Sinsal(context, style.colorBoxGray0, listTodayPalja, userYeonjiNum, false, 0, true, style.UIButtonWidth+27));
     }
@@ -193,7 +194,8 @@ class _DiaryWritingMainState extends State<DiaryWritingMain> {
 
   @override
   Widget build(BuildContext context) {
-    if(mapUserData.isEmpty && widget.isRegiedUserData == false){  //사용자 등록이 안되어있으면
+
+    if(personalDataManager.mapUserData.isEmpty && widget.isRegiedUserData == false){  //사용자 등록이 안되어있으면
       stateNum = 1;}
     else {
       stateNum = 0;
@@ -420,8 +422,8 @@ class _DiaryWritingMainState extends State<DiaryWritingMain> {
                       onPressed: () {
                         GetDdayPalja();
                         setState(() {
-                          widget.SetSideOptionWidget(diaryWriting.DiaryWriting(listTodayPalja: listTodayPalja, userIlganNum: userIlganNum, userYeonjiNum: userYeonjiNum, diaryYear: calendarSelectedDay.year, diaryMonth: calendarSelectedDay.month,
-                              diaryDay: calendarSelectedDay.day, dayString: GetDayString(DateFormat('E').format(calendarSelectedDay)), isWriting: 1, CloseOption: widget.CloseOption,), isCompulsionOn : true);
+                          widget.SetSideOptionWidget(diaryWriting.DiaryWriting(listTodayPalja: listTodayPalja, userGender: mapUserData['gender'], userIlganNum: userIlganNum, userYeonjiNum: userYeonjiNum, diaryYear: calendarSelectedDay.year, diaryMonth: calendarSelectedDay.month,
+                              diaryDay: calendarSelectedDay.day, dayString: GetDayString(DateFormat('E').format(calendarSelectedDay)), isWriting: 1, CloseOption: widget.CloseOption, RevealWindow: widget.RevealWindow,), isCompulsionOn : true,);
                         });
                       },
                     ),

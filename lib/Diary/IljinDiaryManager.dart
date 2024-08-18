@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import '../style.dart' as style;
 import 'DiaryWritingMain.dart' as diaryWritingMain;
 import 'DiarySaveList.dart' as diarySaveList;
+import '../Settings/personalDataManager.dart' as personalDataManager;
 
 class Iljindiarymanager extends StatefulWidget {
-  const Iljindiarymanager({super.key, required this.SetSettingWidget, required this.isRegiedUserData, required this.SetSideOptionWidget, required this.CloseOption});
+  const Iljindiarymanager({super.key, required this.SetSettingWidget, required this.isRegiedUserData, required this.SetSideOptionWidget, required this.CloseOption, required this.RevealWindow});
 
   final bool isRegiedUserData;
 
   final SetSettingWidget;
   final SetSideOptionWidget;
-  final CloseOption;
+  final CloseOption, RevealWindow;
 
   @override
   State<Iljindiarymanager> createState() => _IljindiarymanagerState();
@@ -63,12 +64,12 @@ class _IljindiarymanagerState extends State<Iljindiarymanager> {
       Container(
         width: widgetWidth,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: diaryWritingMain.DiaryWritingMain(widgetWidth: widgetWidth, isRegiedUserData: widget.isRegiedUserData, SetSettingWidget: widget.SetSettingWidget, SetSideOptionWidget: widget.SetSideOptionWidget, CloseOption: widget.CloseOption),
+        child: diaryWritingMain.DiaryWritingMain(widgetWidth: widgetWidth, isRegiedUserData: widget.isRegiedUserData, SetSettingWidget: widget.SetSettingWidget, SetSideOptionWidget: widget.SetSideOptionWidget, CloseOption: widget.CloseOption, RevealWindow: widget.RevealWindow,),
       ),
       Container(
         width: widgetWidth,
         height: MediaQuery.of(context).size.height - style.appBarHeight - 55,
-        child: diarySaveList.Diarysavelist(widgetWidth: widgetWidth, SetSideOptionWidget: widget.SetSideOptionWidget, CloseOption: widget.CloseOption,),
+        child: diarySaveList.Diarysavelist(widgetWidth: widgetWidth, SetSideOptionWidget: widget.SetSideOptionWidget, CloseOption: widget.CloseOption, RevealWindow: widget.RevealWindow,),
       ),
     ];
 
@@ -99,7 +100,25 @@ class _IljindiarymanagerState extends State<Iljindiarymanager> {
                       style: ButtonStyle(splashFactory: NoSplash.splashFactory, overlayColor: WidgetStateProperty.all(Colors.transparent),
                           padding: WidgetStatePropertyAll(EdgeInsets.all(0))),
                       child:listDiaryTexts[1]
-                      , onPressed:(){HeadLineButtonAction(1);})
+                      , onPressed:(){
+                        if(personalDataManager.mapUserData.isEmpty){
+                          showDialog<void>(
+                            context: context,
+                            barrierDismissible: true,
+                            //barrierColor: Colors.transparent,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(
+                                  '일기목록을 보려면 사용자 등록을 먼저 해야합니다',
+                                  textAlign: TextAlign.center,
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          HeadLineButtonAction(1);
+                        }
+                      })
               ),
               Container(
                   height: style.headLineHeight,

@@ -8,11 +8,12 @@ import '../findGanji.dart' as findGanji;
 import '../CalendarResult/InquireSinsals/yugchinWidget.dart' as yugchinWidget;
 
 class ThemeSettingWidget extends StatefulWidget {
-  const ThemeSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting});
+  const ThemeSettingWidget({super.key, required this.widgetWidth, required this.widgetHeight, required this.reloadSetting, required this.RevealWindow});
 
   final double widgetWidth;
   final double widgetHeight;
   final reloadSetting;
+  final RevealWindow;
 
   @override
   State<ThemeSettingWidget> createState() => ThemeSettingState();
@@ -61,9 +62,9 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
 
   Widget GetYugchinWidget(bool isCheongan, List<int> listPalja){
       if(isCheongan == true){
-        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: true, isLastWidget: false, widgetWidth: 450);
+        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: true, isLastWidget: false, widgetWidth: 450, RevealWindow: widget.RevealWindow);
       } else {
-        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: false, isLastWidget: true, widgetWidth: 450);
+        return yugchinWidget.YugchinWidget(containerColor: listContainerColor[0], listPaljaData: listPalja, stanIlganNum: listPalja[4], isManseryoc:true, isCheongan: false, isLastWidget: true, widgetWidth: 450, RevealWindow: widget.RevealWindow);
       }
   }
 
@@ -429,7 +430,11 @@ class ThemeSettingState extends State<ThemeSettingWidget> {
     widgetWidth = widget.widgetWidth;
     widgetHeight = widget.widgetHeight;
 
-    listPaljaData = findGanji.InquireGanji(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+    if(personalDataManager.mapUserData.isNotEmpty){
+      listPaljaData = personalDataManager.mapUserData['listPaljaData'];
+    } else {
+      listPaljaData = findGanji.InquireGanji(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+    }
 
     if(((personalDataManager.etcData % 1000) / 100).floor() == 2){
       isShowDrawerKoreanGanji = 1;

@@ -16,6 +16,8 @@ SetFileDirectoryPath () async{  //처음 시작할 때 파일 저장하는 폴�
   await LoadRecentPeople();
   await LoadSavedDiary();
   await LoadSavedGroup();
+  await LoadSortNum();
+  await LoadRevealTypeNum();
 }
 // 저장번호 - 단일명식 p001, 최근명식 l001, 일기 j001, 단체명식 g001
 int saveDataLimitCount = 3000; //단일
@@ -29,6 +31,7 @@ List<Map> mapRecentPerson = [];
 List<Map> mapDiary = [];  //일진일기
 
 int sortNumMapPerson = 0;
+int revealTypeNum = 0;
 
 late var snackBar;
 
@@ -481,7 +484,18 @@ late var snackBar;
     SaveDiaryFile();
   }
 }
-
+  LoadSortNum() async {
+  try {
+    sortNumMapPerson = jsonDecode(await File('${fileDirPath}/sortNumMapPerson').readAsString());
+    SortMapPerson(sortNumMapPerson);
+  } catch(e) {};
+}
+  LoadRevealTypeNum() async {
+    try {
+      revealTypeNum = jsonDecode(await File('${fileDirPath}/revealTypeNum').readAsString());
+      print(revealTypeNum);
+    } catch(e) {};
+  }
 
   //데이터 삭제
   Future<void> DeleteFile(int num) async {
@@ -825,7 +839,15 @@ late var snackBar;
 
   return true;
 }
-
+  //저장목록 관리 - 일기 불러오기 할 떄 중복 있는지 확인
+  bool LoadDiaryIsSameChecker(int dayData, int labelData, String memo, int tryCount){
+    for(int i = 0; i < tryCount; i++){
+      if(mapDiary[i]['dayData'] == dayData && mapDiary[i]['labelData'] == labelData && mapDiary[i]['memo'] == memo){
+        return false;
+      }
+    }
+    return true;
+  }
   //명식을 삭제할 때 사용2 - mapPerson에서 명식을 삭제
   DeletePersonData2(String name, bool gender, int uemYang, int birthYear, int birthMonth, int birthDay, int birthHour, int birthMin, DateTime saveDate) {
 
@@ -940,7 +962,7 @@ late var snackBar;
   }
 
   //명식 리스트 정렬
-  SortMapPerson(int num){
+  SortMapPerson(int num) async {
     if(num != -1) {
       sortNumMapPerson = num;
     }
@@ -959,6 +981,19 @@ late var snackBar;
         mapPerson.sort((a, b) => b['name'].compareTo(a['name']));
       }
     }
+
+    final file = await CreateSaveFile('sortNumMapPerson');
+
+    await file.writeAsString(jsonEncode(sortNumMapPerson));
+  }
+
+  //간지 설명 타입
+  SetRevealType() async {  //간단히 자세히 버튼
+    revealTypeNum = (revealTypeNum + 1) % 2;
+
+    final file = await CreateSaveFile('revealTypeNum');
+
+    await file.writeAsString(jsonEncode(revealTypeNum));
   }
 
   //최근 명식 저장
@@ -972,7 +1007,7 @@ late var snackBar;
   Map personData = {'name':name, 'birthData':birthData, 'saveDate':DateTime.now()};
 
   bool isSameData = false;
-  int sameDataCheckCount = 9;
+  int sameDataCheckCount = 5;
   if((mapRecentPerson.length - 1) < sameDataCheckCount){
     sameDataCheckCount = (mapRecentPerson.length - 1);
   }
@@ -998,6 +1033,13 @@ late var snackBar;
   SaveRecentPersonFile();
 }
 
+  //명식을 삭제할 때 사용
+  DeleteRecentPersonData(int index) {
+    mapRecentPerson.removeAt(index);
+    SaveRecentPersonFile();
+
+    snackBar('${mapWordData['myeongSic'] == 0? '명식':'원국'}이 삭제되었습니다');
+  }
   //최근 명식의 출생 정보를 선택하여 반환
   GetSelectedRecentBirthData(String type, int index){
   switch(type){
@@ -1024,7 +1066,7 @@ late var snackBar;
       return ((mapRecentPerson[index]['birthData'] / 100 ) % 100).floor();
     }
     case 'birthMin':{
-      return mapRecentPerson[index]['birthData'] % 10;
+      return mapRecentPerson[index]['birthData'] % 100;
     }
   }
 }

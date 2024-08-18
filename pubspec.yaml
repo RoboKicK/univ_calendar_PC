@@ -49,6 +49,7 @@ dev_dependencies:
   table_calendar: ^3.0.9
   desktop_window: ^0.4.0
   msix: ^3.16.6
+  url_launcher: ^6.3.0
   window_size:
     git:
       url: https://github.com/google/flutter-desktop-embedding
@@ -69,9 +70,9 @@ msix_config:
   publisher_display_name: 우주하늘별
   publisher: CN=F441533D-F1C0-4DF8-97FE-79F0D26AD206
   identity_name: F8174BC7.5875522272499
-  msix_version: 1.0.1.0
-  logo_path: C:\Users\hoon87\Desktop\main_icon 300x300.png
-  #capabilities: internetClient, location, microphone, webcam
+  msix_version: 1.0.8.0
+  icons_background_color: transparent
+  logo_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
   languages: ko-kr
   certificate_path: C:\Users\hoon87\certs\CERTIFICATE.pfx
   certificate_password: 524200
@@ -81,6 +82,9 @@ msix_config:
     automatic_background_task: true
     update_block_activation: true
     show_prompt: true
+  #start_menu_icon_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
+  #tile_icon_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
+  #capabilities: internetClient, location, microphone, webcam
 
 # The following section is specific to Flutter packages.
 flutter:
