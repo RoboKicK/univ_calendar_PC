@@ -80,7 +80,7 @@ class _HelpManagerWidget extends State<HelpManagerWidget> {
                     ),
                     child: ElevatedButton(
                       onPressed: (){
-                        launchWebView("https://www.youtube.com/watch?v=12EPDAyV7Ys&list=PLVSYYFyGNdbZbHG1k2AyNf0f0Z5SO8lWC");
+                        launchWebView("https://www.youtube.com/watch?v=Khbd2oPkT9k&t=21s");
                       },
                       child: Text("매뉴얼", style: Theme.of(context).textTheme.headlineSmall),
                       style: ElevatedButton.styleFrom(overlayColor: Colors.transparent, foregroundColor: Colors.transparent, animationDuration: Duration(milliseconds: 0), splashFactory: NoSplash.splashFactory, backgroundColor: Colors.transparent, elevation:0.0, surfaceTintColor: Colors.transparent),

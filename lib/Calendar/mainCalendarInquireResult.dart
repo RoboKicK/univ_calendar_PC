@@ -1004,6 +1004,7 @@ class _MainCalendarInquireResultState extends State<MainCalendarInquireResult> {
 
     setState(() {
       listPaljaData = findGanji.InquireGanji(listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4]);
+      gongmang.Gongmang().FindGongmangNum(listPaljaData, 0, SetGongmangNum); //공망 찾기
     });
 
     widget.setWidgetCalendarResultBirthTextFromChooseDayMode(listBirth[0], listBirth[1], listBirth[2], listBirth[3], listBirth[4]);

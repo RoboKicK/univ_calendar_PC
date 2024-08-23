@@ -775,16 +775,20 @@ class _DiaryWritingState extends State<DiaryWriting> {
                                     return AlertDialog(
                                       content: Text("일기를 삭제합니다"),
                                       actions:[
-                                        TextButton(onPressed: () async {
-                                          await saveDataManager.DeleteDiaryData(widget.diaryYear, widget.diaryMonth, widget.diaryDay);
-                                          Navigator.of(context).pop(true);
-                                          Navigator.of(context).pop(true);
-                                        },
+                                        TextButton(
+                                          onPressed: () async {
+                                            await saveDataManager.DeleteDiaryData(widget.diaryYear, widget.diaryMonth, widget.diaryDay);
+                                            widget.CloseOption(false);
+
+                                            //Navigator.of(context).pop(true);
+                                            Navigator.of(context).pop(true);
+                                          },
                                           child: Text("네"),
                                         ),
-                                        TextButton(onPressed: () {
-                                          Navigator.of(context).pop(true);
-                                        },
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
                                           child: Text("취소"),
                                         ),
                                       ],

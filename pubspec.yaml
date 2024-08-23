@@ -70,7 +70,7 @@ msix_config:
   publisher_display_name: 우주하늘별
   publisher: CN=F441533D-F1C0-4DF8-97FE-79F0D26AD206
   identity_name: F8174BC7.5875522272499
-  msix_version: 1.0.8.0
+  msix_version: 1.0.9.0
   icons_background_color: transparent
   logo_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
   languages: ko-kr
