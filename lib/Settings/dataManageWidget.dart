@@ -767,7 +767,7 @@ class _DataManageWidgetState extends State<DataManageWidget> {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     onPressed: () {
-                      launchWebView("https://youtube.com/shorts/01D8zYNmmBM?si=gp-8YAD0VkReI86U");
+                      launchWebView("https://youtu.be/Khbd2oPkT9k?si=ix6X3dlD7xgrsJze&t=327");
                     }),
               ),
               //Container(

@@ -275,10 +275,12 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
       storeNowPageName = listPageNameController[nowPageNum];
     } else {
       storeNowPageName = text;
+
       setState(() {
         pageNameController.text = text;
       });
     }
+
     nowPageName = storeNowPageName;
     context.read<Store>().SetNowPageName(storeNowPageName);
   }
@@ -316,8 +318,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
               setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
-          SetNowCalendarNum(nowPageNum + 1);
-          for(int i = nowPageCount - 1; i > 0; i--){
+
+          for(int i = nowPageCount; i > 0; i--){
             if(listPageNameController[i - 1] != ''){
               listPageNameController[i] = listPageNameController[i - 1];
               listPageNameController[i - 1] = '';
@@ -327,7 +329,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
               listPageSaveDate[i - 1] = DateTime.utc(3000);
             }
           }
-          SetNowPageName(listPageName[nowPageNum]);
+
+          SetNowCalendarNum(nowPageNum + 1);
         } else {
           listCalendarButtonColor.add(Colors.white);
           listCalendarButtonSize.add(16);
@@ -372,7 +375,8 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
         SetNowCalendarNum(0);
         ShowSnackBar('모든 묶음을 비웠습니다');
       });
-    } else {
+    }
+    else {
       setState(() {
         listPageWidget.removeAt(num);
         listUniquePageNum.removeAt(num);
@@ -384,13 +388,15 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
               setNowPageName: SetNowPageName, setSideOptionLayerWidget: SetSideOptionLayerWidget, setSideOptionWidget: SetSideOptionWidget, refreshMapPersonLengthAndSort: RefreshMapPersonLengthAndSort,
               refreshMapRecentPersonLength: RefreshRecentPersonLength, refreshListMapGroupLength: RefreshListMapGroupLength, refreshGroupName: RefreshGroupName,
               setGroupMemoWidget: SetGroupMemoWidget, getGroupTempMemo: GetGroupTempMemo, setGroupSaveDateAfterSave: SetGroupSaveDateAfterSave, RevealWindow: RevealWindow,));
-          for(int i = 0; i < 3; i++){
-            listPageNameController[i] = '';
-            listPageSaveDate[i] = DateTime.utc(3000);
-          }
+
+          listPageNameController[num] = '';
+          listPageSaveDate[num] = DateTime.utc(3000);
+          pageNameController.text = '';
+
           SetNowPageName(listPageName[num]);
         } else {
           if(num == 0){ //첫번째 페이지 비우기
+            listPageNameController[0] = listPageNameController[1];
             SetNowCalendarNum(0);
           } else {
             SetNowCalendarNum(nowPageNum - 1);

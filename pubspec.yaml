@@ -70,9 +70,9 @@ msix_config:
   publisher_display_name: 우주하늘별
   publisher: CN=F441533D-F1C0-4DF8-97FE-79F0D26AD206
   identity_name: F8174BC7.5875522272499
+  store: true
   msix_version: 1.0.9.0
-  icons_background_color: transparent
-  logo_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
+  logo_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_400x400.png
   languages: ko-kr
   certificate_path: C:\Users\hoon87\certs\CERTIFICATE.pfx
   certificate_password: 524200
@@ -82,6 +82,7 @@ msix_config:
     automatic_background_task: true
     update_block_activation: true
     show_prompt: true
+  #icons_background_color: transparent
   #start_menu_icon_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
   #tile_icon_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_1024x1024.png
   #capabilities: internetClient, location, microphone, webcam
