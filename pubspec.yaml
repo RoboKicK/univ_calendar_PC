@@ -71,7 +71,7 @@ msix_config:
   publisher: CN=F441533D-F1C0-4DF8-97FE-79F0D26AD206
   identity_name: F8174BC7.5875522272499
   store: true
-  msix_version: 1.0.9.0
+  msix_version: 1.0.10.0
   logo_path: C:\Users\hoon87\AndroidStudioProjects\univ_calendar_pc\main_icon_400x400.png
   languages: ko-kr
   certificate_path: C:\Users\hoon87\certs\CERTIFICATE.pfx
